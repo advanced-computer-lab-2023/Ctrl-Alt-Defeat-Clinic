@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import Axios from "axios";
 
 function AddAdmin() {
+  const [res, setRes] = useState(null);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -11,15 +13,14 @@ function AddAdmin() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // You can handle form submission logic here, such as adding the admin to your system.
-    console.log(formData);
-    // Clear the form fields after submission if needed
-    setFormData({
-      username: "",
-      password: "",
-    });
+    const response = await Axios.post(
+      "http://localhost:8000/api/v1/admins/add",
+      formData
+    );
+    console.log(response);
+    setRes(response);
   };
 
   return (
@@ -48,6 +49,7 @@ function AddAdmin() {
         </div>
         <button type="submit">Add Admin</button>
       </form>
+      {res && <div>new admin added</div>}
     </div>
   );
 }

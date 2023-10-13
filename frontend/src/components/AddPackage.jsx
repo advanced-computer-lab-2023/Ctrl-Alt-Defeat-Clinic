@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import Axios from "axios";
 
 function AddPackage() {
+  const [res, setRes] = useState(null);
   const [formData, setFormData] = useState({
     packageName: "",
     price: "",
@@ -14,18 +16,23 @@ function AddPackage() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // You can handle form submission logic here, such as saving the package data to your system.
-    console.log(formData);
-    // Clear the form fields after submission if needed.
-    setFormData({
-      packageName: "",
-      price: "",
-      doctorDiscount: "",
-      medicalDiscount: "",
-      familyDiscount: "",
-    });
+    const data = {
+      name: formData.packageName,
+      price: formData.price,
+      discounts: {
+        doctorSessionDiscount: formData.doctorDiscount,
+        medicineDiscount: formData.medicalDiscount,
+        familySubscriptionDiscount: formData.familyDiscount,
+      },
+    };
+    const response = await Axios.post(
+      "http://localhost:8000/api/v1/packages/addPackage",
+      data
+    );
+    console.log(response);
+    setRes(response);
   };
 
   return (
@@ -63,7 +70,7 @@ function AddPackage() {
           />
         </div>
         <div>
-          <label>Medical Discount:</label>
+          <label>Medicine Discount:</label>
           <input
             type="number"
             name="medicalDiscount"
@@ -84,6 +91,7 @@ function AddPackage() {
         </div>
         <button type="submit">Add Package</button>
       </form>
+      {res && <div>new package added</div>}
     </div>
   );
 }

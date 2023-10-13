@@ -71,7 +71,7 @@ exports.viewDoctorDetails = async (req, res) => {
   try {
     // Extract the doctor's username from the request body
     const username = req.params.username;
-    console.log(username);
+    // console.log(username);
 
     // Fetch the doctor's details from the database
     const selectedDoctor = await Doctor.findOne({ username });

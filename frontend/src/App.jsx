@@ -1,7 +1,9 @@
 import PatientRegister from "./components/PatientRegister";
 import DoctorRegister from "./components/DoctorRegister";
 import AddAdmin from "./components/AddAdmin";
-import RemoveUser from "./components/RemoveUser";
+import RemoveAdmin from "./components/RemoveAdmin";
+import RemoveDoctor from "./components/RemoveDoctor";
+import RemovePatient from "./components/RemovePatient";
 import ViewDoctorRequest from "./components/ViewDoctorRequest";
 import AddPackage from "./components/AddPackage";
 import DeletePackage from "./components/DeletePackage";
@@ -17,7 +19,11 @@ function App() {
       <hr></hr>
       <AddAdmin />
       <hr></hr>
-      <RemoveUser />
+      <RemoveAdmin />
+      <hr></hr>
+      <RemoveDoctor />
+      <hr></hr>
+      <RemovePatient />
       <hr></hr>
       <ViewDoctorRequest />
       <hr></hr>

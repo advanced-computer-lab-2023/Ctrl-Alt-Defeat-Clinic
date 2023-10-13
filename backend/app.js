@@ -21,7 +21,7 @@ const packageRouter = require('./Routes/packageRoutes');
 
 app.use('/api/v1/patients', patientRouter);
 app.use('/api/v1/doctors', doctorRouter);
-app.use('/api/admins', adminRoutes);
+app.use('/api/v1/admins', adminRoutes);
 app.use('/api/v1/appointments', appointmentRouter);
 app.use('/api/v1/packages', packageRouter);
 

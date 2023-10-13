@@ -1,16 +1,18 @@
 import React, { useState } from "react";
+import Axios from "axios";
 
 function DoctorRegister() {
+  const [res, setRes] = useState(null);
   const [formData, setFormData] = useState({
     username: "",
     name: "",
     email: "",
     password: "",
-    dob: "",
+    dateOfBirth: "",
     hourlyRate: "",
     affiliation: "",
     educationalBackground: "",
-    specialty: "",
+    speciality: "",
   });
 
   const handleChange = (e) => {
@@ -18,9 +20,14 @@ function DoctorRegister() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(formData);
+    const response = await Axios.post(
+      "http://localhost:8000/api/v1/doctors/register",
+      formData
+    );
+    console.log(response.data);
+    setRes(response.data);
   };
 
   return (
@@ -71,8 +78,8 @@ function DoctorRegister() {
           <label>Date of Birth:</label>
           <input
             type="date"
-            name="dob"
-            value={formData.dob}
+            name="dateOfBirth"
+            value={formData.dateOfBirth}
             onChange={handleChange}
             required
           />
@@ -108,17 +115,18 @@ function DoctorRegister() {
           />
         </div>
         <div>
-          <label>Specialty:</label>
+          <label>Speciality:</label>
           <input
             type="text"
-            name="specialty"
-            value={formData.specialty}
+            name="speciality"
+            value={formData.speciality}
             onChange={handleChange}
             required
           />
         </div>
         <button type="submit">Register</button>
       </form>
+      {res && <div>doctor request sent</div>}
     </div>
   );
 }

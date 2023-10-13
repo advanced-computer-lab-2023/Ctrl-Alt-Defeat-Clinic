@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import Axios from "axios";
 
 function UpdatePackage() {
+  const [res, setRes] = useState(null);
   const [formData, setFormData] = useState({
     packageName: "",
     updatedName: "",
@@ -10,24 +12,30 @@ function UpdatePackage() {
     familyDiscount: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // You can handle the update logic here, such as updating the package with the provided information.
-    console.log(formData);
-    // Clear the form fields after submission if needed.
-    setFormData({
-      packageName: "",
-      updatedName: "",
-      updatedPrice: "",
-      doctorDiscount: "",
-      medicalDiscount: "",
-      familyDiscount: "",
-    });
+    const data = {
+      name: formData.updatedName,
+      price: formData.updatedPrice,
+      discounts: {
+        doctorSessionDiscount: formData.doctorDiscount,
+        medicineDiscount: formData.medicalDiscount,
+        familySubscriptionDiscount: formData.familyDiscount,
+      },
+    };
+    const response = await Axios.put(
+      "http://localhost:8000/api/v1/packages/updatePackage/" +
+        formData.packageName,
+      data
+    );
+    console.log(response);
+    setRes(response);
   };
 
   return (
@@ -96,6 +104,7 @@ function UpdatePackage() {
         </div>
         <button type="submit">Update Package</button>
       </form>
+      {res && <div>package updated</div>}
     </div>
   );
 }
