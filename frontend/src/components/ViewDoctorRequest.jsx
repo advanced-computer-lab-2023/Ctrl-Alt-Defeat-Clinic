@@ -55,7 +55,7 @@ function ViewDoctorRequest() {
             {userInfo.educationalBackground}
           </p>
           <p>
-            <strong>Specialty:</strong> {userInfo.specialty}
+            <strong>Speciality:</strong> {userInfo.specialty}
           </p>
         </div>
       )}

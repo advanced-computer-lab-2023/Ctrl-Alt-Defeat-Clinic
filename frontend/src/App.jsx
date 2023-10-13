@@ -8,7 +8,8 @@ import ViewDoctorRequest from "./components/ViewDoctorRequest";
 import AddPackage from "./components/AddPackage";
 import DeletePackage from "./components/DeletePackage";
 import UpdatePackage from "./components/UpdatePackage";
-import "./App.css";
+import ViewAllDoctors from "./components/ViewAllDoctors";
+//import "./App.css";
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
       <DeletePackage />
       <hr></hr>
       <UpdatePackage />
+      <hr></hr>
+      <ViewAllDoctors />
     </>
   );
 }
