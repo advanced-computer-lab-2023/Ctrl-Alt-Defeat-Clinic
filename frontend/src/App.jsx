@@ -9,6 +9,7 @@ import AddPackage from "./components/AddPackage";
 import DeletePackage from "./components/DeletePackage";
 import UpdatePackage from "./components/UpdatePackage";
 import ViewAllDoctors from "./components/ViewAllDoctors";
+import SearchForDoctors from "./components/SearchForDoctors";
 //import "./App.css";
 
 function App() {
@@ -35,6 +36,8 @@ function App() {
       <UpdatePackage />
       <hr></hr>
       <ViewAllDoctors />
+      <hr></hr>
+      <SearchForDoctors />
     </>
   );
 }
