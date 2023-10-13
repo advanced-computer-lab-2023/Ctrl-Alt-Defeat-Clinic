@@ -6,37 +6,37 @@ const filterAppointments = async (req, res) => {
   // filter appointments by date/status
 
   // Extract the targetDates from the request body
-  const { startDate, endDate, targetStatus } = req.body;
+  const { startDate, endDate, status } = req.query;
 
-  // Validate the targetDates and targetStatus
-  if ((!startDate && endDate) || (startDate && !endDate) || (!startDate && !endDate && !targetStatus))
+  // Validate the targetDates and status
+  if ((!startDate && endDate) || (startDate && !endDate) || (!startDate && !endDate && !status))
     return res.status(400).json('There are null values.');
 
   try {
     let foundAppointment;
 
-    if (!targetStatus) {
+    if (!status) {
       // Fetch appointments with taregtDates
       foundAppointment = await Appointment.find({ date: { $gte: startDate, $lte: endDate } }).exec();
 
       //console.log("dates only");
     } else if (!startDate && !endDate) {
-      // Fetch appointments with a targetStatus
-      foundAppointment = await Appointment.find({ status: targetStatus }).exec();
+      // Fetch appointments with a status
+      foundAppointment = await Appointment.find({ status: status }).exec();
 
       //console.log("status only");
     } else {
-      // Fetch appointments with both targetDates & targetStatus
+      // Fetch appointments with both targetDates & status
       foundAppointment = await Appointment.find({
         date: { $gte: startDate, $lte: endDate },
-        status: targetStatus,
+        status: status,
       }).exec();
 
       //console.log("both");
     }
 
     // Send the appointments as a response
-    res.send(foundAppointment);
+    res.status(200).json(foundAppointment);
   } catch (error) {
     // Handle any errors that occur during the process
     console.error('Error:', error);

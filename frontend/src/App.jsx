@@ -10,6 +10,7 @@ import DeletePackage from "./components/DeletePackage";
 import UpdatePackage from "./components/UpdatePackage";
 import ViewAllDoctors from "./components/ViewAllDoctors";
 import SearchForDoctors from "./components/SearchForDoctors";
+import FilterAppointments from "./components/FilterAppointments";
 //import "./App.css";
 
 function App() {
@@ -38,6 +39,8 @@ function App() {
       <ViewAllDoctors />
       <hr></hr>
       <SearchForDoctors />
+      <hr></hr>
+      <FilterAppointments />
     </>
   );
 }

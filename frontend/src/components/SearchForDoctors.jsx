@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Axios from "axios";
 
 function SearchForDoctors() {
-    const [username, setUsername] = useState("");
+    const [name, setName] = useState("");
     const [speciality, setSpeciality] = useState("");
 
     const [userInfo, setUserInfo] = useState(null);
@@ -10,11 +10,9 @@ function SearchForDoctors() {
     const handleSubmit = async (e) => {
       e.preventDefault();
       const userInformation = await Axios.get(
-        `http://localhost:8000/api/v1/patients/searchForDoctors?name=${username}&speciality=${speciality}`
+        `http://localhost:8000/api/v1/patients/searchForDoctors?name=${name}&speciality=${speciality}`
       );
 
-      console.log(username);
-      console.log(speciality);
       console.log(userInformation);
       setUserInfo(userInformation.data);
     };
@@ -24,11 +22,11 @@ function SearchForDoctors() {
         <h2>Search For Doctor</h2>
         <form onSubmit={handleSubmit}>
           <div>
-          <label>Enter Username:</label>
+          <label>Enter Name:</label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           </div>
           <div>
