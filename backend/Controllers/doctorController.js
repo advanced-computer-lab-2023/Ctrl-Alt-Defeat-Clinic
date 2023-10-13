@@ -70,7 +70,8 @@ exports.viewPatientInfo = async (req, res) => {
 exports.viewDoctorDetails = async (req, res) => {
   try {
     // Extract the doctor's username from the request body
-    const { username } = req.body;
+    const username = req.params.username;
+    console.log(username);
 
     // Fetch the doctor's details from the database
     const selectedDoctor = await Doctor.findOne({ username });
@@ -79,14 +80,16 @@ exports.viewDoctorDetails = async (req, res) => {
     if (!selectedDoctor) {
       return res.status(404).json({ error: 'Doctor not found' });
     }
+    selectedDoctor.password = undefined;
 
     // Respond with the selected doctor's details, including specialty, affiliation, and educational background
     res.json({
-      username: selectedDoctor.username,
-      name: selectedDoctor.name,
-      specialty: selectedDoctor.specialty,
-      affiliation: selectedDoctor.affiliation,
-      educationalBackground: selectedDoctor.educationalBackground,
+      // username: selectedDoctor.username,
+      // name: selectedDoctor.name,
+      // specialty: selectedDoctor.specialty,
+      // affiliation: selectedDoctor.affiliation,
+      // educationalBackground: selectedDoctor.educationalBackground,
+      data: selectedDoctor,
     });
   } catch (error) {
     console.error('Error fetching doctor details:', error);
