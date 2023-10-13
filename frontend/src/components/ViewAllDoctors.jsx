@@ -31,7 +31,7 @@ function ViewAllDoctors() {
         </form>
         {userInfo && userInfo.map((user, index) => (
         <div key={index}>
-            <h3>Doctor Information:</h3>
+            <h3>Doctor {index +1} Information:</h3>
             <p>
             <strong>Name:</strong> {user.name}
             </p>
