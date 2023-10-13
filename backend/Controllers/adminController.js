@@ -29,7 +29,7 @@ const addAdmin = async (req, res) => {
 
 const deleteAdmin = async (req, res) => {
   try {
-    const { username } = req.body; // Assuming you're sending the username as a request body
+    const username = req.params.username; // Assuming you're sending the username as a request body
     // Find the admin document by username and delete it
     const deletedAdmin = await Admin.findOneAndDelete({ username });
 
@@ -46,7 +46,7 @@ const deleteAdmin = async (req, res) => {
 
 const deletePatient = async (req, res) => {
   try {
-    const { username } = req.body; // Assuming you're sending the patient's username in the request body
+    const username = req.params.username; // Assuming you're sending the patient's username in the request body
 
     // Check if the username is provided in the request body
     if (!username) {
@@ -69,7 +69,7 @@ const deletePatient = async (req, res) => {
 
 const deleteDoctor = async (req, res) => {
   try {
-    const { username } = req.body; // Assuming you're sending the doctor's username in the request body
+    const username = req.params.username; // Assuming you're sending the doctor's username in the request body
 
     // Check if the username is provided in the request body
     if (!username) {

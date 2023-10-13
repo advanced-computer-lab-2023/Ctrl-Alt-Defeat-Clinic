@@ -10,7 +10,6 @@ router.route('/').put(protect, restrictTo('doctor'), doctorController.updateDoct
 
 router.route('/selectPatient').get(doctorController.selectPatient);
 
-router.route('/doctordetails').get(doctorController.viewDoctorDetails);
-
+router.route('/doctordetails/:username').get(doctorController.viewDoctorDetails);
 
 module.exports = router;
