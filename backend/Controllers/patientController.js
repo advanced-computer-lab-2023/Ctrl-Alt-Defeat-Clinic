@@ -1,7 +1,7 @@
 const Patient = require('../Models/Patient');
 const Doctor = require('../Models/Doctor');
 const { generateToken } = require('./AuthController');
-const Package = require("../Models/Package");
+const Package = require('../Models/Package');
 const FamilyMember = require('../Models/FamilyMember');
 const Prescription = require('../Models/Prescriptions');
 
@@ -57,22 +57,21 @@ exports.addFamilyMember = async (req, res) => {
   }
 };
 
-exports.viewAllPatients=async(req,res) =>{
-  try{
-  const allPatients = await Patient.find()
-  console.log(allPatients)
-  res.status(200).send(allPatients) 
-  }catch(err){
-    res.status(500).json({message: err.message})
-  }  
-}
+exports.viewAllPatients = async (req, res) => {
+  try {
+    const allPatients = await Patient.find();
+    console.log(allPatients);
+    res.status(200).send(allPatients);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-exports.viewAllDoctors = async (req,res) => {
-  
-  const { username } = req.params
-  try{
+exports.viewAllDoctors = async (req, res) => {
+  const { username } = req.params;
+  try {
     //Getting the current patient view the list of doctor
-    const currentPatient =await Patient.findOne({username});
+    const currentPatient = await Patient.findOne({ username });
 
     if (!currentPatient) {
       return res.status(404).json({ error: 'Patient not found' });
@@ -80,27 +79,32 @@ exports.viewAllDoctors = async (req,res) => {
 
     const doctors = await Doctor.find({}, 'name speciality hourlyRate');
 
-    const doctorsWithSessionPrices = await Promise.all(doctors.map(async (currentDoctor) => {
-      const sessionPrice = await calculateSessionPrice(currentDoctor.hourlyRate, currentPatient.healthPackage);
-      return {
-        name: currentDoctor.name,
-        speciality: currentDoctor.speciality,
-        sessionPrice,
-      };
-    }));
+    const doctorsWithSessionPrices = await Promise.all(
+      doctors.map(async currentDoctor => {
+        const sessionPrice = await calculateSessionPrice(currentDoctor.hourlyRate, currentPatient.healthPackage);
+        return {
+          name: currentDoctor.name,
+          speciality: currentDoctor.speciality,
+          sessionPrice,
+        };
+      })
+    );
 
     res.status(200).send(doctorsWithSessionPrices);
-
-  } catch(error) {
-    res.status(500).json({err : 'Could not view doctors'});
+  } catch (error) {
+    res.status(500).json({ err: 'Could not view doctors' });
   }
-}
+};
 
-async function calculateSessionPrice(doctorRate , healthPackage) { //Calculating the sessionPrice of doctor 
+async function calculateSessionPrice(doctorRate, healthPackage) {
+  //Calculating the sessionPrice of doctor
 
   const patientPackage = await Package.findById(healthPackage);
-  return (doctorRate + doctorRate * 10/100) - (patientPackage ? (doctorRate + doctorRate * 10/100) * patientPackage.discounts.doctorSessionDiscount : 0 ); 
-
+  return (
+    doctorRate +
+    (doctorRate * 10) / 100 -
+    (patientPackage ? (doctorRate + (doctorRate * 10) / 100) * patientPackage.discounts.doctorSessionDiscount : 0)
+  );
 }
 
 exports.viewFamilyMembers = async (req, res) => {
@@ -129,8 +133,8 @@ exports.viewAllPatients = async (req, res) => {
 
 exports.getAllPrescriptionsForPatient = async (req, res) => {
   try {
-    const patientId = req.query.patientId;
-    const prescriptions = await Prescription.find({ patient: patientId }).populate('doctor');
+    const username = req.query.username;
+    const prescriptions = await Prescription.find({ patient: username }).populate('doctor');
 
     res.status(200).json(prescriptions);
   } catch (err) {
@@ -183,12 +187,12 @@ exports.filterPrescriptions = async (req, res) => {
 };
 
 exports.searchForDoctors = async (req, res) => {
-  const {name,speciality} = req.query;
+  const { name, speciality } = req.query;
 
   try {
     let query = {};
     if (name) {
-      query.name = name
+      query.name = name;
     }
     if (speciality) {
       query.speciality = speciality;
