@@ -11,6 +11,7 @@ import UpdatePackage from "./components/UpdatePackage";
 import ViewAllDoctors from "./components/ViewAllDoctors";
 import SearchForDoctors from "./components/SearchForDoctors";
 import FilterAppointments from "./components/FilterAppointments";
+import FilterDoctors from "./components/FilterDoctors";
 //import "./App.css";
 
 function App() {
@@ -41,6 +42,8 @@ function App() {
       <SearchForDoctors />
       <hr></hr>
       <FilterAppointments />
+      <hr></hr>
+      <FilterDoctors />
     </>
   );
 }
