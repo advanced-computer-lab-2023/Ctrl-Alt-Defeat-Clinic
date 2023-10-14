@@ -12,5 +12,7 @@ router.route('/selectPatient').get(doctorController.selectPatient);
 
 router.route('/doctordetails').get(doctorController.viewDoctorDetails);
 
+router.route('/viewAllDoctors').get(doctorController.viewAllDoctors);
 
+router.route('/filterDoctors').get(doctorController.filterDoctors);
 module.exports = router;

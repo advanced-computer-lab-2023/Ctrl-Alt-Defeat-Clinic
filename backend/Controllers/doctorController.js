@@ -3,6 +3,15 @@ const Patient = require('../Models/Patient');
 const Appointment = require('../Models/Appointment');
 const Prescription = require('../Models/Prescriptions');
 
+exports.viewAllDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find();
+    res.status(200).json(doctors);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.registerDoctor = async (req, res) => {
   const newDoctor = await Doctor.create(req.body);
 
@@ -91,5 +100,65 @@ exports.viewDoctorDetails = async (req, res) => {
   } catch (error) {
     console.error('Error fetching doctor details:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+// Filter doctors by availability at a specific date and time
+exports.filterDoctors = async (req, res) => {
+  try {
+    const { name, speciality, registrationStatus, date } = req.query;
+
+    const query = {};
+
+    if (name) {
+      query.name = name;
+    }
+
+    if (speciality) {
+      query.speciality = speciality;
+    }
+
+    if (registrationStatus) {
+      query.registrationStatus = registrationStatus;
+    }
+
+    // Construct the date and time for the appointment
+    const appointmentDateTime = new Date(date);
+    console.log(appointmentDateTime);
+
+    // Use an aggregation pipeline to find doctors without appointments at the specified date and time
+    // Use an aggregation pipeline to find doctors without appointments at the specified date and time
+    const availableDoctors = await Doctor.aggregate([
+      {
+        $match: query, // Match doctors based on other filters
+      },
+      {
+        $lookup: {
+          from: 'appointments',
+          let: { doctorId: '$_id', appointmentDate: appointmentDateTime },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $nin: [
+                    { $eq: ['$doctor', '$$doctorId'] },
+                    { $eq: ['$date', '$$appointmentDate'] }, // Exclude appointments on the specified date and time
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'doctorAppointments',
+        },
+      },
+      {
+        $match: {
+          doctorAppointments: { $eq: [] }, // Filter out doctors with appointments at the specified date and time
+        },
+      },
+    ]);
+
+    res.status(200).json(availableDoctors);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
