@@ -25,7 +25,6 @@ class PrescriptionDetails extends React.Component {
               {this.props.selectedPrescription.filled ? "Filled" : "Not Filled"}
             </p>
             <p>Doctor: {this.props.selectedPrescription.doctor.name}</p>
-            {/* Add more details as needed */}
           </div>
         ) : (
           <p>Select a prescription to view details.</p>

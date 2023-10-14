@@ -1,5 +1,3 @@
-import React from "react";
-
 const HealthPackage = () => {
   // Define your health package options here
   const healthPackages = [

@@ -1,5 +1,3 @@
-import React from "react";
-
 const SubscribeHealthPackage = () => {
   const handleSubscribe = (packageId) => {
     // Implement the subscription logic here

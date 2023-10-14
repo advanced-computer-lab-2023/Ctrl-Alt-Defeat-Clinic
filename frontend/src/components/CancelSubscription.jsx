@@ -1,5 +1,3 @@
-import React from "react";
-
 const CancelSubscription = () => {
   const handleCancelSubscription = (subscriptionId) => {
     // Implement the subscription cancellation logic here
