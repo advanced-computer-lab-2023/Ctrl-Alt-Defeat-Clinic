@@ -3,13 +3,22 @@ import axios from 'axios';
 
 function ViewAllPatients() {
   const [doctorUsername, setDoctorUsername] = useState('');
-  const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState('');
+  const [displayedPatients, setDisplayedPatients] = useState([]);
+
+  const getPatientsWithUpcomingAppointments = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/v1/appointments/filterPatients?doctorUsername=${doctorUsername}`);
+      setDisplayedPatients(response.data);
+    } catch (error) {
+      console.error('Error fetching patients with upcoming appointments:', error);
+    }
+  };
 
   const handleViewPatients = async () => {
     try {
       const response = await axios.get(`http://localhost:8000/api/v1/doctors/viewPatients?doctorUsername=${doctorUsername}`);
-      setPatients(response.data);
+      setDisplayedPatients(response.data);
     } catch (error) {
       console.error('Error fetching patients:', error);
     }
@@ -34,12 +43,14 @@ function ViewAllPatients() {
         onChange={(e) => setDoctorUsername(e.target.value)}
       />
       <br />
-      <button onClick={handleViewPatients}>View Patients</button>
-      {patients.length > 0 && (
+      <br />
+      <button id='all' onClick={handleViewPatients}>All patients</button>
+      <button id='upcoming' onClick={getPatientsWithUpcomingAppointments}>Patients with upcoming appointments</button>
+      {displayedPatients.length > 0 && (
         <div>
           <h3>Patients:</h3>
           <ul>
-            {patients.map((patient) => (
+            {displayedPatients.map((patient) => (
               <li key={patient._id}><button id={patient._id} onClick={handleSelectPatient}>{patient.name}</button></li>
             ))}
           </ul>
