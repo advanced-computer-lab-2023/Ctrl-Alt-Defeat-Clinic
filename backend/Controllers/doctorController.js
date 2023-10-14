@@ -121,43 +121,20 @@ exports.filterDoctors = async (req, res) => {
       query.registrationStatus = registrationStatus;
     }
 
-    // Construct the date and time for the appointment
-    const appointmentDateTime = new Date(date);
-    console.log(appointmentDateTime);
+    // Find all doctors matching the specified criteria
+    const matchingDoctors = await Doctor.find(query).exec();
 
-    // Use an aggregation pipeline to find doctors without appointments at the specified date and time
-    // Aggregate to find doctors based on the dateTime
-    const pipeline = [
-      {
-        $match: { date: appointmentDateTime }, // Match appointments on the specified dateTime
-      },
-      {
-        $group: {
-          username: '$doctor',
-          count: { $sum: 1 }, // Count appointments per doctor
-        },
-      },
-      {
-        $lookup: {
-          from: 'doctors', // The name of the 'doctor' collection
-          localField: 'username',
-          foreignField: 'doctor',
-          as: 'doctor',
-        },
-      },
-      {
-        $match: { count: 0 }, // Remove doctors with appointments
-      },
-      {
-        $project: {
-          _id: 0,
-          doctor: 1,
-        },
-      },
-    ];
+    // Find appointments for the specified date and time
+    const matchingAppointments = await Appointment.find({ date: date }).exec();
 
-    const result = await Appointment.aggregate(pipeline);
-    console.log(result);
+    console.log(date);
+    console.log(matchingAppointments);
+
+    // Extract an array of unique doctor usernames from the matching appointments
+    const doctorUsernames = [...new Set(matchingAppointments.map(appointment => appointment.doctor))];
+
+    // Filter out doctors who have appointments at the specified date and time
+    const availableDoctors = matchingDoctors.filter(doctor => !doctorUsernames.includes(doctor.username));
 
     res.status(200).json(availableDoctors);
   } catch (error) {

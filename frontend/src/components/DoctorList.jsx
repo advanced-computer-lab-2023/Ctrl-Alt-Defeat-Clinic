@@ -78,13 +78,13 @@ const DoctorList = () => {
           <option value="accepted">Accepted</option>
           <option value="rejected">Rejected</option>
         </select>
-        <label>Filter by Appointment Date:</label>
+        <label>Filter by Available Date:</label>
         <input
           type="date"
           value={filterDate}
           onChange={(e) => setFilterDate(e.target.value)}
         />
-        <label>Filter by Appointment Time:</label>
+        <label>Filter by Available Time:</label>
         <input
           type="time"
           value={filterTime}
