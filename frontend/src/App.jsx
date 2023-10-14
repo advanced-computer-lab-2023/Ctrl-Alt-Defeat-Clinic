@@ -10,10 +10,13 @@ import DeletePackage from "./components/DeletePackage";
 import UpdatePackage from "./components/UpdatePackage";
 import ViewAllDoctors from "./components/ViewAllDoctors";
 import FilterAppointments from "./components/FilterAppointments";
-//import "./App.css";
 import UpdateDoctor from "./components/updateDoctor";
 import ViewAllPatients from "./components/ViewAllPatients";
 import SearchPatient from "./components/SearchPatient";
+import PrescriptionList from "./components/PrescriptionList";
+import AddFamilyMember from "./components/AddFamilyMembers";
+import FamilyMembersViewer from "./components/FamilyMembersViewer";
+import DoctorList from "./components/DoctorList";
 
 function App() {
   return (
@@ -47,6 +50,15 @@ function App() {
       <ViewAllPatients />
       <hr />
       <SearchPatient />
+      <hr />
+      <FamilyMembersViewer />
+      <hr />
+      <AddFamilyMember />
+      <hr />
+      <PrescriptionList />
+      <hr />
+      <DoctorList />
+      <hr />
     </>
   );
 }

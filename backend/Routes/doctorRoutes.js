@@ -16,6 +16,10 @@ router.route('/selectPatient').get(doctorController.selectPatient);
 
 router.route('/doctordetails/:username').get(doctorController.viewDoctorDetails);
 
+router.route('/viewAllDoctors').get(doctorController.viewAllDoctors);
+
 router.route('/viewPatientInfo').get(doctorController.viewPatientInfo);
+
+router.route('/filterDoctors').get(doctorController.filterDoctors);
 
 module.exports = router;

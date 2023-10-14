@@ -4,6 +4,7 @@ const { protect, restrictTo } = require('../Middlewares/authMiddlewares');
 
 const router = express.Router();
 
+
 router.route('/register').post(patientController.registerPatient);
 router.route('/addMember/:id').post(patientController.addFamilyMember);
 router.route('/viewFamilyMembers').get(patientController.viewFamilyMembers);

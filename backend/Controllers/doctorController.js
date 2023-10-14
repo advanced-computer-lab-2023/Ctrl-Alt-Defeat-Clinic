@@ -3,6 +3,15 @@ const Patient = require('../Models/Patient');
 const Appointment = require('../Models/Appointment');
 const Prescription = require('../Models/Prescriptions');
 
+exports.viewAllDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find();
+    res.status(200).json(doctors);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.registerDoctor = async (req, res) => {
   const newDoctor = await Doctor.create(req.body);
 
@@ -118,5 +127,44 @@ exports.viewDoctorDetails = async (req, res) => {
   } catch (error) {
     console.error('Error fetching doctor details:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+// Filter doctors by availability at a specific date and time
+exports.filterDoctors = async (req, res) => {
+  try {
+    const { name, speciality, registrationStatus, date } = req.query;
+
+    const query = {};
+
+    if (name) {
+      query.name = name;
+    }
+
+    if (speciality) {
+      query.speciality = speciality;
+    }
+
+    if (registrationStatus) {
+      query.registrationStatus = registrationStatus;
+    }
+
+    // Find all doctors matching the specified criteria
+    const matchingDoctors = await Doctor.find(query).exec();
+
+    // Find appointments for the specified date and time
+    const matchingAppointments = await Appointment.find({ date: date }).exec();
+
+    console.log(date);
+    console.log(matchingAppointments);
+
+    // Extract an array of unique doctor usernames from the matching appointments
+    const doctorUsernames = [...new Set(matchingAppointments.map(appointment => appointment.doctor))];
+
+    // Filter out doctors who have appointments at the specified date and time
+    const availableDoctors = matchingDoctors.filter(doctor => !doctorUsernames.includes(doctor.username));
+
+    res.status(200).json(availableDoctors);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
