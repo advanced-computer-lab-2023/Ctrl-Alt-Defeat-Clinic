@@ -9,41 +9,44 @@ import AddPackage from "./components/AddPackage";
 import DeletePackage from "./components/DeletePackage";
 import UpdatePackage from "./components/UpdatePackage";
 import ViewAllDoctors from "./components/ViewAllDoctors";
-import SearchForDoctors from "./components/SearchForDoctors";
 import FilterAppointments from "./components/FilterAppointments";
-import FilterDoctors from "./components/FilterDoctors";
 //import "./App.css";
+import UpdateDoctor from "./components/updateDoctor";
+import ViewAllPatients from "./components/ViewAllPatients";
+import SearchPatient from "./components/SearchPatient";
 
 function App() {
   return (
     <>
       <PatientRegister />
-      <hr></hr>
+      <hr />
       <DoctorRegister />
-      <hr></hr>
+      <hr />
       <AddAdmin />
-      <hr></hr>
+      <hr />
       <RemoveAdmin />
-      <hr></hr>
+      <hr />
       <RemoveDoctor />
-      <hr></hr>
+      <hr />
       <RemovePatient />
-      <hr></hr>
+      <hr />
       <ViewDoctorRequest />
-      <hr></hr>
+      <hr />
       <AddPackage />
-      <hr></hr>
+      <hr />
       <DeletePackage />
-      <hr></hr>
+      <hr />
       <UpdatePackage />
-      <hr></hr>
+      <hr />
       <ViewAllDoctors />
-      <hr></hr>
-      <SearchForDoctors />
-      <hr></hr>
+      <hr />
       <FilterAppointments />
-      <hr></hr>
-      <FilterDoctors />
+      <hr />
+      <UpdateDoctor />
+      <hr />
+      <ViewAllPatients />
+      <hr />
+      <SearchPatient />
     </>
   );
 }

@@ -47,6 +47,8 @@ const filterAppointments = async (req, res) => {
 const filterPatients = async (req, res) => {
   // filter patients based on upcoming appointments
 
+  const { doctorUsername } = req.query;
+
   try {
     // Fetch appointments with a date in the future
     const appointments = await Appointment.find({ date: { $gte: new Date() } }).exec();
@@ -54,8 +56,9 @@ const filterPatients = async (req, res) => {
     // Extract the 'patient' values from appointments and create an array
     const patientIds = appointments.map(appointment => appointment.patient);
 
-    // Fetch patients whose 'username' is in the 'patientIds' array
-    const patients = await Patient.find({ username: { $in: patientIds } }).exec();
+    const doctor = await Doctor.findOne({ username: doctorUsername }).populate('registeredPatients');
+
+    const patients = doctor.registeredPatients.filter(patient => patientIds.includes(patient.username));
 
     // Send the patients as a response
     res.send(patients);
