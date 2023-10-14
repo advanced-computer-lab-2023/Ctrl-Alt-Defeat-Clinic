@@ -150,20 +150,19 @@ exports.filterDoctors = async (req, res) => {
 
     // Find all doctors matching the specified criteria
     const matchingDoctors = await Doctor.find(query).exec();
+    if (date) {
+      // Find appointments for the specified date and time
+      const matchingAppointments = await Appointment.find({ date: date }).exec();
 
-    // Find appointments for the specified date and time
-    const matchingAppointments = await Appointment.find({ date: date }).exec();
+      // Extract an array of unique doctor usernames from the matching appointments
+      const doctorUsernames = [...new Set(matchingAppointments.map(appointment => appointment.doctor))];
 
-    console.log(date);
-    console.log(matchingAppointments);
-
-    // Extract an array of unique doctor usernames from the matching appointments
-    const doctorUsernames = [...new Set(matchingAppointments.map(appointment => appointment.doctor))];
-
-    // Filter out doctors who have appointments at the specified date and time
-    const availableDoctors = matchingDoctors.filter(doctor => !doctorUsernames.includes(doctor.username));
-
-    res.status(200).json(availableDoctors);
+      // Filter out doctors who have appointments at the specified date and time
+      const availableDoctors = matchingDoctors.filter(doctor => !doctorUsernames.includes(doctor.username));
+      res.status(200).json(availableDoctors);
+      return;
+    }
+    res.status(200).json(matchingDoctors);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

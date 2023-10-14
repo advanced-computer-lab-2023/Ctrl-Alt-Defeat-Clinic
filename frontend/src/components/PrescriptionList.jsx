@@ -9,7 +9,6 @@ const PrescriptionList = () => {
   const [filterDate, setFilterDate] = useState("");
   const [filterDoctor, setFilterDoctor] = useState("");
   const [filterStatus, setFilterStatus] = useState("all"); // "all" means no filtering
-  const [filterPatientUsername, setFilterPatientUsername] = useState(""); // Add state for patient username
 
   const handleFetchPrescriptions = async (e) => {
     e.preventDefault(); // Prevent the default form submission
@@ -31,7 +30,7 @@ const PrescriptionList = () => {
   const handleFilterPrescriptions = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/patients/filterPrescriptions?date=${filterDate}&doctorUsername=${filterDoctor}&filled=${filterStatus}&patientUsername=${filterPatientUsername}` // Include patient username
+        `http://localhost:8000/api/v1/patients/filterPrescriptions?date=${filterDate}&doctorUsername=${filterDoctor}&filled=${filterStatus}` // Include patient username
       );
       setPrescriptions(response.data);
     } catch (error) {
@@ -58,12 +57,7 @@ const PrescriptionList = () => {
           handleFilterPrescriptions();
         }}
       >
-        <label>Filter by Patient Username:</label>
-        <input
-          type="text"
-          value={filterPatientUsername}
-          onChange={(e) => setFilterPatientUsername(e.target.value)}
-        />
+        
         <label>Filter by Date:</label>
         <input
           type="text"

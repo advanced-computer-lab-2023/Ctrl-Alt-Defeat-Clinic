@@ -8,9 +8,9 @@ const DoctorList = () => {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [filterName, setFilterName] = useState("");
   const [filterSpeciality, setFilterSpeciality] = useState("");
-  const [filterRegistrationStatus, setFilterRegistrationStatus] = useState(""); // "all" means no filtering
+  // const [filterRegistrationStatus, setFilterRegistrationStatus] = useState(""); // "all" means no filtering
   const [filterDate, setFilterDate] = useState(""); // Add state for appointment date
-  const [filterTime, setFilterTime] = useState(""); // Add state for appointment time
+  // const [filterTime, setFilterTime] = useState(""); // Add state for appointment time
 
   const handleFetchDoctors = async (e) => {
     e.preventDefault();
@@ -32,9 +32,7 @@ const DoctorList = () => {
   const handleFilterDoctors = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/doctors/filterDoctors?name=${filterName}&speciality=${filterSpeciality}&registrationStatus=${filterRegistrationStatus}&date=${new Date(
-          filterDate + "T" + filterTime
-        )}`
+        `http://localhost:8000/api/v1/doctors/filterDoctors?name=${filterName}&speciality=${filterSpeciality}&date=${filterDate? new Date(filterDate) : ""}`
       );
       setDoctors(response.data);
     } catch (error) {
@@ -68,27 +66,11 @@ const DoctorList = () => {
           value={filterSpeciality}
           onChange={(e) => setFilterSpeciality(e.target.value)}
         />
-        <label>Filter by Registration Status:</label>
-        <select
-          value={filterRegistrationStatus}
-          onChange={(e) => setFilterRegistrationStatus(e.target.value)}
-        >
-          <option value="">All</option>
-          <option value="pending">Pending</option>
-          <option value="accepted">Accepted</option>
-          <option value="rejected">Rejected</option>
-        </select>
         <label>Filter by Available Date:</label>
         <input
-          type="date"
+          type="datetime-local"
           value={filterDate}
           onChange={(e) => setFilterDate(e.target.value)}
-        />
-        <label>Filter by Available Time:</label>
-        <input
-          type="time"
-          value={filterTime}
-          onChange={(e) => setFilterTime(e.target.value)}
         />
         <button type="submit">Filter</button>
       </form>

@@ -17,6 +17,7 @@ import PrescriptionList from "./components/PrescriptionList";
 import AddFamilyMember from "./components/AddFamilyMembers";
 import FamilyMembersViewer from "./components/FamilyMembersViewer";
 import DoctorList from "./components/DoctorList";
+import './App.css'
 
 function App() {
   return (
