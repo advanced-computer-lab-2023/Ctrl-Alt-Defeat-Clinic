@@ -28,11 +28,11 @@ router.post('/add', addAdmin);
 //Deleting Entities
 
 // Route handler for deleting an admin by username
-router.delete('/deleteadmin', deleteAdmin);
+router.delete('/deleteAdmin/:username', deleteAdmin);
 // Route handler for deleting an doctor by username
-router.delete('/deleteadmin', deleteDoctor);
+router.delete('/deleteDoctor/:username', deleteDoctor);
 // Route handler for deleting an Patient by username
-router.delete('/deleteadmin', deletePatient);
+router.delete('/deletePatient/:username', deletePatient);
 
 //Put Requests
 

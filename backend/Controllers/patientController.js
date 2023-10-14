@@ -23,15 +23,6 @@ exports.registerPatient = async (req, res) => {
   });
 };
 
-exports.searchPatientsByName = async (req, res) => {
-  const requiredName = req.query.name;
-  try {
-    const resultedPatients = await Patient.find({ name: requiredName });
-    res.status(200).send(resultedPatients);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
 exports.addFamilyMember = async (req, res) => {
   try {
     const username = req.query.username;
@@ -52,16 +43,6 @@ exports.addFamilyMember = async (req, res) => {
     res.status(201).json(newMember);
   } catch (error) {
     res.status(500).json({ error: 'Cannot add the family member' });
-  }
-};
-
-exports.viewAllPatients = async (req, res) => {
-  try {
-    const allPatients = await Patient.find();
-    console.log(allPatients);
-    res.status(200).send(allPatients);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
   }
 };
 
