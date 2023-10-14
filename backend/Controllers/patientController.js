@@ -32,26 +32,24 @@ exports.searchPatientsByName = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
 exports.addFamilyMember = async (req, res) => {
   try {
-    const patientId = req.params.id;
+    const username = req.query.username;
+    const patient = await Patient.findOne({ username: username });
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
     const memberData = req.body;
-    const newMember = new FamilyMember(memberData);
-    await newMember.save();
-    User.findByIdAndUpdate(
-      patientId,
-      { $push: { familyMembers: newMember._id } },
-      { new: true },
-      (err, updatedPatient) => {
-        if (err) {
-          console.error(err);
-        } else {
-          console.log(updatedPatient);
-        }
-      }
-    );
-    res.status(201).json(savedMember);
+
+    // Save the new family member to the database
+    const newMember = await FamilyMember.create(memberData);
+
+    // Add the new family member's ObjectId to the patient's familyMembers array
+    // Save the updated patient document
+    const updatedPatient = await Patient.updateOne({ username: username }, { $push: { familyMembers: newMember._id } });
+
+    res.status(201).json(newMember);
   } catch (error) {
     res.status(500).json({ error: 'Cannot add the family member' });
   }
@@ -109,13 +107,20 @@ async function calculateSessionPrice(doctorRate, healthPackage) {
 
 exports.viewFamilyMembers = async (req, res) => {
   try {
-    const patientId = req.params.id;
-    const patient = await Patient.findById(patientId);
+    const username = req.query.username;
+    const patient = await Patient.findOne({ username: username }).populate('familyMembers');
+
     if (!patient) {
-      return res.status(500).send('Patient not found');
+      return res.status(404).json({ message: 'Patient not found' });
     }
-    const familyMembrers = patient.FamilyMember;
-    res.status(201).send(familyMembrers);
+
+    const familyMembers = patient.familyMembers;
+
+    if (!familyMembers || familyMembers.length === 0) {
+      return res.status(200).json({ message: 'No family members found for the patient' });
+    }
+
+    res.status(200).json(familyMembers);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -134,7 +139,10 @@ exports.viewAllPatients = async (req, res) => {
 exports.getAllPrescriptionsForPatient = async (req, res) => {
   try {
     const username = req.query.username;
-    const prescriptions = await Prescription.find({ patient: username }).populate('doctor');
+    const patient = await Patient.findOne({ username: username });
+    const patientId = patient.id;
+
+    const prescriptions = await Prescription.find({ patient: patientId }).populate('doctor');
 
     res.status(200).json(prescriptions);
   } catch (err) {
@@ -160,17 +168,37 @@ exports.getPrescriptionById = async (req, res) => {
 };
 
 exports.filterPrescriptions = async (req, res) => {
-  const { date, doctorId, filled } = req.query;
+  const { date, doctorUsername, filled, patientUsername } = req.query;
 
   try {
     let query = {};
 
     if (date) {
-      query.createdAt = { $gte: new Date(date) };
+      // Convert the filter date to a JavaScript Date object
+      const filterDate = new Date(date);
+
+      // Set the filter to match any prescription created on the same date
+      // by checking if it falls within the range from start to end of the day
+      filterDate.setHours(0, 0, 0, 0); // Set to the start of the day
+      const endOfDay = new Date(filterDate);
+      endOfDay.setHours(23, 59, 59, 999); // Set to the end of the day
+
+      query.createdAt = {
+        $gte: filterDate,
+        $lte: endOfDay,
+      };
     }
 
-    if (doctorId) {
+    if (doctorUsername) {
+      const doctor = await Doctor.findOne({ username: doctorUsername });
+      const doctorId = doctor.id;
       query.doctor = doctorId;
+    }
+
+    if (patientUsername) {
+      const patient = await Patient.findOne({ username: patientUsername });
+      const patientId = patient.id;
+      query.patient = patientId;
     }
 
     if (filled === 'true') {
@@ -179,8 +207,9 @@ exports.filterPrescriptions = async (req, res) => {
       query.filled = false;
     }
 
-    const prescriptions = await Prescription.find(query);
-    res.status(200).json(prescriptions);
+    const prescriptionsWithDoctor = await Prescription.find(query).populate('doctor');
+
+    res.status(200).json(prescriptionsWithDoctor);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

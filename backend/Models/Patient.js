@@ -43,17 +43,17 @@ const patientSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-    familyMembers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: FamilyMember,
-      },
-    ],
   },
   healthPackage: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Package",
-  }
+    ref: 'Package',
+  },
+  familyMembers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: FamilyMember,
+    },
+  ],
 });
 
 patientSchema.pre('save', async function (next) {
