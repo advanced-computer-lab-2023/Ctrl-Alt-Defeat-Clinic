@@ -20,7 +20,7 @@ const AddFamilyMember = () => {
         gender,
         relationToPatient,
       };
-      console.log("Added family member:", newFamilyMember);
+      // console.log("Added family member:", newFamilyMember);
 
       // Send a POST request to the backend API with the patient's username as a query parameter
       const response = await axios.post(

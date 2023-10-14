@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 router.route('/register').post(patientController.registerPatient);
-router.route('/addMember/:id').post(patientController.addFamilyMember);
+router.route('/addMember').post(patientController.addFamilyMember);
 router.route('/viewFamilyMembers').get(patientController.viewFamilyMembers);
 router.route('/getAllPrescriptionsForPatient').get(patientController.getAllPrescriptionsForPatient);
 router.route('/getPrescriptionById').get(patientController.getPrescriptionById);
