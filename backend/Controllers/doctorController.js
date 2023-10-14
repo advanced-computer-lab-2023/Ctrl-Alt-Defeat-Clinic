@@ -22,23 +22,46 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.updateDoctor = async (req, res) => {
-  const filteredObj = filterObj(req.body, 'email', 'hourlyRate', 'affiliation');
+  const { username, email, hourlyRate, affiliation } = req.body;
+  try {
+    const updatedDoctor = await Doctor.updateOne({ username }, { email, hourlyRate, affiliation });
+    res.status(200).json({
+      message: 'doctor info updated',
+      data: updatedDoctor,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-  const updatedDoctor = await Doctor.findByIdAndUpdate(req.user.id, filteredObj, {
-    new: true,
-  });
-
-  res.status(200).json({
-    message: 'doctor info updated',
-    data: updatedDoctor,
-  });
+exports.searchPatientsByName = async (req, res) => {
+  const { name, doctorUsername } = req.query;
+  try {
+    const doctor = await Doctor.findOne({ username: doctorUsername }).populate('registeredPatients');
+    const patients = doctor.registeredPatients;
+    const resultedPatients = patients.filter(patient => patient.name.toLowerCase().includes(name.toLowerCase()));
+    res.status(200).send(resultedPatients);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 exports.selectPatient = async (req, res) => {
   const patientId = req.query.id;
+  console.log(patientId);
   try {
-    const resultedPatient = await Patient.find({ _id: patientId });
+    const resultedPatient = await Patient.findById(patientId);
     res.status(200).send(resultedPatient);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.viewAllPatients = async (req, res) => {
+  const { doctorUsername } = req.query;
+  try {
+    const doctor = await Doctor.findOne({ username: doctorUsername }).populate('registeredPatients');
+    res.status(200).send(doctor.registeredPatients);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -53,14 +76,15 @@ exports.viewPatientInfo = async (req, res) => {
       return res.status(500).json({ message: 'Patient not found' });
     }
 
-    const patientAppointments = await Appointment.find({ patient: id });
-    const patientPrescriptions = await Prescription.find({ patient: id });
+    console.log(patient.username);
+
+    const appointments = await Appointment.find({ patient: patient.username });
+    const prescriptions = await Prescription.find({ patient: id }).populate('doctor');
 
     const patientInfo = {
-      ...patient,
-      password: undefined,
-      ...patientAppointments,
-      ...patientPrescriptions,
+      patient,
+      appointments,
+      prescriptions,
     };
     res.status(200).send(patientInfo);
   } catch (err) {

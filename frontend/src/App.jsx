@@ -8,30 +8,38 @@ import ViewDoctorRequest from "./components/ViewDoctorRequest";
 import AddPackage from "./components/AddPackage";
 import DeletePackage from "./components/DeletePackage";
 import UpdatePackage from "./components/UpdatePackage";
-import "./App.css";
+import UpdateDoctor from "./components/updateDoctor";
+import ViewAllPatients from "./components/ViewAllPatients";
+import SearchPatient from "./components/SearchPatient";
 
 function App() {
   return (
     <>
       <PatientRegister />
-      <hr></hr>
+      <hr />
       <DoctorRegister />
-      <hr></hr>
+      <hr />
       <AddAdmin />
-      <hr></hr>
+      <hr />
       <RemoveAdmin />
-      <hr></hr>
+      <hr />
       <RemoveDoctor />
-      <hr></hr>
+      <hr />
       <RemovePatient />
-      <hr></hr>
+      <hr />
       <ViewDoctorRequest />
-      <hr></hr>
+      <hr />
       <AddPackage />
-      <hr></hr>
+      <hr />
       <DeletePackage />
-      <hr></hr>
+      <hr />
       <UpdatePackage />
+      <hr />
+      <UpdateDoctor />
+      <hr />
+      <ViewAllPatients />
+      <hr />
+      <SearchPatient />
     </>
   );
 }

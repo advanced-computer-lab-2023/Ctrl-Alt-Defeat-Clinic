@@ -45,6 +45,12 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  registeredPatients: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Patient',
+    },
+  ],
 });
 
 doctorSchema.pre('save', async function (next) {
