@@ -126,36 +126,38 @@ exports.filterDoctors = async (req, res) => {
     console.log(appointmentDateTime);
 
     // Use an aggregation pipeline to find doctors without appointments at the specified date and time
-    // Use an aggregation pipeline to find doctors without appointments at the specified date and time
-    const availableDoctors = await Doctor.aggregate([
+    // Aggregate to find doctors based on the dateTime
+    const pipeline = [
       {
-        $match: query, // Match doctors based on other filters
+        $match: { date: appointmentDateTime }, // Match appointments on the specified dateTime
+      },
+      {
+        $group: {
+          username: '$doctor',
+          count: { $sum: 1 }, // Count appointments per doctor
+        },
       },
       {
         $lookup: {
-          from: 'appointments',
-          let: { doctorId: '$_id', appointmentDate: appointmentDateTime },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $nin: [
-                    { $eq: ['$doctor', '$$doctorId'] },
-                    { $eq: ['$date', '$$appointmentDate'] }, // Exclude appointments on the specified date and time
-                  ],
-                },
-              },
-            },
-          ],
-          as: 'doctorAppointments',
+          from: 'doctors', // The name of the 'doctor' collection
+          localField: 'username',
+          foreignField: 'doctor',
+          as: 'doctor',
         },
       },
       {
-        $match: {
-          doctorAppointments: { $eq: [] }, // Filter out doctors with appointments at the specified date and time
+        $match: { count: 0 }, // Remove doctors with appointments
+      },
+      {
+        $project: {
+          _id: 0,
+          doctor: 1,
         },
       },
-    ]);
+    ];
+
+    const result = await Appointment.aggregate(pipeline);
+    console.log(result);
 
     res.status(200).json(availableDoctors);
   } catch (error) {
