@@ -8,6 +8,9 @@ import ViewDoctorRequest from "./components/ViewDoctorRequest";
 import AddPackage from "./components/AddPackage";
 import DeletePackage from "./components/DeletePackage";
 import UpdatePackage from "./components/UpdatePackage";
+import ViewAllDoctors from "./components/ViewAllDoctors";
+import FilterAppointments from "./components/FilterAppointments";
+//import "./App.css";
 import UpdateDoctor from "./components/updateDoctor";
 import ViewAllPatients from "./components/ViewAllPatients";
 import SearchPatient from "./components/SearchPatient";
@@ -34,6 +37,10 @@ function App() {
       <DeletePackage />
       <hr />
       <UpdatePackage />
+      <hr />
+      <ViewAllDoctors />
+      <hr />
+      <FilterAppointments />
       <hr />
       <UpdateDoctor />
       <hr />
