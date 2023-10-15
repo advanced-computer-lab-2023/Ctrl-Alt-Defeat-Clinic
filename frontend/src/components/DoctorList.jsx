@@ -54,7 +54,7 @@ const DoctorList = () => {
           handleFilterDoctors();
         }}
       >
-        <label>Filter by Name:</label>
+        <label>Search by Name:</label>
         <input
           type="text"
           value={filterName}
@@ -72,7 +72,7 @@ const DoctorList = () => {
           value={filterDate}
           onChange={(e) => setFilterDate(e.target.value)}
         />
-        <button type="submit">Filter</button>
+        <button type="submit">Search / Filter</button>
       </form>
 
       <table>
