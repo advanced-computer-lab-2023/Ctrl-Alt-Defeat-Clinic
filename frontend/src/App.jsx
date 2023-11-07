@@ -17,7 +17,9 @@ import PrescriptionList from "./components/PrescriptionList";
 import AddFamilyMember from "./components/AddFamilyMembers";
 import FamilyMembersViewer from "./components/FamilyMembersViewer";
 import DoctorList from "./components/DoctorList";
-import './App.css'
+import HealthPackages from "./components/HealthPackages";
+import Contract from "./components/Contract";
+import "./App.css";
 
 function App() {
   return (
@@ -60,6 +62,9 @@ function App() {
       <hr />
       <DoctorList />
       <hr />
+      <HealthPackages />
+      <hr />
+      <Contract />
     </>
   );
 }

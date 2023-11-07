@@ -1,23 +1,40 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 const HealthPackage = () => {
-  // Define your health package options here
-  const healthPackages = [
-    { id: 1, name: "Basic Health Package", details: "Includes basic checkup" },
-    {
-      id: 2,
-      name: "Premium Health Package",
-      details: "Includes full checkup and tests",
-    },
-    // Add more health packages here
-  ];
+  const [healthPackages, setHealthPackages] = useState([]);
+
+  useEffect(() => {
+    // Make an HTTP GET request to API
+    axios
+      .get("http://localhost:8000/api/v1/packages/getPackages")
+      .then((response) => {
+        setHealthPackages(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data: ", error);
+      });
+  }, []);
 
   return (
     <div>
       <h2>Health Package Options</h2>
       <ul>
-        {healthPackages.map((HealthPackage) => (
-          <li key={HealthPackage.id}>
-            <strong>{HealthPackage.name}</strong>
-            <p>{HealthPackage.details}</p>
+        {healthPackages.map((healthpackage) => (
+          <li key={healthpackage._id}>
+            <strong>{healthpackage.name}</strong>
+            <p>Price: ${healthpackage.price}</p>
+            <p>
+              Doctor Session Discount:{" "}
+              {healthpackage.discounts.doctorSessionDiscount}%
+            </p>
+            <p>
+              Medicine Discount: {healthpackage.discounts.medicineDiscount}%
+            </p>
+            <p>
+              Family Subscription Discount:{" "}
+              {healthpackage.discounts.familySubscriptionDiscount}%
+            </p>
           </li>
         ))}
       </ul>
