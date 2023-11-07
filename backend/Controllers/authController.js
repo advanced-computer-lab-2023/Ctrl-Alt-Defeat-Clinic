@@ -5,3 +5,11 @@ exports.generateToken = (id, role) => {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
+
+exports.login = (req, res) => {};
+
+exports.logout = (req, res) => {};
+
+exports.forgotPassword = (req, res) => {};
+
+exports.resetPassword = (req, res) => {};
