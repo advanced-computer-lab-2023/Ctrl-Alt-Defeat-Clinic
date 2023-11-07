@@ -17,7 +17,8 @@ const Contract = () => {
   By accepting this contract, you agree to the terms and conditions outlined above.
 `;
 
-  const handleAcceptance = () => {
+  const handleAcceptance = (e) => {
+    e.preventDefault();
     setAccepted(true);
   };
 
