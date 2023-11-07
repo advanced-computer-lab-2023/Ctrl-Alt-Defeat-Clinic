@@ -18,12 +18,14 @@ const doctorRouter = require('./Routes/doctorRoutes.js');
 const adminRoutes = require('./Routes/adminRoutes');
 const appointmentRouter = require('./Routes/appointmentRoutes.js');
 const packageRouter = require('./Routes/packageRoutes');
+const authRouter = require('./Routes/authRoutes');
 
 app.use('/api/v1/patients', patientRouter);
 app.use('/api/v1/doctors', doctorRouter);
 app.use('/api/v1/admins', adminRoutes);
 app.use('/api/v1/appointments', appointmentRouter);
 app.use('/api/v1/packages', packageRouter);
+app.use('/api/v1/auth', authRouter);
 
 connectToMongoDB();
 app.listen(port, () => {
