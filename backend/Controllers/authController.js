@@ -18,7 +18,7 @@ const findByUsername = async username => {
   user = await Doctor.findOne({ username });
   if (user) return { user, role: 'doctor' };
 
-  return null;
+  return {};
 };
 
 const findUserById = async id => {
@@ -42,9 +42,9 @@ exports.generateToken = (id, role) => {
   });
 };
 
-exports.sendToken = (id, role, res) => {
-  const token = this.generateToken(id, role);
-  console.log(id);
+exports.sendToken = (user, role, res) => {
+  const token = this.generateToken(user._id, role);
+  // console.log(user._id);
   const cookieOptions = {
     expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
     httpOnly: true,
@@ -52,8 +52,10 @@ exports.sendToken = (id, role, res) => {
 
   res.cookie('jwt', token, cookieOptions);
   res.status(200).json({
-    status: `success. welcome ${role}`,
+    status: `success`,
+    role,
     token,
+    user,
   });
 };
 
@@ -70,17 +72,16 @@ exports.login = async (req, res) => {
     return;
   }
 
-  const validated = await bcrypt.compare(password, user.password);
+  // const validated = await bcrypt.compare(password, user.password);
 
-  if (!user || !validated) {
+  if (!user || !(await bcrypt.compare(password, user.password))) {
     res.status(404).json({
       status: 'failed',
       message: !user ? 'this user does not exist' : 'incorrect username or password',
     });
     return;
   }
-
-  this.sendToken(user._id, role, res);
+  this.sendToken(user, role, res);
   // console.log(req.cookies.jwt.id);
 };
 
@@ -96,11 +97,8 @@ exports.getMe = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  res.cookie('jwt', null, {
-    expires: new Date(Date.now() + 1000),
-    httpOnly: true,
-  });
-  res.status(200).json({ status: 'success' });
+  res.clearCookie('jwt');
+  res.status(200).json({ status: 'logged out successfully' });
 };
 
 exports.forgotPassword = (req, res) => {};
