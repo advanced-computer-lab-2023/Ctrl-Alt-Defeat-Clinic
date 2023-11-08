@@ -13,7 +13,7 @@ const findByUsername = async username => {
   if (user) return { user, role: 'admin' };
 
   user = await Patient.findOne({ username });
-  if (user) return { user, role: 'patient' };
+  if (user) return { user, role: 'Patient' };
 
   user = await Doctor.findOne({ username });
   if (user) return { user, role: 'doctor' };
