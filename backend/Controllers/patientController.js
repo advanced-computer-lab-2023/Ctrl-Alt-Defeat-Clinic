@@ -213,3 +213,40 @@ exports.searchForDoctors = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.subscribeToHealthPackage = async (req, res) => {
+  
+  try {
+    const { patientId, healthPackageId } = req.body;
+    
+    const familyMembers = await Patient.findById(patientId).populate('familyMembers');
+    // Find the patient by ID
+    const patient = await Patient.findById(patientId);
+
+    if (!patient) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    // Find the health package by ID
+    const healthPackage = await Package.findById(healthPackageId);
+
+    if (!healthPackage) {
+      return res.status(404).json({ error: 'Health package not found' });
+    }
+
+    // Subscribe the patient to the health package
+    patient.healthPackage = healthPackageId;
+    await patient.save();
+
+    for(let i = 0; i < familyMembers.familyMembers.length; i++){
+      familyMembers.familyMembers[i].healthPackage = healthPackageId;
+      await familyMembers.familyMembers[i].save();
+    }
+
+    res.status(200).json({ message: 'Subscription successful' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error during subscription' });
+  }
+};
+

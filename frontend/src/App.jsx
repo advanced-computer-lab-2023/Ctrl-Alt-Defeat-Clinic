@@ -23,6 +23,9 @@ import AdminHome from "./components/AdminHome";
 import DoctorHome from "./components/DoctorHome";
 import PatientHome from "./components/PatientHome";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HealthPackages from "./components/HealthPackages";
+import Contract from "./components/Contract";
+import SubscribeHealthPackages from "./components/SubscribeHealthPackages";
 import "./App.css";
 
 function App() {
@@ -92,7 +95,15 @@ function App() {
       <hr />
       <DoctorList />
       <hr /> */}
+      <hr />
+      <HealthPackages />
+      <hr />
+      <Contract />
+      <hr />
+      <SubscribeHealthPackages />
+      <hr />
     </>
+
   );
 }
 

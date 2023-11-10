@@ -19,11 +19,19 @@ const FamilyMemberSchema = new mongoose.Schema({
     enum: ['male', 'female'],
     required: true,
   },
+  healthPackage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Package',
+  },
   relationToPatient: {
     type: String,
     enum: ['wife', 'husband', 'children'],
     required: true,
   },
+  healthPackage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Package',
+  }
 });
 
 const FamilyMember = mongoose.model('FamilyMember', FamilyMemberSchema);
