@@ -196,10 +196,10 @@ exports.filterDoctors = async (req, res) => {
   
     try{
       
-      const appointments = await Appointment.find({doctor: req.user.username}).exec();
-  
+      const {username} = req.query; //TODO
+      const appointments = await Appointment.find({doctor: username}).exec();
       //res.status(200).json(appointments);
-  
+      
       filterAppointments(req, res, appointments);
   
     } catch(err){

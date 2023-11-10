@@ -1,12 +1,12 @@
 const Appointment = require('../Models/Appointment');
 
 const addAppointment = async (req, res) => {
-  const { patient, doctor, date, status } = req.body;
+  const { patient, doctor, date, status } = req.query;
 
   if (!patient || !doctor || !date || !status) return res.status(400).json('There are null values');
 
   try {
-    const newAppointment = await Appointment.create(req.body);
+    const newAppointment = await Appointment.create(req.query);
     // console.log(newAppointment);
     res.send('Appointment created successfully!');
   } catch {
