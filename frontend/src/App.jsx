@@ -19,6 +19,7 @@ import FamilyMembersViewer from "./components/FamilyMembersViewer";
 import DoctorList from "./components/DoctorList";
 import HealthPackages from "./components/HealthPackages";
 import Contract from "./components/Contract";
+import SubscribeHealthPackages from "./components/SubscribeHealthPackages";
 import "./App.css";
 
 function App() {
@@ -65,7 +66,11 @@ function App() {
       <HealthPackages />
       <hr />
       <Contract />
+      <hr />
+      <SubscribeHealthPackages />
+      <hr />
     </>
+
   );
 }
 
