@@ -17,7 +17,7 @@ exports.protect = async (req, res, next) => {
   }
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-
+  console.log('role: ' + decoded.role);
   let currentUser;
   if (decoded.role === 'doctor') currentUser = await Doctor.findById(decoded.id);
   else if (decoded.role === 'patient') currentUser = await Patient.findById(decoded.id);

@@ -20,11 +20,11 @@ function Login() {
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/auth/login",
-        { username: formData.username, password: formData.password }
+        { username: formData.username, password: formData.password },
+        {
+          withCredentials: true,
+        }
       );
-      // {
-      //   withCredentials: true,
-      // }
       console.log(response);
       if (response.data.role === "Admin") {
         navigate("/admins/home");
