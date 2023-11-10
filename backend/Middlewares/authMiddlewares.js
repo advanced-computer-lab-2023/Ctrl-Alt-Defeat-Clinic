@@ -11,13 +11,13 @@ exports.protect = async (req, res, next) => {
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
-
+  console.log(token == null);
   if (!token) {
     return next(new Error(`your're not logged in. Please log in`));
   }
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-
+  console.log('role: ' + decoded.role);
   let currentUser;
   if (decoded.role === 'doctor') currentUser = await Doctor.findById(decoded.id);
   else if (decoded.role === 'patient') currentUser = await Patient.findById(decoded.id);
@@ -34,8 +34,9 @@ exports.protect = async (req, res, next) => {
 };
 
 exports.restrictTo = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.cookies.jwt.role)) {
+  return async (req, res, next) => {
+    const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+    if (!roles.includes(decoded.role)) {
       res.status(401).json({
         message: "your're not authorized to access this route",
       });

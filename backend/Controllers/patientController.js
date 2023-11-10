@@ -1,6 +1,6 @@
 const Patient = require('../Models/Patient');
 const Doctor = require('../Models/Doctor');
-const { generateToken } = require('./AuthController');
+const { generateToken } = require('./authController');
 const Package = require('../Models/Package');
 const FamilyMember = require('../Models/FamilyMember');
 const Prescription = require('../Models/Prescriptions');

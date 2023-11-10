@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function PatientRegister() {
+  const navigate = useNavigate();
   const [res, setRes] = useState(null);
   const [formData, setFormData] = useState({
     username: "",
@@ -54,6 +56,7 @@ function PatientRegister() {
       emergencyContactName: "",
       emergencyContactNumber: "",
     });
+    setTimeout(() => navigate("/login"), 3000);
   };
 
   return (
