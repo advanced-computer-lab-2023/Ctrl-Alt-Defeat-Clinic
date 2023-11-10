@@ -10,7 +10,7 @@ router.route('/updateDoctor').put(doctorController.updateDoctor);
 
 router.route('/viewPatients').get(doctorController.viewAllPatients);
 
-router.route('/searchPatientsByName').get(doctorController.searchPatientsByName);
+router.route('/searchPatientsByName').get(protect, doctorController.searchPatientsByName);
 
 router.route('/selectPatient').get(doctorController.selectPatient);
 

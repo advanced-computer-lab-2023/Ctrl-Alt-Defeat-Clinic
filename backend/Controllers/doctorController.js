@@ -44,9 +44,10 @@ exports.updateDoctor = async (req, res) => {
 };
 
 exports.searchPatientsByName = async (req, res) => {
-  const { name, doctorUsername } = req.query;
+  // const { name, doctorUsername } = req.query;
+  const { name } = req.query;
   try {
-    const doctor = await Doctor.findOne({ username: doctorUsername }).populate('registeredPatients');
+    const doctor = await Doctor.findById(req.user._id).populate('registeredPatients');
     const patients = doctor.registeredPatients;
     const resultedPatients = patients.filter(patient => patient.name.toLowerCase().includes(name.toLowerCase()));
     res.status(200).send(resultedPatients);
