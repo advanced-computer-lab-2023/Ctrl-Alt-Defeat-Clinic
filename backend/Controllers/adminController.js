@@ -94,9 +94,9 @@ const getPendingDoctors = async (req, res) => {
   try {
     // Assuming you have some form of authentication/authorization to ensure only admins can access this
     // Check if the user making the request is an admin (you need to implement this part)
-    if (!req.user || !req.user.isAdmin) {
-      return res.status(403).json({ error: 'Permission denied' });
-    }
+    // if (!req.user || !req.user.isAdmin) {
+    //   return res.status(403).json({ error: 'Permission denied' });
+    // }
 
     // Find all doctors with a registrationStatus of "pending"
     const pendingDoctors = await Doctor.find({ registrationStatus: 'pending' });

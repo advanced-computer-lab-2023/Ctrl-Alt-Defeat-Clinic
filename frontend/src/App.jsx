@@ -37,6 +37,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/patients/register" element={<PatientRegister />} />
+          <Route path="/patients/healthPackages" element={<HealthPackages />} />
           <Route path="/doctors/register" element={<DoctorRegister />} />
           <Route path="/admins/home" element={<AdminHome />} />
           <Route path="/admin/addAdmin" element={<AddAdmin />} />
@@ -95,15 +96,14 @@ function App() {
       <hr />
       <DoctorList />
       <hr /> */}
-      <hr />
+      {/* <hr />
       <HealthPackages />
       <hr />
       <Contract />
       <hr />
       <SubscribeHealthPackages />
-      <hr />
+      <hr /> */}
     </>
-
   );
 }
 
