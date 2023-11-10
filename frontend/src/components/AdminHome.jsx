@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 function AdminHome() {
   const handleLogout = async () => {
     const response = await axios.get(
-      "http://localhost:8000/api/v1/auth/logout"
+      "http://localhost:8000/api/v1/auth/logout",
+      { withCredentials: true }
     );
     console.log(response.data);
   };

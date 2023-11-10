@@ -26,7 +26,7 @@ function Login() {
         }
       );
       console.log(response);
-      if (response.data.role === "Admin") {
+      if (response.data.role === "admin") {
         navigate("/admins/home");
       } else if (response.data.role === "doctor") {
         navigate("/doctors/home");
