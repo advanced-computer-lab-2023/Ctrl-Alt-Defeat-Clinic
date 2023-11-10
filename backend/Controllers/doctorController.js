@@ -2,6 +2,7 @@ const Doctor = require('../Models/Doctor');
 const Patient = require('../Models/Patient');
 const Appointment = require('../Models/Appointment');
 const Prescription = require('../Models/Prescriptions');
+const { filterAppointments } = require('./appointmentController');
 
 exports.viewAllDoctors = async (req, res) => {
   try {
@@ -168,3 +169,40 @@ exports.filterDoctors = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+  //-------------- SPRINT 2 -------------------
+
+  exports.addAvailableSlot = async (req, res) => {
+
+    //how to get the session doctor username from login? - ASK ABT THIS
+  
+    //handle past timeSlots and to remove slots that have already passed TODO
+  
+    try {
+  
+      const {slotDate} = req.query;
+  
+      if(!slotDate) return res.status(400).json({ message: 'Enter the slot time and date.'});
+  
+      const updatedDoctor = await Doctor.updateOne({ username: user.req.username }, { $addToSet: { availableSlots: slotDate } });
+  
+      res.status(200).json(updatedDoctor);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
+  exports.viewDoctorAppointments = async (req,res) => {
+  
+    try{
+      
+      const appointments = await Appointment.find({doctor: req.user.username}).exec();
+  
+      //res.status(200).json(appointments);
+  
+      filterAppointments(req, res, appointments);
+  
+    } catch(err){
+      res.status(500).json({ message: err.message });
+    }
+  };

@@ -1,6 +1,6 @@
 const express = require('express');
 const patientController = require('../Controllers/patientController');
-const { protect, restrictTo } = require('../Middlewares/authMiddlewares');
+const authMiddlewares = require('../Middlewares/authMiddlewares');
 
 const router = express.Router();
 
@@ -14,6 +14,8 @@ router.route('/filterPrescriptions').get(patientController.filterPrescriptions);
 router.route('/viewDoctors/:username').get(patientController.viewAllDoctors);
 router.route('/searchForDoctors').get(patientController.searchForDoctors);
 router.route('/subscribeToHealthPackage').post(patientController.subscribeToHealthPackage);
+router.route('/viewDoctorSlots').get(authMiddlewares.protect, authMiddlewares.restrictTo('patient'),patientController.viewDoctorSlots);
+router.route('/viewPatientAppointments').get(authMiddlewares.protect, authMiddlewares.restrictTo('patient'),patientController.viewPatientAppointments);
 
 
 module.exports = router;

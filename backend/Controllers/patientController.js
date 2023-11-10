@@ -4,6 +4,8 @@ const { generateToken } = require('./authController');
 const Package = require('../Models/Package');
 const FamilyMember = require('../Models/FamilyMember');
 const Prescription = require('../Models/Prescriptions');
+const Appointment = require('../Models/Appointment');
+const { filterAppointments } = require('./appointmentController');
 
 exports.registerPatient = async (req, res) => {
   const newPatient = await Patient.create(req.body);
@@ -250,3 +252,39 @@ exports.subscribeToHealthPackage = async (req, res) => {
   }
 };
 
+  //-------------- SPRINT 2 -------------------
+
+  exports.viewDoctorSlots = async (req, res) => {
+
+    try{
+  
+      const {doctorUsername} = req.query;
+  
+      if(!doctorUsername) return res.status(400).json('There are null values.');
+  
+      const doctor = await Doctor.findOne({ username: doctorUsername }).exec();
+  
+      if (!doctor) return res.status(404).json({ message: 'Doctor not found' });
+  
+      res.status(200).json(doctor.availableSlots);
+  
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  
+  };
+  
+  exports.viewPatientAppointments = async (req,res) => {
+  
+    try{
+  
+      const appointments = await Appointment.find({patient: req.user.username}).exec();
+  
+      //res.status(200).json(appointments);
+  
+      filterAppointments(req, res, appointments);
+  
+    } catch(err){
+      res.status(500).json({ message: err.message });
+    }
+  };

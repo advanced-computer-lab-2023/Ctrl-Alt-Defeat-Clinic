@@ -1,6 +1,6 @@
 const express = require('express');
 const doctorController = require('../Controllers/doctorController');
-const { protect, restrictTo } = require('../Middlewares/authMiddlewares');
+const authMiddlewares = require('../Middlewares/authMiddlewares');
 
 const router = express.Router();
 
@@ -21,5 +21,9 @@ router.route('/viewAllDoctors').get(doctorController.viewAllDoctors);
 router.route('/viewPatientInfo').get(doctorController.viewPatientInfo);
 
 router.route('/filterDoctors').get(doctorController.filterDoctors);
+
+router.route('addAvailableSlot').put(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'), doctorController.addAvailableSlot);
+
+router.route('/viewDoctorAppointments').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'), doctorController.viewDoctorAppointments);
 
 module.exports = router;
