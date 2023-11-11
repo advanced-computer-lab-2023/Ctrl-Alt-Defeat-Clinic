@@ -69,7 +69,7 @@ const deletePatient = async (req, res) => {
 
 const deleteDoctor = async (req, res) => {
   try {
-    const username = req.params.username; // Assuming you're sending the doctor's username in the request body
+    const username = req.params.username;
 
     // Check if the username is provided in the request body
     if (!username) {
