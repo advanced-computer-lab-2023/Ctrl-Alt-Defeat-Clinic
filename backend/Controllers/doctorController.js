@@ -180,11 +180,11 @@ exports.filterDoctors = async (req, res) => {
   
     try {
   
-      const {slotDate} = req.query;
+      const {username, slotDate} = req.query;
   
       if(!slotDate) return res.status(400).json({ message: 'Enter the slot time and date.'});
   
-      const updatedDoctor = await Doctor.updateOne({ username: user.req.username }, { $addToSet: { availableSlots: slotDate } });
+      const updatedDoctor = await Doctor.updateOne({ username: username }, { $addToSet: { availableSlots: slotDate } });
   
       res.status(200).json(updatedDoctor);
     } catch (error) {

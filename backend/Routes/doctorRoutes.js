@@ -22,7 +22,7 @@ router.route('/viewPatientInfo').get(doctorController.viewPatientInfo);
 
 router.route('/filterDoctors').get(doctorController.filterDoctors);
 
-router.route('/addAvailableSlot').put(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'), doctorController.addAvailableSlot);
+router.route('/addAvailableSlot').put(doctorController.addAvailableSlot);
 
 router.route('/viewDoctorAppointments').get(doctorController.viewDoctorAppointments);
 

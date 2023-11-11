@@ -23,6 +23,8 @@ import AdminHome from "./components/AdminHome";
 import DoctorHome from "./components/DoctorHome";
 import PatientHome from "./components/PatientHome";
 import ViewAllDoctorAppointments from "./components/ViewAllDoctorAppointments";
+import ViewAllPatientAppointments from "./components/ViewAllPatientAppointments";
+import AddTimeSlot from "./components/AddTimeSlot";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HealthPackages from "./components/HealthPackages";
 import Contract from "./components/Contract";
@@ -56,7 +58,9 @@ function App() {
           <Route path="/doctors/my-patients" element={<ViewAllPatients />} />
           <Route path="/doctors/search" element={<SearchPatient />} />
           <Route path="/doctors/view-all-doctor-appointments" element={<ViewAllDoctorAppointments />} />
+          <Route path="/doctors/add-time-slot" element={<AddTimeSlot />} />
           <Route path="/patients/home" element={<PatientHome />} />
+          <Route path="/patients/view-all-patient-appointments" element={<ViewAllPatientAppointments />} />
         </Routes>
       </BrowserRouter>
       {/* <PatientRegister />

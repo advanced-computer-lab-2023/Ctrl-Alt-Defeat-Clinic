@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Axios from "axios";
 
-function ViewAllDoctorAppointments() {
+function ViewAllPatientAppointments() {
   
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -13,7 +13,7 @@ function ViewAllDoctorAppointments() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const appointmentInformation = await Axios.get(
-      `http://localhost:8000/api/v1/doctors/viewDoctorAppointments?username=${doctorUsername}&startDate=${startDate? new Date(startDate) : ""}&endDate=${endDate? new Date(endDate) : ""}&status=${status}` //TODO
+      `http://localhost:8000/api/v1/patients/viewPatientAppointments?username=${doctorUsername}&startDate=${startDate? new Date(startDate) : ""}&endDate=${endDate? new Date(endDate) : ""}&status=${status}` //TODO
     );
     console.log(appointmentInformation);
     setAppointmentInfo(appointmentInformation.data);
@@ -25,7 +25,7 @@ function ViewAllDoctorAppointments() {
         <thead>
           <tr>
             <th>Date and Time</th>
-            <th>Patient</th>
+            <th>Doctor</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -33,7 +33,7 @@ function ViewAllDoctorAppointments() {
           {appointmentInfo.map((appointment, index) => (
             <tr key={index}>
               <td>{new Date(appointment.date).toLocaleString()}</td>
-              <td>{appointment.patient}</td>
+              <td>{appointment.doctor}</td>
               <td>{appointment.status}</td>
             </tr>
           ))}
@@ -46,7 +46,7 @@ function ViewAllDoctorAppointments() {
     <div>
       <h2>View All Appointments</h2>
       
-      <label>Doctor Username: </label>
+      <label>Patient Username: </label>
       <input
         type="text"
         value={doctorUsername}
@@ -112,4 +112,4 @@ function ViewAllDoctorAppointments() {
   );
 }
 
-export default ViewAllDoctorAppointments;
+export default ViewAllPatientAppointments;
