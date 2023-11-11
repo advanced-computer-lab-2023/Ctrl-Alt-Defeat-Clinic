@@ -168,3 +168,31 @@ exports.filterDoctors = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.acceptContract = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    // Find the doctor by username
+    const existingDoctor = await Doctor.findOne({ username });
+    console.log(existingDoctor);
+    // If doctor not found, respond with a 404 error
+    if (!existingDoctor) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+
+    // Update the doctor's registrationStatus to "accepted"
+    const updatedDoctor = await Doctor.findOneAndUpdate(
+      { username },
+      { registrationStatus: 'accepted' },
+      { new: true }
+    );
+
+    // Respond with the updated doctor
+    res.json(updatedDoctor);
+  } catch (error) {
+    // Handle any errors that occur during the process
+    console.error('Error accepting contract:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

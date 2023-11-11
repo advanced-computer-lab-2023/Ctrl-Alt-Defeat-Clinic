@@ -69,7 +69,7 @@ const deletePatient = async (req, res) => {
 
 const deleteDoctor = async (req, res) => {
   try {
-    const username = req.params.username; // Assuming you're sending the doctor's username in the request body
+    const username = req.params.username;
 
     // Check if the username is provided in the request body
     if (!username) {
@@ -94,9 +94,9 @@ const getPendingDoctors = async (req, res) => {
   try {
     // Assuming you have some form of authentication/authorization to ensure only admins can access this
     // Check if the user making the request is an admin (you need to implement this part)
-    if (!req.user || !req.user.isAdmin) {
-      return res.status(403).json({ error: 'Permission denied' });
-    }
+    // if (!req.user || !req.user.isAdmin) {
+    //   return res.status(403).json({ error: 'Permission denied' });
+    // }
 
     // Find all doctors with a registrationStatus of "pending"
     const pendingDoctors = await Doctor.find({ registrationStatus: 'pending' });
@@ -158,15 +158,18 @@ const approveDoctor = async (req, res) => {
     }
 
     // Check if the doctor is already accepted
-    if (existingDoctor.registrationStatus === 'accepted') {
+    if (
+      existingDoctor.registrationStatus === 'accepted' ||
+      existingDoctor.registrationStatus === 'partially accepted'
+    ) {
       // If the doctor is already approved, respond with a 400 Bad Request
       return res.status(400).json({ error: 'Doctor is already approved' });
     }
 
-    // Update the doctor's registrationStatus to "accepted"
+    // Update the doctor's registrationStatus to "partially accepted"
     const updatedDoctor = await Doctor.findOneAndUpdate(
       { username },
-      { registrationStatus: 'accepted' },
+      { registrationStatus: 'partially accepted' },
       { new: true }
     );
 

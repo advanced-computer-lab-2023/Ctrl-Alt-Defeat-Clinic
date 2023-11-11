@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Contract from "./Contract";
 
 function DoctorHome() {
   const [doctor, setDoctor] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
+
   const handleLogout = async () => {
     const response = await axios.get(
       "http://localhost:8000/api/v1/auth/logout",
@@ -13,22 +16,37 @@ function DoctorHome() {
   };
 
   const showData = async () => {
-    const response = await axios.get(
-      "http://localhost:8000/api/v1/auth/getMe",
-      { withCredentials: true }
-    );
-    console.log(response.data);
-    setDoctor(response.data.loggedIn);
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/api/v1/auth/getMe",
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      setDoctor(response.data.loggedIn);
+    } catch (error) {
+      console.error("Error fetching doctor data:", error);
+    }
   };
+
+  const handleShowDetails = () => {
+    setShowDetails(!showDetails);
+  };
+
+  useEffect(() => {
+    // Fetch doctor information on mount
+    showData();
+  }, []); // Empty dependency array to run once on mount
+
   return (
     <div>
       <h2>Welcome, Doctor!</h2>
-      <button onClick={showData}>show me</button>
-      {doctor && (
+      <button onClick={handleShowDetails}>Show My Info</button>
+      {showDetails && doctor && (
         <div>
           <p>name: {doctor.name}</p>
           <p>username: {doctor.username}</p>
           <p>email: {doctor.email}</p>
+          <p>registration status: {doctor.registrationStatus}</p>
         </div>
       )}
       <ul>
@@ -47,6 +65,12 @@ function DoctorHome() {
           </Link>
         </li>
       </ul>
+
+      {doctor && doctor.registrationStatus === "partially accepted" && (
+        <div>
+          <Contract username={doctor.username} hourlyRate={doctor.hourlyRate} />
+        </div>
+      )}
     </div>
   );
 }

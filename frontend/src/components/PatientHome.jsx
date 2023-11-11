@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 function PatientHome() {
@@ -35,6 +35,9 @@ function PatientHome() {
           <Link to="/" onClick={handleLogout}>
             Logout
           </Link>
+        </li>
+        <li>
+          <Link to="/patients/healthPackages">Show All Health Packages</Link>
         </li>
       </ul>
     </div>
