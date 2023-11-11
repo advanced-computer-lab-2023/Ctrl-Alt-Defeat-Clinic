@@ -25,6 +25,7 @@ import PatientHome from "./components/PatientHome";
 import ViewAllDoctorAppointments from "./components/ViewAllDoctorAppointments";
 import ViewAllPatientAppointments from "./components/ViewAllPatientAppointments";
 import AddTimeSlot from "./components/AddTimeSlot";
+import ViewAvailableAppointments from "./components/ViewAvailableAppointments";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HealthPackages from "./components/HealthPackages";
 import Contract from "./components/Contract";
@@ -61,6 +62,7 @@ function App() {
           <Route path="/doctors/add-time-slot" element={<AddTimeSlot />} />
           <Route path="/patients/home" element={<PatientHome />} />
           <Route path="/patients/view-all-patient-appointments" element={<ViewAllPatientAppointments />} />
+          <Route path="/patients/view-all-available-appointments" element={<ViewAvailableAppointments />} />
         </Routes>
       </BrowserRouter>
       {/* <PatientRegister />

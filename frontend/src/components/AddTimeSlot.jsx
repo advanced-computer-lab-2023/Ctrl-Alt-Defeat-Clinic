@@ -3,7 +3,6 @@ import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function AddTimeSlot() {
-  const navigate = useNavigate();
 
   const [res, setRes] = useState(null);
 

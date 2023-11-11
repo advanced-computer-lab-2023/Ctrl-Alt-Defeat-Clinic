@@ -14,7 +14,7 @@ router.route('/filterPrescriptions').get(patientController.filterPrescriptions);
 router.route('/viewDoctors/:username').get(patientController.viewAllDoctors);
 router.route('/searchForDoctors').get(patientController.searchForDoctors);
 router.route('/subscribeToHealthPackage').post(patientController.subscribeToHealthPackage);
-router.route('/viewDoctorSlots').get(authMiddlewares.protect, authMiddlewares.restrictTo('patient'),patientController.viewDoctorSlots);
+router.route('/viewDoctorSlots').get(patientController.viewDoctorSlots);
 router.route('/viewPatientAppointments').get(patientController.viewPatientAppointments);
 
 

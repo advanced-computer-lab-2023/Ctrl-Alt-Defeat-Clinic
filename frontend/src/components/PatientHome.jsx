@@ -35,6 +35,9 @@ function PatientHome() {
           <Link to="/patients/view-all-patient-appointments">View All My Appointments</Link>
         </li>
         <li>
+          <Link to="/patients/view-all-available-appointments">View Available Doctor Appointments</Link>
+        </li>
+        <li>
           <Link to="/" onClick={handleLogout}>
             Logout
           </Link>
