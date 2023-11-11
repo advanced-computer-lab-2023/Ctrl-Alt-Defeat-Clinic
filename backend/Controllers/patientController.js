@@ -215,10 +215,9 @@ exports.searchForDoctors = async (req, res) => {
 };
 
 exports.subscribeToHealthPackage = async (req, res) => {
-  
   try {
     const { patientId, healthPackageId } = req.body;
-    
+
     const familyMembers = await Patient.findById(patientId).populate('familyMembers');
     // Find the patient by ID
     const patient = await Patient.findById(patientId);
@@ -238,7 +237,7 @@ exports.subscribeToHealthPackage = async (req, res) => {
     patient.healthPackage = healthPackageId;
     await patient.save();
 
-    for(let i = 0; i < familyMembers.familyMembers.length; i++){
+    for (let i = 0; i < familyMembers.familyMembers.length; i++) {
       familyMembers.familyMembers[i].healthPackage = healthPackageId;
       await familyMembers.familyMembers[i].save();
     }
@@ -250,3 +249,55 @@ exports.subscribeToHealthPackage = async (req, res) => {
   }
 };
 
+exports.linkFamilyMember = async (req, res) => {
+  try {
+    const { username, phoneNumber, email, relationship } = req.body;
+
+    // Find the patient with the given username
+    const patient = await Patient.findOne({ username });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    // Find the patient with the given phone number or email
+    const familyMember = await Patient.findOne({
+      $or: [{ mobileNumber: phoneNumber.toString() }, { email }],
+    });
+
+    if (!familyMember) {
+      return res.status(404).json({ message: 'Family member not found' });
+    }
+    // Explicitly fetch the required fields from the familyMember
+    const { name, gender } = familyMember;
+    const nationalId = null;
+    // Assuming familyMember.dateOfBirth is a valid Date object
+    const birthDate = new Date(familyMember.dateOfBirth);
+    const currentDate = new Date();
+
+    // Calculate the age
+    const ageInMillis = currentDate - birthDate;
+    const age = Math.floor(ageInMillis / (365.25 * 24 * 60 * 60 * 1000));
+
+    // Create a new FamilyMember document with provided fields
+    const newFamilyMember = new FamilyMember({
+      name,
+      nationalId,
+      age,
+      gender,
+      relationToPatient: relationship,
+    });
+    console.log('NEW FAM MEM IS:', newFamilyMember);
+    // Save the new family member to the database
+    await newFamilyMember.save();
+
+    // Add the new family member's ObjectId to the patient's familyMembers array
+    patient.familyMembers.push(newFamilyMember._id);
+    await patient.save();
+
+    res.status(201).json({ message: 'Family member linked successfully' });
+  } catch (error) {
+    console.error('Error linking family member:', error);
+    res.status(500).json({ error: 'Cannot link the family member' });
+  }
+};

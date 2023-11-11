@@ -7,7 +7,6 @@ const FamilyMemberSchema = new mongoose.Schema({
   },
   nationalId: {
     type: Number,
-    required: true,
     unique: true,
   },
   age: {
@@ -31,7 +30,7 @@ const FamilyMemberSchema = new mongoose.Schema({
   healthPackage: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Package',
-  }
+  },
 });
 
 const FamilyMember = mongoose.model('FamilyMember', FamilyMemberSchema);

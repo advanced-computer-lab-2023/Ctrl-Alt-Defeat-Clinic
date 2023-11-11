@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 function PatientHome() {
-  const [doctor, setDoctor] = useState(null);
+  const [patient, setPatient] = useState(null);
   const handleLogout = async () => {
     const response = await axios.get(
       "http://localhost:8000/api/v1/auth/logout",
@@ -17,17 +17,17 @@ function PatientHome() {
       { withCredentials: true }
     );
     console.log(response.data);
-    setDoctor(response.data.loggedIn);
+    setPatient(response.data.loggedIn);
   };
   return (
     <div>
       <h2>welcome, patient!</h2>
       <button onClick={showData}>show me</button>
-      {doctor && (
+      {patient && (
         <div>
-          <p>name: {doctor.name}</p>
-          <p>username: {doctor.username}</p>
-          <p>email: {doctor.email}</p>
+          <p>name: {patient.name}</p>
+          <p>username: {patient.username}</p>
+          <p>email: {patient.email}</p>
         </div>
       )}
       <ul>
@@ -38,6 +38,10 @@ function PatientHome() {
         </li>
         <li>
           <Link to="/patients/healthPackages">Show All Health Packages</Link>
+        </li>
+
+        <li>
+          <Link to="/patients/familyMembers">Manage Family Members</Link>
         </li>
       </ul>
     </div>
