@@ -215,10 +215,9 @@ exports.searchForDoctors = async (req, res) => {
 };
 
 exports.subscribeToHealthPackage = async (req, res) => {
-  
   try {
     const { patientId, healthPackageId } = req.body;
-    
+
     const familyMembers = await Patient.findById(patientId).populate('familyMembers');
     // Find the patient by ID
     const patient = await Patient.findById(patientId);
@@ -238,7 +237,7 @@ exports.subscribeToHealthPackage = async (req, res) => {
     patient.healthPackage = healthPackageId;
     await patient.save();
 
-    for(let i = 0; i < familyMembers.familyMembers.length; i++){
+    for (let i = 0; i < familyMembers.familyMembers.length; i++) {
       familyMembers.familyMembers[i].healthPackage = healthPackageId;
       await familyMembers.familyMembers[i].save();
     }
@@ -250,3 +249,35 @@ exports.subscribeToHealthPackage = async (req, res) => {
   }
 };
 
+exports.viewHealthPackageOfPatient = async (req, res) => {
+  try {
+    const patientId = req.user._id; // Assuming patientId is in the URL parameters
+    const patient = await Patient.findById(patientId).populate('healthPackage');
+    const patientPackage = patient.healthPackage;
+    res.status(200).send(patientPackage);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.viewHealthPackageOfFamilyMembers = async (req, res) => {
+  try {
+    const patientId = req.user._id; // Assuming patientId is in the URL parameters
+    const patient = await Patient.findById(patientId).populate('familyMembers');
+    const familyMembersPackages = [];
+
+    for (let i = 0; i < patient.familyMembers.length; i++) {
+      console.log(patient.familyMembers[i]);
+      await patient.familyMembers[i].populate('healthPackage');
+      console.log(patient.familyMembers[i].healthPackage);
+      familyMembersPackages.push({
+        name: patient.familyMembers[i].name,
+        package: patient.familyMembers[i].healthPackage,
+      });
+    }
+
+    res.status(200).send(familyMembersPackages);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
