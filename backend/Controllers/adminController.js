@@ -158,15 +158,18 @@ const approveDoctor = async (req, res) => {
     }
 
     // Check if the doctor is already accepted
-    if (existingDoctor.registrationStatus === 'accepted') {
+    if (
+      existingDoctor.registrationStatus === 'accepted' ||
+      existingDoctor.registrationStatus === 'partially accepted'
+    ) {
       // If the doctor is already approved, respond with a 400 Bad Request
       return res.status(400).json({ error: 'Doctor is already approved' });
     }
 
-    // Update the doctor's registrationStatus to "accepted"
+    // Update the doctor's registrationStatus to "partially accepted"
     const updatedDoctor = await Doctor.findOneAndUpdate(
       { username },
-      { registrationStatus: 'accepted' },
+      { registrationStatus: 'partially accepted' },
       { new: true }
     );
 

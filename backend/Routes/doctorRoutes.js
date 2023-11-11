@@ -22,4 +22,6 @@ router.route('/viewPatientInfo').get(doctorController.viewPatientInfo);
 
 router.route('/filterDoctors').get(doctorController.filterDoctors);
 
+router.route('/acceptContract').put(doctorController.acceptContract);
+
 module.exports = router;

@@ -38,7 +38,7 @@ const doctorSchema = new mongoose.Schema({
   },
   registrationStatus: {
     type: String,
-    enum: ['pending', 'accepted', 'rejected'],
+    enum: ['pending', 'accepted', 'partially accepted'],
     default: 'pending',
   },
   speciality: {

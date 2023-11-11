@@ -98,9 +98,9 @@ function App() {
       <hr /> */}
       {/* <hr />
       <HealthPackages />
-      <hr />
-      <Contract />
-      <hr />
+      <hr /> */}
+
+      {/* <hr />
       <SubscribeHealthPackages />
       <hr /> */}
     </>
