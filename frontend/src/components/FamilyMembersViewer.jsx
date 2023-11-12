@@ -11,7 +11,6 @@ const FamilyMembersViewer = () => {
   const [relationToPatient, setRelationToPatient] = useState("wife");
   const [familyMembers, setFamilyMembers] = useState([]);
   const [linkingData, setLinkingData] = useState({
-    username: patient?.username,
     phoneNumber: "",
     email: "",
     relationship: "",
@@ -45,7 +44,8 @@ const FamilyMembersViewer = () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/patients/viewFamilyMembers/?username=${patient.username}`
+        `http://localhost:8000/api/v1/patients/viewFamilyMembers`,
+        { withCredentials: true }
       );
       setFamilyMembers(response.data);
       console.log(response.data);
@@ -67,8 +67,9 @@ const FamilyMembersViewer = () => {
       };
 
       const response = await axios.post(
-        `http://localhost:8000/api/v1/patients/addMember/?username=${patient.username}`,
-        newFamilyMember
+        `http://localhost:8000/api/v1/patients/addMember`,
+        newFamilyMember,
+        { withCredentials: true }
       );
 
       console.log("Added family member:", response.data);
@@ -89,17 +90,17 @@ const FamilyMembersViewer = () => {
     e.preventDefault();
 
     try {
-      setLinkingData({ ...linkingData, username: patient.username });
+      setLinkingData({ ...linkingData });
       const response = await axios.post(
         "http://localhost:8000/api/v1/patients/linkMember",
-        linkingData
+        linkingData,
+        { withCredentials: true }
       );
 
       console.log("Linked family member:", response.data);
 
       // Clear linking data
       setLinkingData({
-        username: patient?.username,
         phoneNumber: "",
         email: "",
         relationship: "",

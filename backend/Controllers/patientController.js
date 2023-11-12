@@ -25,8 +25,7 @@ exports.registerPatient = async (req, res) => {
 
 exports.addFamilyMember = async (req, res) => {
   try {
-    const username = req.query.username;
-    const patient = await Patient.findOne({ username: username });
+    const patient = await Patient.findOne({ username: req.user.username });
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
     }
@@ -38,7 +37,10 @@ exports.addFamilyMember = async (req, res) => {
 
     // Add the new family member's ObjectId to the patient's familyMembers array
     // Save the updated patient document
-    const updatedPatient = await Patient.updateOne({ username: username }, { $push: { familyMembers: newMember._id } });
+    const updatedPatient = await Patient.updateOne(
+      { username: req.user.username },
+      { $push: { familyMembers: newMember._id } }
+    );
 
     res.status(201).json(newMember);
   } catch (error) {
@@ -88,8 +90,7 @@ async function calculateSessionPrice(doctorRate, healthPackage) {
 
 exports.viewFamilyMembers = async (req, res) => {
   try {
-    const username = req.query.username;
-    const patient = await Patient.findOne({ username: username }).populate('familyMembers');
+    const patient = await Patient.findOne({ username: req.user.username }).populate('familyMembers');
 
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
@@ -251,10 +252,10 @@ exports.subscribeToHealthPackage = async (req, res) => {
 
 exports.linkFamilyMember = async (req, res) => {
   try {
-    const { username, phoneNumber, email, relationship } = req.body;
+    const { phoneNumber, email, relationship } = req.body;
 
     // Find the patient with the given username
-    const patient = await Patient.findOne({ username });
+    const patient = await Patient.findOne({ username: req.user.username });
 
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
