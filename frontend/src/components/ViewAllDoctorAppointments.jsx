@@ -6,14 +6,14 @@ function ViewAllDoctorAppointments() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState("");
-  const [doctorUsername, setDoctorUsername] = useState('');
 
   const [appointmentInfo, setAppointmentInfo] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const appointmentInformation = await Axios.get(
-      `http://localhost:8000/api/v1/doctors/viewDoctorAppointments?username=${doctorUsername}&startDate=${startDate? new Date(startDate) : ""}&endDate=${endDate? new Date(endDate) : ""}&status=${status}` //TODO
+      `http://localhost:8000/api/v1/doctors/viewDoctorAppointments?startDate=${startDate? new Date(startDate) : ""}&endDate=${endDate? new Date(endDate) : ""}&status=${status}`,
+      {withCredentials: true}
     );
     console.log(appointmentInformation);
     setAppointmentInfo(appointmentInformation.data);
@@ -45,13 +45,6 @@ function ViewAllDoctorAppointments() {
   return (
     <div>
       <h2>View All Appointments</h2>
-      
-      <label>Doctor Username: </label>
-      <input
-        type="text"
-        value={doctorUsername}
-        onChange={(e) => setDoctorUsername(e.target.value)}
-      />
 
 <     form onSubmit={handleSubmit}>
         <div>
@@ -87,23 +80,6 @@ function ViewAllDoctorAppointments() {
           <button type="submit">View All Appointments</button>
         </div>
       </form>
-
-
-      {/* {appointmentInfo &&
-        appointmentInfo.map((appointment, index) => (
-          <div key={index}>
-            <h3>Appointment {index + 1} Information:</h3>
-            <p>
-              <strong>Patient Username:</strong> {appointment.patient}
-            </p>
-            <p>
-              <strong>Date:</strong> {appointment.date}
-            </p>
-            <p>
-              <strong>Status:</strong> {appointment.status}
-            </p>
-          </div>
-        ))} */}
 
       {appointmentInfo && appointmentInfo.length > 0 && renderAppointmentsTable()}
       {!appointmentInfo || appointmentInfo.length === 0 && <p>No appointments found.</p>}

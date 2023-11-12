@@ -278,8 +278,8 @@ exports.subscribeToHealthPackage = async (req, res) => {
   
     try{
   
-      const {username} = req.query;
-      const appointments = await Appointment.find({patient: username}).exec();
+      //const {username} = req.query;
+      const appointments = await Appointment.find({patient: req.user.username}).exec();
   
       //res.status(200).json(appointments);
   

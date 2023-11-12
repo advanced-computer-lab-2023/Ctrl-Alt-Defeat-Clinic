@@ -24,7 +24,8 @@ function ViewAvailableAppointments() {
     e.preventDefault();
     try {
       const response = await Axios.get(
-        `http://localhost:8000/api/v1/patients/viewDoctorSlots?doctorUsername=${selectedDoctor}`
+        `http://localhost:8000/api/v1/patients/viewDoctorSlots?doctorUsername=${selectedDoctor}`,
+        {withCredentials: true}
       );
       setAppointmentInfo(response.data);
     } catch (error) {

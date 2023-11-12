@@ -13,7 +13,8 @@ function ViewAllPatientAppointments() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const appointmentInformation = await Axios.get(
-      `http://localhost:8000/api/v1/patients/viewPatientAppointments?username=${doctorUsername}&startDate=${startDate? new Date(startDate) : ""}&endDate=${endDate? new Date(endDate) : ""}&status=${status}` //TODO
+      `http://localhost:8000/api/v1/patients/viewPatientAppointments?username=${doctorUsername}&startDate=${startDate? new Date(startDate) : ""}&endDate=${endDate? new Date(endDate) : ""}&status=${status}`,
+      {withCredentials: true}
     );
     console.log(appointmentInformation);
     setAppointmentInfo(appointmentInformation.data);

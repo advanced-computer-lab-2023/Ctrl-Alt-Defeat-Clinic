@@ -180,11 +180,11 @@ exports.filterDoctors = async (req, res) => {
   
     try {
   
-      const {username, slotDate} = req.query;
+      const {slotDate} = req.query;
   
       if(!slotDate) return res.status(400).json({ message: 'Enter the slot time and date.'});
   
-      const updatedDoctor = await Doctor.updateOne({ username: username }, { $addToSet: { availableSlots: slotDate } });
+      const updatedDoctor = await Doctor.updateOne({ username: req.user.username }, { $addToSet: { availableSlots: slotDate } });
   
       res.status(200).json(updatedDoctor);
     } catch (error) {
@@ -196,8 +196,8 @@ exports.filterDoctors = async (req, res) => {
   
     try{
       
-      const {username} = req.query; //TODO
-      const appointments = await Appointment.find({doctor: username}).exec();
+      //const {username} = req.query; //TODO
+      const appointments = await Appointment.find({doctor: req.user.username}).exec();
       //res.status(200).json(appointments);
       
       filterAppointments(req, res, appointments);

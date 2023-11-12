@@ -16,14 +16,14 @@ router.route('/selectPatient').get(doctorController.selectPatient);
 
 router.route('/doctordetails/:username').get(doctorController.viewDoctorDetails);
 
-router.route('/viewAllDoctors').get(doctorController.viewAllDoctors);
+router.route('/viewAllDoctors').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor', 'patient'), doctorController.viewAllDoctors);
 
 router.route('/viewPatientInfo').get(doctorController.viewPatientInfo);
 
 router.route('/filterDoctors').get(doctorController.filterDoctors);
 
-router.route('/addAvailableSlot').put(doctorController.addAvailableSlot);
+router.route('/addAvailableSlot').put(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'), doctorController.addAvailableSlot);
 
-router.route('/viewDoctorAppointments').get(doctorController.viewDoctorAppointments);
+router.route('/viewDoctorAppointments').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.viewDoctorAppointments);
 
 module.exports = router;
