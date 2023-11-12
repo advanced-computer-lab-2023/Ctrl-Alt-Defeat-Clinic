@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const FamilyMembersViewer = () => {
@@ -67,7 +67,7 @@ const FamilyMembersViewer = () => {
       };
 
       const response = await axios.post(
-        `http://localhost:8000/api/v1/patients/addFamilyMember/?username=${patient.username}`,
+        `http://localhost:8000/api/v1/patients/addMember/?username=${patient.username}`,
         newFamilyMember
       );
 
