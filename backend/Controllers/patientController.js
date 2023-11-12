@@ -281,3 +281,30 @@ exports.viewHealthPackageOfFamilyMembers = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+exports.cancelHealthPackage = async (req, res) => {
+  try {
+    const  patientId  = req.user._id;
+    const familyMembers = await Patient.findById(patientId).populate('familyMembers');
+    // Find the patient by ID
+    const patient = await Patient.findById(patientId);
+
+    if (!patient) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    // Cancel the patient's health package
+    patient.healthPackage = null;
+    await patient.save();
+
+    // Cancel the health package for all family members
+    for(let i = 0; i < familyMembers.familyMembers.length; i++){
+      familyMembers.familyMembers[i].healthPackage = null;
+      await familyMembers.familyMembers[i].save();
+    }
+
+    res.status(200).json({ message: 'Health package cancelled successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error during cancellation' });
+  }
+};
