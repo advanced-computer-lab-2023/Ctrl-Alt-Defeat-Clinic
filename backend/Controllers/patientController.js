@@ -265,8 +265,14 @@ exports.subscribeToHealthPackage = async (req, res) => {
       const doctor = await Doctor.findOne({ username: doctorUsername }).exec();
   
       if (!doctor) return res.status(404).json({ message: 'Doctor not found' });
-  
-      res.status(200).json(doctor.availableSlots);
+      
+      const updateDoctor = await Doctor.findOneAndUpdate(
+        { username: doctorUsername },
+        {$pull: { availableSlots: { $lt: new Date() } }},
+        { new: true }
+      );
+
+      res.status(200).json(updateDoctor.availableSlots);
   
     } catch (err) {
       res.status(500).json({ message: err.message });

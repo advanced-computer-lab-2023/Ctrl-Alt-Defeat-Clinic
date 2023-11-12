@@ -173,8 +173,6 @@ exports.filterDoctors = async (req, res) => {
   //-------------- SPRINT 2 -------------------
 
   exports.addAvailableSlot = async (req, res) => {
-
-    //how to get the session doctor username from login? - ASK ABT THIS
   
     //handle past timeSlots and to remove slots that have already passed TODO
   
@@ -183,6 +181,14 @@ exports.filterDoctors = async (req, res) => {
       const {slotDate} = req.query;
   
       if(!slotDate) return res.status(400).json({ message: 'Enter the slot time and date.'});
+
+      if(slotDate < new Date()) res.status(400).json({ message: 'Date and time has already passed.'});
+
+      const doctor = await Doctor.findOneAndUpdate(
+        { username: req.user.username },
+        {$pull: { availableSlots: { $lt: new Date() } }},
+        { new: true }
+      );
   
       const updatedDoctor = await Doctor.updateOne({ username: req.user.username }, { $addToSet: { availableSlots: slotDate } });
   

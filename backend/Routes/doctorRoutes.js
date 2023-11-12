@@ -16,7 +16,7 @@ router.route('/selectPatient').get(doctorController.selectPatient);
 
 router.route('/doctordetails/:username').get(doctorController.viewDoctorDetails);
 
-router.route('/viewAllDoctors').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor', 'patient'), doctorController.viewAllDoctors);
+router.route('/viewAllDoctors').get(doctorController.viewAllDoctors);
 
 router.route('/viewPatientInfo').get(doctorController.viewPatientInfo);
 
