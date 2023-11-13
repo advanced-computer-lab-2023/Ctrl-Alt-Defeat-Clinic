@@ -7,6 +7,13 @@ const addAppointment = async (req, res) => {
 
   try {
     const newAppointment = await Appointment.create(req.query);
+
+    const doctor = await Doctor.findOneAndUpdate(
+      { username: doctor },
+      {$pull: { availableSlots: date }},
+      { new: true }
+    );
+
     // console.log(newAppointment);
     res.send('Appointment created successfully!');
   } catch {

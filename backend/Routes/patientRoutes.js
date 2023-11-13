@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.route('/register').post(patientController.registerPatient);
 router.route('/addMember').post(patientController.addFamilyMember);
-router.route('/viewFamilyMembers').get(patientController.viewFamilyMembers);
+router.route('/viewFamilyMembers').get(authMiddlewares.protect, authMiddlewares.restrictTo('patient'), patientController.viewFamilyMembers);
 router.route('/getAllPrescriptionsForPatient').get(patientController.getAllPrescriptionsForPatient);
 router.route('/getPrescriptionById').get(patientController.getPrescriptionById);
 router.route('/filterPrescriptions').get(patientController.filterPrescriptions);

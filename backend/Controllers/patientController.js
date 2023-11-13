@@ -90,8 +90,8 @@ async function calculateSessionPrice(doctorRate, healthPackage) {
 
 exports.viewFamilyMembers = async (req, res) => {
   try {
-    const username = req.query.username;
-    const patient = await Patient.findOne({ username: username }).populate('familyMembers');
+    //const username = req.query.username;
+    const patient = await Patient.findOne({ username: req.user.username }).populate('familyMembers');
 
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
