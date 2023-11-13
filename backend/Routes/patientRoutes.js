@@ -15,4 +15,6 @@ router.route('/searchForDoctors').get(patientController.searchForDoctors);
 router.route('/subscribeToHealthPackage').post(patientController.subscribeToHealthPackage);
 router.route('/viewHealthPackageOfPatient').get(protect, patientController.viewHealthPackageOfPatient);
 router.route('/viewHealthPackageOfFamilyMembers').get(protect, patientController.viewHealthPackageOfFamilyMembers);
+router.route('/cancelHealthPackage').post(protect,restrictTo('patient'), patientController.cancelHealthPackage);
+
 module.exports = router;

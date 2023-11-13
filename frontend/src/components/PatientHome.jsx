@@ -39,6 +39,9 @@ function PatientHome() {
         <li>
           <Link to="/patients/healthPackages">Show All Health Packages</Link>
         </li>
+        <li>
+          <Link to="/patients/cancelHealthPackage">Cancel Health Package</Link>
+        </li>
       </ul>
     </div>
   );
