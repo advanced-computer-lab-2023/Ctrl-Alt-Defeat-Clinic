@@ -196,3 +196,17 @@ exports.acceptContract = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+exports.addHealthRecord = async (req, res) => {
+  try {
+    const newHealthRecord = await new Prescription({
+      patient: req.body.patient,
+      doctor: req.user,
+      date: req.body.date,
+      description: req.body.description,
+      prescription: req.body.prescription,
+    }).save();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

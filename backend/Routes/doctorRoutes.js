@@ -24,4 +24,6 @@ router.route('/filterDoctors').get(doctorController.filterDoctors);
 
 router.route('/acceptContract').put(doctorController.acceptContract);
 
+router.route('/addHealthRecord').post(protect, restrictTo('doctor'), doctorController.addHealthRecord);
+
 module.exports = router;
