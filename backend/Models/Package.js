@@ -23,6 +23,12 @@ const packageSchema = new mongoose.Schema({
       type: Number,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ['subscribed', 'unsubscribed', 'cancelled'],
+      default: 'unsubscribed',
+      required: true,
+    },
   },
 });
 

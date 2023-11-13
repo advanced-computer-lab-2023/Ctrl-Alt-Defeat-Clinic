@@ -281,3 +281,35 @@ exports.viewHealthPackageOfFamilyMembers = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.viewPackageStausOfPatient = async (req, res) => {
+  try {
+    const patient = req.user;
+    const patientPackage = await patient.healthPackage;
+    const patientPackageStatus = patientPackage.status;
+
+    res.status(200).send(patientPackageStatus);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.viewPackageStausOfFamilyMembers = async (req, res) => {
+  try {
+    const patient = req.user;
+    const familyMembers = await patient.familyMembers;
+    const familyMembersPackagesStatus = [];
+
+    for (let i = 0; i < familyMembers.length; i++) {
+      await familyMembers[i].populate('healthPackage');
+      familyMembersPackagesStatus.push({
+        name: familyMembers[i].name,
+        packageStatus: familyMembers[i].healthPackage.status,
+      });
+    }
+
+    res.status(200).send(familyMembersPackagesStatus);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
