@@ -47,6 +47,7 @@ function DoctorHome() {
           <p>username: {doctor.username}</p>
           <p>email: {doctor.email}</p>
           <p>registration status: {doctor.registrationStatus}</p>
+          <p>wallet Balance: {doctor.wallet}</p>
         </div>
       )}
       <ul>
@@ -61,6 +62,12 @@ function DoctorHome() {
         </li>
         <li>
           <Link to="/doctors/scheduleFollowUp">Schedule Follow-Up</Link>
+        </li>
+        <li>
+          <Link to="/doctors/view-all-doctor-appointments">View All My Appointments</Link>
+        </li>
+        <li>
+          <Link to="/doctors/add-time-slot">Add New Time Slot</Link>
         </li>
         <li>
           <Link to="/" onClick={handleLogout}>
