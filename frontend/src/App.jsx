@@ -46,6 +46,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/patients/register" element={<PatientRegister />} />
           <Route path="/patients/healthPackages" element={<HealthPackages />} />
+          <Route
+            path="/patients/familyMembers"
+            element={<FamilyMembersViewer />}
+          />
+
           <Route path="/doctors/register" element={<DoctorRegister />} />
           <Route path="/admins/home" element={<AdminHome />} />
           <Route path="/admin/addAdmin" element={<AddAdmin />} />

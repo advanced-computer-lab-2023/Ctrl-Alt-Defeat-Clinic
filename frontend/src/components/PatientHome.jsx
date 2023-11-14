@@ -42,6 +42,8 @@ function PatientHome() {
           <Link to="/patients/healthPackages">Show All Health Packages</Link>
         </li>
         <li>
+          <Link to="/patients/familyMembers">Manage Family Members</Link>
+        <li>
           <Link to="/patients/upload">Upload Medical History</Link>
         </li>
         <li>
