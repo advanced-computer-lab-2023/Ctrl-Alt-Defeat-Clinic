@@ -13,8 +13,10 @@ const FamilyMembersViewer = () => {
   const [linkingData, setLinkingData] = useState({
     phoneNumber: "",
     email: "",
-    relationship: "",
+    relationship: "wife",
   });
+  const [addError, setAddError] = useState(null);
+  const [linkError, setLinkError] = useState(null);
 
   const showData = async () => {
     try {
@@ -74,6 +76,9 @@ const FamilyMembersViewer = () => {
 
       console.log("Added family member:", response.data);
 
+      // Reset error state
+      setAddError(null);
+
       setName("");
       setNationalId("");
       setAge("");
@@ -83,6 +88,11 @@ const FamilyMembersViewer = () => {
       handleViewFamilyMembers(e);
     } catch (error) {
       console.error("Error adding family member:", error);
+      // Set error state for display
+      setAddError(
+        error.response?.data?.error ||
+          "An error occurred while adding a family member."
+      );
     }
   };
 
@@ -99,17 +109,25 @@ const FamilyMembersViewer = () => {
 
       console.log("Linked family member:", response.data);
 
+      // Reset error state
+      setLinkError(null);
+
       // Clear linking data
       setLinkingData({
         phoneNumber: "",
         email: "",
-        relationship: "",
+        relationship: "wife",
       });
 
       // Refresh the list of family members
       handleViewFamilyMembers(e);
     } catch (error) {
       console.error("Error linking family member:", error);
+      // Set error state for display
+      setLinkError(
+        error.response?.data?.error ||
+          "An error occurred while linking a family member."
+      );
     }
   };
 
@@ -153,6 +171,8 @@ const FamilyMembersViewer = () => {
             <button type="submit">Add Family Member</button>
           </form>
 
+          {addError && <p style={{ color: "red" }}>{addError}</p>}
+
           <form onSubmit={handleLinkFamilyMember}>
             <h2>Link Family Member</h2>
 
@@ -187,6 +207,8 @@ const FamilyMembersViewer = () => {
             </select>
             <button type="submit">Link Family Member</button>
           </form>
+
+          {linkError && <p style={{ color: "red" }}>{linkError}</p>}
 
           <form onSubmit={handleViewFamilyMembers}>
             <h2>View Family Members</h2>

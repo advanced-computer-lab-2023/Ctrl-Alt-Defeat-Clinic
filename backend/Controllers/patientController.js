@@ -265,7 +265,6 @@ exports.subscribeToHealthPackage = async (req, res) => {
     const { healthPackageId } = req.body;
     const patientId = req.user._id;
 
-
     const patient = await Patient.findById(patientId).populate('familyMembers');
     const familyMembers = patient.familyMembers;
     const healthPackage = await Package.findById(healthPackageId);
@@ -355,6 +354,12 @@ exports.linkFamilyMember = async (req, res) => {
     if (!familyMember) {
       return res.status(404).json({ message: 'Family member not found' });
     }
+
+    // Check if the family member is already related to the patient
+    if (patient.familyMembers.includes(familyMember._id)) {
+      return res.status(400).json({ message: 'Family member is already related to the patient' });
+    }
+
     // Explicitly fetch the required fields from the familyMember
     const { name, gender, nationalId } = familyMember;
     // Assuming familyMember.dateOfBirth is a valid Date object
@@ -373,6 +378,7 @@ exports.linkFamilyMember = async (req, res) => {
       gender,
       relationToPatient: relationship,
     });
+
     // Save the new family member to the database
     await newFamilyMember.save();
 
@@ -382,50 +388,48 @@ exports.linkFamilyMember = async (req, res) => {
 
     res.status(201).json({ message: 'Family member linked successfully' });
   } catch (error) {
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.nationalId) {
+      // Handle the duplicate key error for nationalId
+      return res.status(400).json({ error: 'Duplicate nationalId. Please use a different nationalId.' });
+    }
+
     console.error('Error linking family member:', error);
     res.status(500).json({ error: 'Cannot link the family member' });
   }
 };
 
-  //-------------- SPRINT 2 -------------------
+//-------------- SPRINT 2 -------------------
 
-  exports.viewDoctorSlots = async (req, res) => {
+exports.viewDoctorSlots = async (req, res) => {
+  try {
+    const { doctorUsername } = req.query;
 
-    try{
-  
-      const {doctorUsername} = req.query;
-  
-      if(!doctorUsername) return res.status(400).json('There are null values.');
-  
-      const doctor = await Doctor.findOne({ username: doctorUsername }).exec();
-  
-      if (!doctor) return res.status(404).json({ message: 'Doctor not found' });
-      
-      const updateDoctor = await Doctor.findOneAndUpdate(
-        { username: doctorUsername },
-        {$pull: { availableSlots: { $lt: new Date() } }},
-        { new: true }
-      );
+    if (!doctorUsername) return res.status(400).json('There are null values.');
 
-      res.status(200).json(updateDoctor.availableSlots);
-  
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  
-  };
-  
-  exports.viewPatientAppointments = async (req,res) => {
-  
-    try{
-      const appointments = await Appointment.find({patient: req.user.username}).exec();  
-      filterAppointments(req, res, appointments);
-  
-    } catch(err){
-      res.status(500).json({ message: err.message });
-    }
-  };
+    const doctor = await Doctor.findOne({ username: doctorUsername }).exec();
 
+    if (!doctor) return res.status(404).json({ message: 'Doctor not found' });
+
+    const updateDoctor = await Doctor.findOneAndUpdate(
+      { username: doctorUsername },
+      { $pull: { availableSlots: { $lt: new Date() } } },
+      { new: true }
+    );
+
+    res.status(200).json(updateDoctor.availableSlots);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.viewPatientAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({ patient: req.user.username }).exec();
+    filterAppointments(req, res, appointments);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 exports.cancelHealthPackage = async (req, res) => {
   try {
@@ -479,7 +483,7 @@ exports.getHealthPackageStatus = async (req, res) => {
 
 exports.uploadFile = async (req, res) => {
   try {
-    const patientId = req.user._id; 
+    const patientId = req.user._id;
     const filePath = req.file.path;
 
     // Update the patient's medicalHistory field by adding to the array
@@ -492,11 +496,9 @@ exports.uploadFile = async (req, res) => {
   }
 };
 
-
-
 exports.deleteMedicalHistory = async (req, res) => {
   try {
-    const patientId = req.user._id; 
+    const patientId = req.user._id;
     const filePath = req.body.filePath;
 
     // Update the patient's medicalHistory field by removing the file path from the array
@@ -507,13 +509,12 @@ exports.deleteMedicalHistory = async (req, res) => {
 
     console.log('Attempting to delete file at path:', fullPath);
 
-  // if (fs.existsSync(fullPath)) {
-  //   fs.unlinkSync(fullPath);
-  //   res.json({ message: 'File deleted successfully' });
-  // } else {
-  //   res.status(404).json({ message: 'File not found' });
-  // }
-
+    // if (fs.existsSync(fullPath)) {
+    //   fs.unlinkSync(fullPath);
+    //   res.json({ message: 'File deleted successfully' });
+    // } else {
+    //   res.status(404).json({ message: 'File not found' });
+    // }
   } catch (error) {
     console.error('Error deleting file:', error);
     res.status(500).json({ message: 'Error deleting file' });
