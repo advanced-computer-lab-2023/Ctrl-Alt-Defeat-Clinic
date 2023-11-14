@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Axios from "axios";
+import { Link } from "react-router-dom";
 
 function AddAdmin() {
   const [res, setRes] = useState(null);
@@ -50,6 +51,7 @@ function AddAdmin() {
         <button type="submit">Add Admin</button>
       </form>
       {res && <div>new admin added</div>}
+      <Link to="/admins/home">Home</Link>
     </div>
   );
 }

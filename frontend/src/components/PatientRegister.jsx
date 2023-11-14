@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function PatientRegister() {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ function PatientRegister() {
     phoneNumber: "",
     emergencyContactName: "",
     emergencyContactNumber: "",
+    nationalId: "",
   });
 
   const handleChange = (e) => {
@@ -32,6 +33,7 @@ function PatientRegister() {
       dateOfBirth: formData.dob,
       gender: formData.gender,
       mobileNumber: formData.phoneNumber,
+      nationalId: formData.nationalId,
       emergencyContact: {
         fullName: formData.emergencyContactName,
         mobileNumber: formData.emergencyContactNumber,
@@ -55,6 +57,7 @@ function PatientRegister() {
       phoneNumber: "",
       emergencyContactName: "",
       emergencyContactNumber: "",
+      nationalId: "",
     });
     setTimeout(() => navigate("/login"), 3000);
   };
@@ -114,6 +117,16 @@ function PatientRegister() {
           />
         </div>
         <div>
+          <label>National ID:</label>
+          <input
+            type="number"
+            name="nationalId"
+            value={formData.nationalId}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
           <label>Gender:</label>
           <select
             name="gender"
@@ -160,6 +173,7 @@ function PatientRegister() {
         <button type="submit">Register</button>
       </form>
       {res && <div>patient registered</div>}
+      <Link to="/">Back</Link>
     </div>
   );
 }

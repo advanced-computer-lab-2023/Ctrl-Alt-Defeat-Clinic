@@ -25,6 +25,11 @@ const patientSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  nationalId: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
   gender: {
     type: String,
     enum: ['male', 'female'],
@@ -48,12 +53,35 @@ const patientSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Package',
   },
+  healthPackageStatus: {
+    type: String,
+    enum: ['subscribed', 'unsubscribed', 'cancelled'],
+    default: 'unsubscribed',
+  },
+  healthPackageRenewalDate: {
+    type: Date,
+  },
+  healthPackageEndDate: {
+    type: Date,
+  },
   familyMembers: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: FamilyMember,
     },
   ],
+  medicalHistory:[
+    {
+      type: String, 
+    },
+  ],
+  wallet: {
+    type: Number,
+    default: 0,
+  },
+  otp: {
+    type: String,
+  },
 });
 
 patientSchema.pre('save', async function (next) {

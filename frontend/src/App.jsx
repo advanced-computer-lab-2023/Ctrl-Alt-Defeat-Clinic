@@ -14,7 +14,6 @@ import UpdateDoctor from "./components/updateDoctor";
 import ViewAllPatients from "./components/ViewAllPatients";
 import SearchPatient from "./components/SearchPatient";
 import PrescriptionList from "./components/PrescriptionList";
-import AddFamilyMember from "./components/AddFamilyMembers";
 import FamilyMembersViewer from "./components/FamilyMembersViewer";
 import DoctorList from "./components/DoctorList";
 import Home from "./components/Home";
@@ -22,12 +21,25 @@ import Login from "./components/Login";
 import AdminHome from "./components/AdminHome";
 import DoctorHome from "./components/DoctorHome";
 import PatientHome from "./components/PatientHome";
+import ViewAllDoctorAppointments from "./components/ViewAllDoctorAppointments";
+import ViewAllPatientAppointments from "./components/ViewAllPatientAppointments";
+import AddTimeSlot from "./components/AddTimeSlot";
+import ViewAvailableAppointments from "./components/ViewAvailableAppointments";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HealthPackages from "./components/HealthPackages";
 import Contract from "./components/Contract";
 import SubscribeHealthPackages from "./components/SubscribeHealthPackages";
 import  AddHealthRecord  from "./components/AddHealthRecord";
+import VerifyOTP from "./components/VerifyOTP";
+import ForgetPassword from "./components/ForgetPassword";
+import ResetPassword from "./components/ResetPassword";
+import ChangePassword from "./components/ChangePassword";
+import UploadMedicalHistory from "./components/UploadMedicalHistory";
+import DeleteMedicalHistory from "./components/DeleteMedicalHistory";
+import MedicalHistoryViewer from "./components/MedicalHistoryViewer";
+import MedicalHistoryDoctorViewer from "./components/MedicalHistoryDoctorViewer";
 import "./App.css";
+import ScheduleFollowUpForm from "./components/ScheduleFollowUp";
 
 function App() {
   return (
@@ -37,8 +49,17 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/verifyOTP/:username" element={<VerifyOTP />} />
+          <Route path="/forgetPassword" element={<ForgetPassword />} />
+          <Route path="/resetPassword/:username" element={<ResetPassword />} />
+          <Route path="/changePassword" element={<ChangePassword />} />
           <Route path="/patients/register" element={<PatientRegister />} />
           <Route path="/patients/healthPackages" element={<HealthPackages />} />
+          <Route
+            path="/patients/familyMembers"
+            element={<FamilyMembersViewer />}
+          />
+
           <Route path="/doctors/register" element={<DoctorRegister />} />
           <Route path="/admins/home" element={<AdminHome />} />
           <Route path="/admin/addAdmin" element={<AddAdmin />} />
@@ -56,55 +77,38 @@ function App() {
           <Route path="/doctors/update-my-info" element={<UpdateDoctor />} />
           <Route path="/doctors/my-patients" element={<ViewAllPatients />} />
           <Route path="/doctors/search" element={<SearchPatient />} />
+          <Route
+            path="/doctors/view-all-doctor-appointments"
+            element={<ViewAllDoctorAppointments />}
+          />
+          <Route path="/doctors/add-time-slot" element={<AddTimeSlot />} />
+          <Route
+            path="/doctors/scheduleFollowUp"
+            element={<ScheduleFollowUpForm />}
+          />
+          <Route
+            path="/doctors/view-patient-medical-history"
+            element={<MedicalHistoryDoctorViewer />}
+          />
           <Route path="/patients/home" element={<PatientHome />} />
           <Route path="/doctors/AddHealthRecord" element={<AddHealthRecord />} />
+
+          <Route
+            path="/patients/view-all-patient-appointments"
+            element={<ViewAllPatientAppointments />}
+          />
+          <Route
+            path="/patients/view-all-available-appointments"
+            element={<ViewAvailableAppointments />}
+          />
+          <Route path="/patients/upload" element={<UploadMedicalHistory />} />
+          <Route path="/patients/delete" element={<DeleteMedicalHistory />} />
+          <Route
+            path="/patients/view-medical-history"
+            element={<MedicalHistoryViewer />}
+          />
         </Routes>
       </BrowserRouter>
-      {/* <PatientRegister />
-      <hr />
-      <DoctorRegister />
-      <hr />
-      <AddAdmin />
-      <hr />
-      <RemoveAdmin />
-      <hr />
-      <RemoveDoctor />
-      <hr />
-      <RemovePatient />
-      <hr />
-      <ViewDoctorRequest />
-      <hr />
-      <AddPackage />
-      <hr />
-      <DeletePackage />
-      <hr />
-      <UpdatePackage />
-      <hr />
-      <ViewAllDoctors />
-      <hr />
-      <FilterAppointments />
-      <hr />
-      <UpdateDoctor />
-      <hr />
-      <ViewAllPatients />
-      <hr />
-      <SearchPatient />
-      <hr />
-      <FamilyMembersViewer />
-      <hr />
-      <AddFamilyMember />
-      <hr />
-      <PrescriptionList />
-      <hr />
-      <DoctorList />
-      <hr /> */}
-      {/* <hr />
-      <HealthPackages />
-      <hr /> */}
-
-      {/* <hr />
-      <SubscribeHealthPackages />
-      <hr /> */}
     </>
   );
 }

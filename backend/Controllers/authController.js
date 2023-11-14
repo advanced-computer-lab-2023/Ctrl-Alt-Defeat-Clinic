@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const Admin = require('../Models/Admin');
 const Patient = require('../Models/Patient');
 const Doctor = require('../Models/Doctor');
+const sendEmail = require('../Utils/email');
 
 const findByUsername = async username => {
   let user;
@@ -76,6 +77,87 @@ exports.logout = (req, res) => {
   res.status(200).json({ status: 'logged out successfully' });
 };
 
-exports.forgotPassword = (req, res) => {};
+exports.forgotPassword = async (req, res) => {
+  const { user } = await findByUsername(req.body.username);
+  console.log(user);
+  if (!user) {
+    return res.status(404).json({ status: 'failed' });
+  }
 
-exports.resetPassword = (req, res) => {};
+  const resetURL = `http://localhost:5173/verifyOTP?username=${req.body.username}`;
+  const otp = Math.floor(1000 + Math.random() * 9000);
+
+  user.otp = otp + '';
+  await user.save();
+  const message = `this is your OTP to be used when resetting your password: \n ${otp}.
+  \n you can reset your password through the following link: ${resetURL}`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'reset password with OTP',
+      message,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'otp sent to email!',
+    });
+  } catch (err) {
+    res.status(400).json({ status: 'error', message: err.message });
+    await user.save({ validateBeforeSave: false });
+    return;
+  }
+};
+
+exports.verifyOTP = async (req, res) => {
+  const otp = req.body.otp;
+  const username = req.params.username;
+
+  const { user } = await findByUsername(username);
+
+  if (!user || !user.otp === otp) {
+    return;
+  }
+
+  res.status(200).json({
+    status: 'success',
+    message: 'otp verified successfully',
+  });
+};
+
+exports.resetPassword = async (req, res) => {
+  const username = req.params.username;
+
+  const { user } = await findByUsername(username);
+
+  if (!user) {
+    return res.status(401).json({ status: 'error', message: 'err' });
+  }
+
+  user.password = req.body.password;
+  user.otp = undefined;
+
+  await user.save();
+
+  res.status(200).json({
+    status: 'success',
+    message: 'password reset successfully',
+  });
+};
+
+exports.changePassword = async (req, res) => {
+  const { user } = await findByUsername(req.user.username);
+
+  const currentPassword = req.body.currentPassword;
+  const newPassword = req.body.newPassword;
+
+  if (!(await bcrypt.compare(currentPassword, req.user.password))) {
+    res.status(400).json({ status: 'error' });
+    return;
+  }
+
+  user.password = newPassword;
+  await user.save();
+  res.status(200).json({ status: 'success' });
+};

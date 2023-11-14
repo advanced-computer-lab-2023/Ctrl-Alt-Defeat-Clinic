@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
@@ -65,7 +65,10 @@ function Login() {
         </div>
         <button type="submit">Login</button>
       </form>
+      <Link to="/forgetPassword">forgot password</Link>
       {message && <div>{message}</div>}
+      <br />
+      <Link to="/">Back</Link>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Axios from "axios";
+import { Link } from "react-router-dom";
 
 function RemovePatient() {
   const [username, setUsername] = useState("");
@@ -30,6 +31,7 @@ function RemovePatient() {
         <button type="submit">Remove Patient</button>
       </form>
       {res && <div>patient deleted</div>}
+      <Link to="/admins/home">Home</Link>
     </div>
   );
 }
