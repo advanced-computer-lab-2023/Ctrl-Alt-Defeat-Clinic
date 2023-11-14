@@ -74,6 +74,9 @@ const patientSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  otp: {
+    type: String,
+  },
 });
 
 patientSchema.pre('save', async function (next) {
