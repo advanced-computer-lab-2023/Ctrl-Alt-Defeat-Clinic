@@ -71,8 +71,6 @@ const ViewDoctorRequest = () => {
         `http://localhost:8000/api/v1/doctors/doctordetails/${username}`
       ); // Update the URL accordingly
       setSelectedDoctor(response.data);
-      console.log(response.data);
-      console.log(selectedDoctor);
     } catch (error) {
       console.error("Error fetching doctor details:", error);
     }
