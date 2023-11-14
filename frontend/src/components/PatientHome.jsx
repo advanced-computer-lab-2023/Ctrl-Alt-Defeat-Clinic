@@ -39,7 +39,7 @@ function PatientHome() {
         </li>
         <li>
           <Link to="/patients/view-all-available-appointments">
-            View Available Doctor Appointments
+            View & Select Available Doctor Appointments
           </Link>
         </li>
         <li>
@@ -53,6 +53,7 @@ function PatientHome() {
         </li>
         <li>
           <Link to="/patients/familyMembers">Manage Family Members</Link>
+        </li>
         <li>
           <Link to="/patients/upload">Upload Medical History</Link>
         </li>

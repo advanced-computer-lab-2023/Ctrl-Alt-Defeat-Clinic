@@ -97,7 +97,7 @@ function ViewAvailableAppointments() {
           <option value="" disabled>Select a patient</option>
           <option value="Me">Me</option>
           {familyMembers.message != 'No family members found for the patient' && familyMembers.map((familyMember) => (
-            <option key={familyMember._id} value={familyMember._id}>
+            <option key={familyMember._id} value={familyMember.name}>
               {familyMember.name}
             </option>
           ))}
