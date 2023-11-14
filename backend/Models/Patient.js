@@ -53,12 +53,27 @@ const patientSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Package',
   },
+  healthPackageStatus: {
+    type: String,
+    enum: ['subscribed', 'unsubscribed', 'cancelled'],
+    default: 'unsubscribed',
+  },
+  healthPackageRenewalDate: {
+    type: Date,
+  },
+  healthPackageEndDate: {
+    type: Date,
+  },
   familyMembers: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: FamilyMember,
     },
   ],
+  wallet: {
+    type: Number,
+    default: 0,
+  },
 });
 
 patientSchema.pre('save', async function (next) {
