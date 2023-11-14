@@ -30,6 +30,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HealthPackages from "./components/HealthPackages";
 import Contract from "./components/Contract";
 import "./App.css";
+import ScheduleFollowUpForm from "./components/ScheduleFollowUp";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
           <Route path="/doctors/view-all-doctor-appointments" element={<ViewAllDoctorAppointments />} />
           <Route path="/doctors/add-time-slot" element={<AddTimeSlot />} />
           <Route path="/patients/home" element={<PatientHome />} />
+          <Route path="/doctors/scheduleFollowUp" element={<ScheduleFollowUpForm />} />
           <Route path="/patients/view-all-patient-appointments" element={<ViewAllPatientAppointments />} />
           <Route path="/patients/view-all-available-appointments" element={<ViewAvailableAppointments />} />
         </Routes>
