@@ -251,7 +251,7 @@ exports.subscribeToHealthPackage = async (req, res) => {
 
 exports.viewHealthPackageOfPatient = async (req, res) => {
   try {
-    const patientId = req.user._id; // Assuming patientId is in the URL parameters
+    const patientId = req.user._id;
     const patient = await Patient.findById(patientId).populate('healthPackage');
     const patientPackage = patient.healthPackage;
     res.status(200).send(patientPackage);

@@ -199,8 +199,8 @@ exports.acceptContract = async (req, res) => {
 
 exports.addHealthRecord = async (req, res) => {
   try {
-    const patientId = req.body.patientId;
-    const patient = await Patient.findById(patientId);
+    const patientUsername = req.body.patientUsername;
+    const patient = await Patient.findOne({ username: patientUsername });
 
     const medicines = req.body.medicines.map(medicine => ({
       name: medicine.name,
@@ -216,7 +216,7 @@ exports.addHealthRecord = async (req, res) => {
       filled: req.body.filled,
     }).save();
 
-    res.status(201).json(newHealthRecord); // Assuming you want to return the created health record
+    res.status(201).json(newHealthRecord);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
