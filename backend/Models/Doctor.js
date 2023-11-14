@@ -51,6 +51,12 @@ const doctorSchema = new mongoose.Schema({
       ref: 'Patient',
     },
   ],
+  availableSlots: [
+    {
+      type: Date,
+      default: null,
+    },
+  ],
   wallet: {
     type: Number,
     default: 0,

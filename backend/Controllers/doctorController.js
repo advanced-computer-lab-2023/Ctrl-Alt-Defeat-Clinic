@@ -2,6 +2,7 @@ const Doctor = require('../Models/Doctor');
 const Patient = require('../Models/Patient');
 const Appointment = require('../Models/Appointment');
 const Prescription = require('../Models/Prescriptions');
+const { filterAppointments } = require('./appointmentController');
 
 exports.viewAllDoctors = async (req, res) => {
   try {
@@ -168,6 +169,44 @@ exports.filterDoctors = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+  //-------------- SPRINT 2 -------------------
+
+  exports.addAvailableSlot = async (req, res) => {
+    
+    try {
+  
+      const {slotDate} = req.query;
+  
+      if(!slotDate) return res.status(400).json({ message: 'Enter the slot time and date.'});
+
+      if(slotDate < new Date()) res.status(400).json({ message: 'Date and time has already passed.'});
+
+      const doctor = await Doctor.findOneAndUpdate(
+        { username: req.user.username },
+        {$pull: { availableSlots: { $lt: new Date() } }},
+        { new: true }
+      );
+  
+      const updatedDoctor = await Doctor.updateOne({ username: req.user.username }, { $addToSet: { availableSlots: slotDate } });
+  
+      res.status(200).json(updatedDoctor);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
+  exports.viewDoctorAppointments = async (req,res) => {
+  
+    try{ 
+      const appointments = await Appointment.find({doctor: req.user.username}).exec();
+      filterAppointments(req, res, appointments);
+  
+    } catch(err){
+      res.status(500).json({ message: err.message });
+    }
+  };
+
 
 exports.acceptContract = async (req, res) => {
   try {

@@ -4,6 +4,8 @@ const { generateToken } = require('./authController');
 const Package = require('../Models/Package');
 const FamilyMember = require('../Models/FamilyMember');
 const Prescription = require('../Models/Prescriptions');
+const Appointment = require('../Models/Appointment');
+const { filterAppointments } = require('./appointmentController');
 
 exports.registerPatient = async (req, res) => {
   const newPatient = await Patient.create(req.body);
@@ -88,8 +90,8 @@ async function calculateSessionPrice(doctorRate, healthPackage) {
 
 exports.viewFamilyMembers = async (req, res) => {
   try {
-    const username = req.query.username;
-    const patient = await Patient.findOne({ username: username }).populate('familyMembers');
+    //const username = req.query.username;
+    const patient = await Patient.findOne({ username: req.user.username }).populate('familyMembers');
 
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
@@ -329,6 +331,46 @@ exports.subscribeToHealthPackageByWallet = async (req, res) => {
     res.status(500).json({ error: 'Error during subscription' });
   }
 };
+
+  //-------------- SPRINT 2 -------------------
+
+  exports.viewDoctorSlots = async (req, res) => {
+
+    try{
+  
+      const {doctorUsername} = req.query;
+  
+      if(!doctorUsername) return res.status(400).json('There are null values.');
+  
+      const doctor = await Doctor.findOne({ username: doctorUsername }).exec();
+  
+      if (!doctor) return res.status(404).json({ message: 'Doctor not found' });
+      
+      const updateDoctor = await Doctor.findOneAndUpdate(
+        { username: doctorUsername },
+        {$pull: { availableSlots: { $lt: new Date() } }},
+        { new: true }
+      );
+
+      res.status(200).json(updateDoctor.availableSlots);
+  
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  
+  };
+  
+  exports.viewPatientAppointments = async (req,res) => {
+  
+    try{
+      const appointments = await Appointment.find({patient: req.user.username}).exec();  
+      filterAppointments(req, res, appointments);
+  
+    } catch(err){
+      res.status(500).json({ message: err.message });
+    }
+  };
+
 
 exports.cancelHealthPackage = async (req, res) => {
   try {
