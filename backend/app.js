@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const connectToMongoDB = require('./DBConfig.js');
 const port = process.env.PORT || 4000;
-const path = require('path');
 
 const app = express();
 
@@ -35,7 +34,6 @@ app.use('/api/v1/admins', adminRoutes);
 app.use('/api/v1/appointments', appointmentRouter);
 app.use('/api/v1/packages', packageRouter);
 app.use('/api/v1/auth', authRouter);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 connectToMongoDB();
 app.listen(port, () => {

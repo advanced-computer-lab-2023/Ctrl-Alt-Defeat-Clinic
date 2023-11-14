@@ -2,7 +2,7 @@ const express = require('express');
 const multerUpload = require('../Middlewares/multerMiddleware');
 const patientController = require('../Controllers/patientController');
 const authMiddlewares = require('../Middlewares/authMiddlewares');
-
+const path = require('path');
 
 const router = express.Router();
 
@@ -19,6 +19,7 @@ router.route('/deleteMedicalHistory').delete(authMiddlewares.protect, authMiddle
 router.route('/getAllMedicalHistory').get(authMiddlewares.protect, authMiddlewares.restrictTo('patient'), patientController.getAllMedicalHistory);
 router.route('/viewDoctorSlots').get(authMiddlewares.protect, authMiddlewares.restrictTo('patient'), patientController.viewDoctorSlots);
 router.route('/viewPatientAppointments').get(authMiddlewares.protect, authMiddlewares.restrictTo('patient'), patientController.viewPatientAppointments);
+router.use('/uploads', authMiddlewares.protect, authMiddlewares.restrictTo('patient'), express.static(path.join(__dirname, '../uploads')));
 router
   .route('/subscribeToHealthPackage')
   .post(authMiddlewares.protect, authMiddlewares.restrictTo('patient'), patientController.subscribeToHealthPackage);

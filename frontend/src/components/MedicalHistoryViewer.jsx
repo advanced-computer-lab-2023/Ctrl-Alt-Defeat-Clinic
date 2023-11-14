@@ -30,7 +30,7 @@ const MedicalHistoryViewer = () => {
       {medicalHistoryPaths && medicalHistoryPaths.length > 0 ? (
         medicalHistoryPaths.map((path, index) => (
           <div key={index}>
-            <a href={`http://localhost:8000/${path}`} target="_blank" rel="noopener noreferrer">
+            <a href={`http://localhost:8000/api/v1/patients/${path}`} target="_blank" rel="noopener noreferrer">
               File {index + 1}
             </a>
           </div>
