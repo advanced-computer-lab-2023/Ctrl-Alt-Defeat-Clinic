@@ -22,14 +22,17 @@ import Login from "./components/Login";
 import AdminHome from "./components/AdminHome";
 import DoctorHome from "./components/DoctorHome";
 import PatientHome from "./components/PatientHome";
+import ViewAllDoctorAppointments from "./components/ViewAllDoctorAppointments";
+import ViewAllPatientAppointments from "./components/ViewAllPatientAppointments";
+import AddTimeSlot from "./components/AddTimeSlot";
+import ViewAvailableAppointments from "./components/ViewAvailableAppointments";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HealthPackages from "./components/HealthPackages";
 import Contract from "./components/Contract";
-import SubscribeHealthPackages from "./components/SubscribeHealthPackages";
 import UploadMedicalHistory from "./components/UploadMedicalHistory";
 import DeleteMedicalHistory from "./components/DeleteMedicalHistory";
-
 import "./App.css";
+import ScheduleFollowUpForm from "./components/ScheduleFollowUp";
 
 function App() {
   return (
@@ -58,9 +61,14 @@ function App() {
           <Route path="/doctors/update-my-info" element={<UpdateDoctor />} />
           <Route path="/doctors/my-patients" element={<ViewAllPatients />} />
           <Route path="/doctors/search" element={<SearchPatient />} />
+          <Route path="/doctors/view-all-doctor-appointments" element={<ViewAllDoctorAppointments />} />
+          <Route path="/doctors/add-time-slot" element={<AddTimeSlot />} />
           <Route path="/patients/home" element={<PatientHome />} />
           <Route path="/patients/upload" element={<UploadMedicalHistory />} />
           <Route path="/patients/delete" element={<DeleteMedicalHistory />} />
+          <Route path="/doctors/scheduleFollowUp" element={<ScheduleFollowUpForm />} />
+          <Route path="/patients/view-all-patient-appointments" element={<ViewAllPatientAppointments />} />
+          <Route path="/patients/view-all-available-appointments" element={<ViewAvailableAppointments />} />
         </Routes>
       </BrowserRouter>
       {/* <PatientRegister />

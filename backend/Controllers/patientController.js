@@ -6,6 +6,8 @@ const FamilyMember = require('../Models/FamilyMember');
 const Prescription = require('../Models/Prescriptions');
 const path = require('path');
 const fs = require('fs');
+const Appointment = require('../Models/Appointment');
+const { filterAppointments } = require('./appointmentController');
 
 exports.registerPatient = async (req, res) => {
   const newPatient = await Patient.create(req.body);
@@ -90,8 +92,8 @@ async function calculateSessionPrice(doctorRate, healthPackage) {
 
 exports.viewFamilyMembers = async (req, res) => {
   try {
-    const username = req.query.username;
-    const patient = await Patient.findOne({ username: username }).populate('familyMembers');
+    //const username = req.query.username;
+    const patient = await Patient.findOne({ username: req.user.username }).populate('familyMembers');
 
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
@@ -216,71 +218,209 @@ exports.searchForDoctors = async (req, res) => {
   }
 };
 
-exports.subscribeToHealthPackage = async (req, res) => {
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
+
+exports.createCheckoutSessionForHp = async (req, res) => {
+  const { healthPackageId } = req.body;
   try {
-    const { patientId, healthPackageId } = req.body;
-
-    const familyMembers = await Patient.findById(patientId).populate('familyMembers');
-    // Find the patient by ID
-    const patient = await Patient.findById(patientId);
-
-    if (!patient) {
-      return res.status(404).json({ error: 'Patient not found' });
-    }
-
-    // Find the health package by ID
     const healthPackage = await Package.findById(healthPackageId);
+    // Create a Stripe price object
+    const price = await stripe.prices.create({
+      unit_amount: healthPackage.price * 100,
+      currency: 'egp',
+      recurring: {
+        interval: 'month',
+      },
+      product_data: {
+        name: healthPackage.name + ' Health Package',
+      },
+    });
 
-    if (!healthPackage) {
-      return res.status(404).json({ error: 'Health package not found' });
-    }
+    // Create a Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'subscription',
+      line_items: [
+        {
+          price: price.id,
+          quantity: 1,
+        },
+      ],
+      customer_email: req.user.email,
+      client_reference_id: req.user._id,
+      success_url: `http://localhost:5173/patients/healthPackages?healthPackageId=${healthPackageId}&success=true`,
+      cancel_url: `http://localhost:5173/patients/healthPackages`,
+    });
 
-    // Subscribe the patient to the health package
-    patient.healthPackage = healthPackageId;
-    await patient.save();
-
-    for (let i = 0; i < familyMembers.familyMembers.length; i++) {
-      familyMembers.familyMembers[i].healthPackage = healthPackageId;
-      await familyMembers.familyMembers[i].save();
-    }
-
-    res.status(200).json({ message: 'Subscription successful' });
+    res.status(200).json({ url: session.url });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error during subscription' });
   }
 };
 
-exports.viewHealthPackageOfPatient = async (req, res) => {
+exports.subscribeToHealthPackage = async (req, res) => {
   try {
-    const patientId = req.user._id; // Assuming patientId is in the URL parameters
-    const patient = await Patient.findById(patientId).populate('healthPackage');
-    const patientPackage = patient.healthPackage;
-    res.status(200).send(patientPackage);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const { healthPackageId } = req.body;
+    const patientId = req.user._id;
+
+    const patient = await Patient.findById(patientId).populate('familyMembers');
+    const familyMembers = patient.familyMembers;
+    const healthPackage = await Package.findById(healthPackageId);
+
+    // Subscribe the patient to the health package
+    patient.healthPackage = healthPackageId;
+    patient.healthPackageStatus = 'subscribed';
+    patient.healthPackageRenewalDate = new Date();
+    await patient.save();
+
+    for (let i = 0; i < familyMembers.length; i++) {
+      familyMembers[i].healthPackage = healthPackageId;
+      familyMembers[i].healthPackageStatus = 'subscribed';
+      familyMembers[i].healthPackageRenewalDate = new Date();
+      await familyMembers[i].save();
+    }
+
+    res.status(200).json({
+      name: healthPackage.name,
+      id: healthPackage._id,
+      status: patient.healthPackageStatus,
+      renewalDate: patient.healthPackageRenewalDate,
+      endDate: patient.healthPackageEndDate,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error during subscription' });
   }
 };
 
-exports.viewHealthPackageOfFamilyMembers = async (req, res) => {
+exports.subscribeToHealthPackageByWallet = async (req, res) => {
   try {
-    const patientId = req.user._id; // Assuming patientId is in the URL parameters
-    const patient = await Patient.findById(patientId).populate('familyMembers');
-    const familyMembersPackages = [];
+    const { healthPackageId } = req.body;
+    const patientId = req.user._id;
 
-    for (let i = 0; i < patient.familyMembers.length; i++) {
-      console.log(patient.familyMembers[i]);
-      await patient.familyMembers[i].populate('healthPackage');
-      console.log(patient.familyMembers[i].healthPackage);
-      familyMembersPackages.push({
-        name: patient.familyMembers[i].name,
-        package: patient.familyMembers[i].healthPackage,
-      });
+    const patient = await Patient.findById(patientId).populate('familyMembers');
+    const familyMembers = patient.familyMembers;
+    const healthPackage = await Package.findById(healthPackageId);
+
+    if (patient.wallet < healthPackage.price) {
+      return res.status(200).json({ error: 'Not enough money in wallet' });
     }
 
-    res.status(200).send(familyMembersPackages);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    // Subscribe the patient to the health package
+    patient.healthPackage = healthPackageId;
+    patient.healthPackageStatus = 'subscribed';
+    patient.healthPackageRenewalDate = new Date();
+    patient.wallet -= healthPackage.price;
+    await patient.save();
+
+    for (let i = 0; i < familyMembers.length; i++) {
+      familyMembers[i].healthPackage = healthPackageId;
+      familyMembers[i].healthPackageStatus = 'subscribed';
+      familyMembers[i].healthPackageRenewalDate = new Date();
+      await familyMembers[i].save();
+    }
+
+    res.status(200).json({
+      name: healthPackage.name,
+      id: healthPackage._id,
+      status: patient.healthPackageStatus,
+      renewalDate: patient.healthPackageRenewalDate,
+      endDate: patient.healthPackageEndDate,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error during subscription' });
+  }
+};
+
+  //-------------- SPRINT 2 -------------------
+
+  exports.viewDoctorSlots = async (req, res) => {
+
+    try{
+  
+      const {doctorUsername} = req.query;
+  
+      if(!doctorUsername) return res.status(400).json('There are null values.');
+  
+      const doctor = await Doctor.findOne({ username: doctorUsername }).exec();
+  
+      if (!doctor) return res.status(404).json({ message: 'Doctor not found' });
+      
+      const updateDoctor = await Doctor.findOneAndUpdate(
+        { username: doctorUsername },
+        {$pull: { availableSlots: { $lt: new Date() } }},
+        { new: true }
+      );
+
+      res.status(200).json(updateDoctor.availableSlots);
+  
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  
+  };
+  
+  exports.viewPatientAppointments = async (req,res) => {
+  
+    try{
+      const appointments = await Appointment.find({patient: req.user.username}).exec();  
+      filterAppointments(req, res, appointments);
+  
+    } catch(err){
+      res.status(500).json({ message: err.message });
+    }
+  };
+
+
+exports.cancelHealthPackage = async (req, res) => {
+  try {
+    const patient = await Patient.findById(req.user._id).populate('familyMembers');
+    const familyMembers = patient.familyMembers;
+
+    patient.healthPackageStatus = 'cancelled';
+    patient.healthPackageEndDate = new Date();
+    await patient.save();
+
+    for (let i = 0; i < familyMembers.length; i++) {
+      familyMembers[i].healthPackageStatus = 'cancelled';
+      familyMembers[i].healthPackageEndDate = new Date();
+      await familyMembers[i].save();
+    }
+
+    res.status(200).json({
+      name: patient.healthPackage.name,
+      id: patient.healthPackage._id,
+      status: patient.healthPackageStatus,
+      renewalDate: patient.healthPackageRenewalDate,
+      endDate: patient.healthPackageEndDate,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error during cancellation' });
+  }
+};
+
+exports.getHealthPackageStatus = async (req, res) => {
+  try {
+    const user = req.user;
+    const healthPackage = user.healthPackage;
+    if (!healthPackage) {
+      return res.status(200).json({});
+    }
+    await user.populate('healthPackage');
+    const healthPackageStatus = {
+      name: healthPackage.name,
+      id: healthPackage._id,
+      status: user.healthPackageStatus,
+      renewalDate: user.healthPackageRenewalDate,
+      endDate: user.healthPackageEndDate,
+    };
+    res.status(200).json(healthPackageStatus);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error during cancellation' });
   }
 };
 
