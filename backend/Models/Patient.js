@@ -54,6 +54,11 @@ const patientSchema = new mongoose.Schema({
       ref: FamilyMember,
     },
   ],
+  medicalHistory:[
+    {
+      type: String, 
+    },
+  ],
 });
 
 patientSchema.pre('save', async function (next) {

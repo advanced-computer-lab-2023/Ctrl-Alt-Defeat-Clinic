@@ -39,6 +39,12 @@ function PatientHome() {
         <li>
           <Link to="/patients/healthPackages">Show All Health Packages</Link>
         </li>
+        <li>
+          <Link to="/patients/upload">Upload Medical History</Link>
+        </li>
+        <li>
+          <Link to="/patients/delete">Delete Medical History</Link>
+        </li>
       </ul>
     </div>
   );
