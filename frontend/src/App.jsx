@@ -26,6 +26,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HealthPackages from "./components/HealthPackages";
 import Contract from "./components/Contract";
 import SubscribeHealthPackages from "./components/SubscribeHealthPackages";
+import  AddHealthRecord  from "./components/AddHealthRecord";
 import "./App.css";
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
           <Route path="/doctors/my-patients" element={<ViewAllPatients />} />
           <Route path="/doctors/search" element={<SearchPatient />} />
           <Route path="/patients/home" element={<PatientHome />} />
+          <Route path="/doctors/AddHealthRecord" element={<AddHealthRecord />} />
         </Routes>
       </BrowserRouter>
       {/* <PatientRegister />
