@@ -51,6 +51,10 @@ const doctorSchema = new mongoose.Schema({
       ref: 'Patient',
     },
   ],
+  wallet: {
+    type: Number,
+    default: 0,
+  },
 });
 
 doctorSchema.pre('save', async function (next) {

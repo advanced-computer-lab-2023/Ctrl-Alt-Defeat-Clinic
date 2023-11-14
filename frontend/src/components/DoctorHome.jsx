@@ -47,6 +47,7 @@ function DoctorHome() {
           <p>username: {doctor.username}</p>
           <p>email: {doctor.email}</p>
           <p>registration status: {doctor.registrationStatus}</p>
+          <p>wallet Balance: {doctor.wallet}</p>
         </div>
       )}
       <ul>
