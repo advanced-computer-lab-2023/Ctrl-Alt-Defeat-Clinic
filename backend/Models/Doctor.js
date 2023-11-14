@@ -61,6 +61,9 @@ const doctorSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  otp: {
+    type: String,
+  },
 });
 
 doctorSchema.pre('save', async function (next) {

@@ -30,7 +30,9 @@ router
 router
   .route('/subscribeToHealthPackage')
   .post(protect, restrictTo('patient'), patientController.subscribeToHealthPackage);
-router.route('/cancelHealthPackage').post(protect, restrictTo('patient'), patientController.cancelHealthPackage);
+router
+  .route('/cancelHealthPackage')
+  .post(protect, restrictTo('patient'), patientController.cancelHealthPackage);
 router
   .route('/viewStatusOfHealthPackage')
   .get(protect, restrictTo('patient'), patientController.getHealthPackageStatus);
@@ -39,6 +41,10 @@ router
   .post(protect, restrictTo('patient'), patientController.createCheckoutSessionForHp);
 router
   .route('/subscribeToHealthPackageByWallet')
-  .post(protect, restrictTo('patient'), patientController.subscribeToHealthPackageByWallet);
+  .post(
+    protect,
+    restrictTo('patient'),
+    patientController.subscribeToHealthPackageByWallet
+  );
 
 module.exports = router;

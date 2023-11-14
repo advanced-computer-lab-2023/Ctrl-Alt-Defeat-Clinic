@@ -11,6 +11,9 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  otp: {
+    type: String,
+  },
 });
 
 adminSchema.pre('save', async function (next) {

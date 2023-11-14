@@ -33,10 +33,20 @@ function PatientHome() {
       )}
       <ul>
         <li>
-          <Link to="/patients/view-all-patient-appointments">View All My Appointments</Link>
+          <Link to="/patients/view-all-patient-appointments">
+            View All My Appointments
+          </Link>
         </li>
         <li>
-          <Link to="/patients/view-all-available-appointments">View Available Doctor Appointments</Link>
+          <Link to="/patients/view-all-available-appointments">
+            View Available Doctor Appointments
+          </Link>
+        </li>
+        <li>
+          <Link to="/patients/healthPackages">Show All Health Packages</Link>
+        </li>
+        <li>
+          <Link to="/changePassword">change password</Link>
         </li>
         <li>
           <Link to="/patients/healthPackages">Show All Health Packages</Link>
