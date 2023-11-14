@@ -14,7 +14,6 @@ import UpdateDoctor from "./components/updateDoctor";
 import ViewAllPatients from "./components/ViewAllPatients";
 import SearchPatient from "./components/SearchPatient";
 import PrescriptionList from "./components/PrescriptionList";
-import AddFamilyMember from "./components/AddFamilyMembers";
 import FamilyMembersViewer from "./components/FamilyMembersViewer";
 import DoctorList from "./components/DoctorList";
 import Home from "./components/Home";
@@ -32,7 +31,6 @@ import VerifyOTP from "./components/VerifyOTP";
 import ForgetPassword from "./components/ForgetPassword";
 import ResetPassword from "./components/ResetPassword";
 import ChangePassword from "./components/ChangePassword";
-import Contract from "./components/Contract";
 import UploadMedicalHistory from "./components/UploadMedicalHistory";
 import DeleteMedicalHistory from "./components/DeleteMedicalHistory";
 import MedicalHistoryViewer from "./components/MedicalHistoryViewer";
@@ -81,8 +79,14 @@ function App() {
             element={<ViewAllDoctorAppointments />}
           />
           <Route path="/doctors/add-time-slot" element={<AddTimeSlot />} />
-          <Route path="/doctors/scheduleFollowUp" element={<ScheduleFollowUpForm />} />
-          <Route path="/doctors/view-patient-medical-history" element={<MedicalHistoryDoctorViewer />} />
+          <Route
+            path="/doctors/scheduleFollowUp"
+            element={<ScheduleFollowUpForm />}
+          />
+          <Route
+            path="/doctors/view-patient-medical-history"
+            element={<MedicalHistoryDoctorViewer />}
+          />
           <Route path="/patients/home" element={<PatientHome />} />
           <Route
             path="/patients/view-all-patient-appointments"
@@ -94,56 +98,12 @@ function App() {
           />
           <Route path="/patients/upload" element={<UploadMedicalHistory />} />
           <Route path="/patients/delete" element={<DeleteMedicalHistory />} />
-          <Route path="/patients/view-medical-history" element={<MedicalHistoryViewer />} />
-          <Route path="/patients/view-all-patient-appointments" element={<ViewAllPatientAppointments />} />
-          <Route path="/patients/view-all-available-appointments" element={<ViewAvailableAppointments />} />
+          <Route
+            path="/patients/view-medical-history"
+            element={<MedicalHistoryViewer />}
+          />
         </Routes>
       </BrowserRouter>
-      {/* <PatientRegister />
-      <hr />
-      <DoctorRegister />
-      <hr />
-      <AddAdmin />
-      <hr />
-      <RemoveAdmin />
-      <hr />
-      <RemoveDoctor />
-      <hr />
-      <RemovePatient />
-      <hr />
-      <ViewDoctorRequest />
-      <hr />
-      <AddPackage />
-      <hr />
-      <DeletePackage />
-      <hr />
-      <UpdatePackage />
-      <hr />
-      <ViewAllDoctors />
-      <hr />
-      <FilterAppointments />
-      <hr />
-      <UpdateDoctor />
-      <hr />
-      <ViewAllPatients />
-      <hr />
-      <SearchPatient />
-      <hr />
-      <FamilyMembersViewer />
-      <hr />
-      <AddFamilyMember />
-      <hr />
-      <PrescriptionList />
-      <hr />
-      <DoctorList />
-      <hr /> */}
-      {/* <hr />
-      <HealthPackages />
-      <hr /> */}
-
-      {/* <hr />
-      <SubscribeHealthPackages />
-      <hr /> */}
     </>
   );
 }

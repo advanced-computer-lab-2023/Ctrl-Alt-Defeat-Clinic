@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ForgetPassword = () => {
   const [username, setUsername] = useState("");
@@ -34,6 +34,7 @@ const ForgetPassword = () => {
         placeholder="Enter your username"
       />
       <button onClick={handleSubmit}>Submit</button>
+      <Link to="/login">Login Page</Link>
     </div>
   );
 };

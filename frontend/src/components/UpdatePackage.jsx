@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Axios from "axios";
+import { Link } from "react-router-dom";
 
 function UpdatePackage() {
   const [res, setRes] = useState(null);
@@ -105,6 +106,7 @@ function UpdatePackage() {
         <button type="submit">Update Package</button>
       </form>
       {res && <div>package updated</div>}
+      <Link to="/admins/home">Home</Link>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -52,6 +52,7 @@ const ChangePassword = () => {
 
       <button onClick={handleSave}>Save</button>
       {changed && <div>password changed successfully</div>}
+      <Link to="/">Go to login page</Link>
     </div>
   );
 };

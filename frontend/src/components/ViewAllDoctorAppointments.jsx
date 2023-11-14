@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Axios from "axios";
+import { Link } from "react-router-dom";
 
 function ViewAllDoctorAppointments() {
-  
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState("");
@@ -12,8 +12,10 @@ function ViewAllDoctorAppointments() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const appointmentInformation = await Axios.get(
-      `http://localhost:8000/api/v1/doctors/viewDoctorAppointments?startDate=${startDate? new Date(startDate) : ""}&endDate=${endDate? new Date(endDate) : ""}&status=${status}`,
-      {withCredentials: true}
+      `http://localhost:8000/api/v1/doctors/viewDoctorAppointments?startDate=${
+        startDate ? new Date(startDate) : ""
+      }&endDate=${endDate ? new Date(endDate) : ""}&status=${status}`,
+      { withCredentials: true }
     );
     console.log(appointmentInformation);
     setAppointmentInfo(appointmentInformation.data);
@@ -46,7 +48,7 @@ function ViewAllDoctorAppointments() {
     <div>
       <h2>View All Appointments</h2>
 
-<     form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div>
           <label>Start Date: </label>
           <input
@@ -65,10 +67,7 @@ function ViewAllDoctorAppointments() {
         </div>
         <div>
           <label>Status: </label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
+          <select value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">All</option>
             <option value="upcoming">Upcoming</option>
             <option value="completed">Completed</option>
@@ -81,9 +80,12 @@ function ViewAllDoctorAppointments() {
         </div>
       </form>
 
-      {appointmentInfo && appointmentInfo.length > 0 && renderAppointmentsTable()}
-      {!appointmentInfo || appointmentInfo.length === 0 && <p>No appointments found.</p>}
-
+      {appointmentInfo &&
+        appointmentInfo.length > 0 &&
+        renderAppointmentsTable()}
+      {!appointmentInfo ||
+        (appointmentInfo.length === 0 && <p>No appointments found.</p>)}
+      <Link to="/doctors/home">Home</Link>
     </div>
   );
 }

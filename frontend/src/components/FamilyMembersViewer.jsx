@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const FamilyMembersViewer = () => {
   const [patient, setPatient] = useState(null);
@@ -233,6 +234,7 @@ const FamilyMembersViewer = () => {
           )}
         </div>
       )}
+      <Link to="/patients/home">Home</Link>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const ViewDoctorRequest = () => {
   const [pendingDoctors, setPendingDoctors] = useState([]);
@@ -144,6 +145,7 @@ const ViewDoctorRequest = () => {
           </p>
         </div>
       )}
+      <Link to="/admins/home">Home</Link>
     </div>
   );
 };

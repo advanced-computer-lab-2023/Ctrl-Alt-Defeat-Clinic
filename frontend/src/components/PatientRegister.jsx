@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function PatientRegister() {
   const navigate = useNavigate();
@@ -173,6 +173,7 @@ function PatientRegister() {
         <button type="submit">Register</button>
       </form>
       {res && <div>patient registered</div>}
+      <Link to="/">Back</Link>
     </div>
   );
 }
