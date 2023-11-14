@@ -335,3 +335,22 @@ exports.viewAvailableSlots = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getPatientMedicalHistory = async (req, res) => {
+  try {
+    const {patientId} = req.query;
+
+    const patient = await Patient.findById(patientId);
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const medicalHistory = patient.medicalHistory || [];
+
+    res.status(200).json({ medicalHistory });
+  } catch (error) {
+    console.error('Error fetching medical history:', error);
+    res.status(500).json({ message: 'Error fetching medical history' });
+  }
+};

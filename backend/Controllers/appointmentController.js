@@ -13,7 +13,7 @@ const addAppointment = async (req, res) => {
 
       const tempDoctor = await Doctor.findOneAndUpdate(
         { username: doctor },
-        {$pull: { availableSlots: date }},
+        {$pull: { availableSlots: date }, $addToSet: { registeredPatients: req.user._id }},
         { new: true }
       ).exec();
   

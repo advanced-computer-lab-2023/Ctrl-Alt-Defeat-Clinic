@@ -39,11 +39,6 @@ function PatientHome() {
           <Link to="/patients/view-all-available-appointments">View Available Doctor Appointments</Link>
         </li>
         <li>
-          <Link to="/" onClick={handleLogout}>
-            Logout
-          </Link>
-        </li>
-        <li>
           <Link to="/patients/healthPackages">Show All Health Packages</Link>
         </li>
         <li>
@@ -53,6 +48,14 @@ function PatientHome() {
         </li>
         <li>
           <Link to="/patients/delete">Delete Medical History</Link>
+        </li>
+        <li>
+          <Link to="/patients/view-medical-history">View Medical History</Link>
+        </li>
+        <li>
+          <Link to="/" onClick={handleLogout}>
+            Logout
+          </Link>
         </li>
       </ul>
     </div>
