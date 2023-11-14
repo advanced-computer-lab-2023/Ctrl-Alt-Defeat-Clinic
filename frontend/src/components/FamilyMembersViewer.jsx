@@ -13,7 +13,7 @@ const FamilyMembersViewer = () => {
   const [linkingData, setLinkingData] = useState({
     phoneNumber: "",
     email: "",
-    relationship: "",
+    relationship: "wife",
   });
 
   const showData = async () => {
