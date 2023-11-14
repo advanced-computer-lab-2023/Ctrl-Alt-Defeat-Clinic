@@ -61,15 +61,19 @@ function DoctorHome() {
           <Link to="/doctors/search">Search Patient</Link>
         </li>
         <li>
-          <Link to="/doctors/view-all-doctor-appointments">
-            View All My Appointments
-          </Link>
+          <Link to="/doctors/scheduleFollowUp">Schedule Follow-Up</Link>
+        </li>
+        <li>
+          <Link to="/doctors/view-all-doctor-appointments">View All My Appointments</Link>
         </li>
         <li>
           <Link to="/doctors/add-time-slot">Add New Time Slot</Link>
         </li>
         <li>
           <Link to="/changePassword">change password</Link>
+        </li>
+        <li>
+          <Link to="/doctors/view-patient-medical-history">View Patient Medical History</Link>
         </li>
         <li>
           <Link to="/" onClick={handleLogout}>

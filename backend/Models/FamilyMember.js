@@ -7,7 +7,6 @@ const FamilyMemberSchema = new mongoose.Schema({
   },
   nationalId: {
     type: Number,
-    required: true,
     unique: true,
   },
   age: {

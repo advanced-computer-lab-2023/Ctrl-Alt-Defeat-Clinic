@@ -8,7 +8,7 @@ router.route('/register').post(doctorController.registerDoctor);
 
 router.route('/updateDoctor').put(doctorController.updateDoctor);
 
-router.route('/viewPatients').get(doctorController.viewAllPatients);
+router.route('/viewPatients').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.viewAllPatients);
 
 router.route('/searchPatientsByName').get(authMiddlewares.protect, doctorController.searchPatientsByName);
 
@@ -27,5 +27,13 @@ router.route('/addAvailableSlot').put(authMiddlewares.protect, authMiddlewares.r
 router.route('/viewDoctorAppointments').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.viewDoctorAppointments);
 
 router.route('/acceptContract').put(doctorController.acceptContract);
+
+router.route('/scheduleFollowUp').put(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.scheduleFollowUp);
+
+router.route('/viewAvailableSlots').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.viewAvailableSlots);
+
+router.route('/addAvailableSlot').put(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.addAvailableSlot);
+
+router.route('/getPatientMedicalHistory').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.getPatientMedicalHistory);
 
 module.exports = router;

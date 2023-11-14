@@ -33,7 +33,12 @@ import ForgetPassword from "./components/ForgetPassword";
 import ResetPassword from "./components/ResetPassword";
 import ChangePassword from "./components/ChangePassword";
 import Contract from "./components/Contract";
+import UploadMedicalHistory from "./components/UploadMedicalHistory";
+import DeleteMedicalHistory from "./components/DeleteMedicalHistory";
+import MedicalHistoryViewer from "./components/MedicalHistoryViewer";
+import MedicalHistoryDoctorViewer from "./components/MedicalHistoryDoctorViewer";
 import "./App.css";
+import ScheduleFollowUpForm from "./components/ScheduleFollowUp";
 
 function App() {
   return (
@@ -49,6 +54,11 @@ function App() {
           <Route path="/changePassword" element={<ChangePassword />} />
           <Route path="/patients/register" element={<PatientRegister />} />
           <Route path="/patients/healthPackages" element={<HealthPackages />} />
+          <Route
+            path="/patients/familyMembers"
+            element={<FamilyMembersViewer />}
+          />
+
           <Route path="/doctors/register" element={<DoctorRegister />} />
           <Route path="/admins/home" element={<AdminHome />} />
           <Route path="/admin/addAdmin" element={<AddAdmin />} />
@@ -71,6 +81,8 @@ function App() {
             element={<ViewAllDoctorAppointments />}
           />
           <Route path="/doctors/add-time-slot" element={<AddTimeSlot />} />
+          <Route path="/doctors/scheduleFollowUp" element={<ScheduleFollowUpForm />} />
+          <Route path="/doctors/view-patient-medical-history" element={<MedicalHistoryDoctorViewer />} />
           <Route path="/patients/home" element={<PatientHome />} />
           <Route
             path="/patients/view-all-patient-appointments"
@@ -80,6 +92,11 @@ function App() {
             path="/patients/view-all-available-appointments"
             element={<ViewAvailableAppointments />}
           />
+          <Route path="/patients/upload" element={<UploadMedicalHistory />} />
+          <Route path="/patients/delete" element={<DeleteMedicalHistory />} />
+          <Route path="/patients/view-medical-history" element={<MedicalHistoryViewer />} />
+          <Route path="/patients/view-all-patient-appointments" element={<ViewAllPatientAppointments />} />
+          <Route path="/patients/view-all-available-appointments" element={<ViewAvailableAppointments />} />
         </Routes>
       </BrowserRouter>
       {/* <PatientRegister />

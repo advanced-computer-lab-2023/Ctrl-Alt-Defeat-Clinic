@@ -4,6 +4,8 @@ const { generateToken } = require('./authController');
 const Package = require('../Models/Package');
 const FamilyMember = require('../Models/FamilyMember');
 const Prescription = require('../Models/Prescriptions');
+const path = require('path');
+const fs = require('fs');
 const Appointment = require('../Models/Appointment');
 const { filterAppointments } = require('./appointmentController');
 
@@ -27,8 +29,7 @@ exports.registerPatient = async (req, res) => {
 
 exports.addFamilyMember = async (req, res) => {
   try {
-    const username = req.query.username;
-    const patient = await Patient.findOne({ username: username });
+    const patient = await Patient.findOne({ username: req.user.username });
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
     }
@@ -40,7 +41,10 @@ exports.addFamilyMember = async (req, res) => {
 
     // Add the new family member's ObjectId to the patient's familyMembers array
     // Save the updated patient document
-    const updatedPatient = await Patient.updateOne({ username: username }, { $push: { familyMembers: newMember._id } });
+    const updatedPatient = await Patient.updateOne(
+      { username: req.user.username },
+      { $push: { familyMembers: newMember._id } }
+    );
 
     res.status(201).json(newMember);
   } catch (error) {
@@ -90,7 +94,6 @@ async function calculateSessionPrice(doctorRate, healthPackage) {
 
 exports.viewFamilyMembers = async (req, res) => {
   try {
-    //const username = req.query.username;
     const patient = await Patient.findOne({ username: req.user.username }).populate('familyMembers');
 
     if (!patient) {
@@ -262,6 +265,7 @@ exports.subscribeToHealthPackage = async (req, res) => {
     const { healthPackageId } = req.body;
     const patientId = req.user._id;
 
+
     const patient = await Patient.findById(patientId).populate('familyMembers');
     const familyMembers = patient.familyMembers;
     const healthPackage = await Package.findById(healthPackageId);
@@ -329,6 +333,57 @@ exports.subscribeToHealthPackageByWallet = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error during subscription' });
+  }
+};
+
+exports.linkFamilyMember = async (req, res) => {
+  try {
+    const { phoneNumber, email, relationship } = req.body;
+
+    // Find the patient with the given username
+    const patient = await Patient.findOne({ username: req.user.username });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    // Find the patient with the given phone number or email
+    const familyMember = await Patient.findOne({
+      $or: [{ mobileNumber: phoneNumber.toString() }, { email }],
+    });
+
+    if (!familyMember) {
+      return res.status(404).json({ message: 'Family member not found' });
+    }
+    // Explicitly fetch the required fields from the familyMember
+    const { name, gender, nationalId } = familyMember;
+    // Assuming familyMember.dateOfBirth is a valid Date object
+    const birthDate = new Date(familyMember.dateOfBirth);
+    const currentDate = new Date();
+
+    // Calculate the age
+    const ageInMillis = currentDate - birthDate;
+    const age = Math.floor(ageInMillis / (365.25 * 24 * 60 * 60 * 1000));
+
+    // Create a new FamilyMember document with provided fields
+    const newFamilyMember = new FamilyMember({
+      name,
+      nationalId,
+      age,
+      gender,
+      relationToPatient: relationship,
+    });
+    // Save the new family member to the database
+    await newFamilyMember.save();
+
+    // Add the new family member's ObjectId to the patient's familyMembers array
+    patient.familyMembers.push(newFamilyMember._id);
+    await patient.save();
+
+    res.status(201).json({ message: 'Family member linked successfully' });
+  } catch (error) {
+    console.error('Error linking family member:', error);
+    res.status(500).json({ error: 'Cannot link the family member' });
   }
 };
 
@@ -419,5 +474,67 @@ exports.getHealthPackageStatus = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error during cancellation' });
+  }
+};
+
+exports.uploadFile = async (req, res) => {
+  try {
+    const patientId = req.user._id; 
+    const filePath = req.file.path;
+
+    // Update the patient's medicalHistory field by adding to the array
+    await Patient.findByIdAndUpdate(patientId, { $push: { medicalHistory: filePath } });
+
+    res.json({ message: 'File uploaded successfully' });
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    res.status(500).json({ message: 'Error uploading file' });
+  }
+};
+
+
+
+exports.deleteMedicalHistory = async (req, res) => {
+  try {
+    const patientId = req.user._id; 
+    const filePath = req.body.filePath;
+
+    // Update the patient's medicalHistory field by removing the file path from the array
+    await Patient.findByIdAndUpdate(patientId, { $pull: { medicalHistory: filePath } });
+    res.json({ message: 'File deleted successfully' });
+    // Delete the file from the uploads folder
+    const fullPath = path.join(__dirname, '..', '..', filePath);
+
+    console.log('Attempting to delete file at path:', fullPath);
+
+  // if (fs.existsSync(fullPath)) {
+  //   fs.unlinkSync(fullPath);
+  //   res.json({ message: 'File deleted successfully' });
+  // } else {
+  //   res.status(404).json({ message: 'File not found' });
+  // }
+
+  } catch (error) {
+    console.error('Error deleting file:', error);
+    res.status(500).json({ message: 'Error deleting file' });
+  }
+};
+
+exports.getAllMedicalHistory = async (req, res) => {
+  try {
+    const patientId = req.user._id; // Assuming you have the user ID in the request
+
+    const patient = await Patient.findById(patientId);
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const medicalHistory = patient.medicalHistory || [];
+
+    res.status(200).json({ medicalHistory });
+  } catch (error) {
+    console.error('Error fetching medical history:', error);
+    res.status(500).json({ message: 'Error fetching medical history' });
   }
 };

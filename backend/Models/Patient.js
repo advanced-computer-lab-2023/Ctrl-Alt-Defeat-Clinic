@@ -70,6 +70,11 @@ const patientSchema = new mongoose.Schema({
       ref: FamilyMember,
     },
   ],
+  medicalHistory:[
+    {
+      type: String, 
+    },
+  ],
   wallet: {
     type: Number,
     default: 0,
