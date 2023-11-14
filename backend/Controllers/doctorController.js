@@ -236,6 +236,31 @@ exports.acceptContract = async (req, res) => {
   }
 };
 
+exports.addHealthRecord = async (req, res) => {
+  try {
+    const patientUsername = req.body.patientUsername;
+    const patient = await Patient.findOne({ username: patientUsername });
+
+    const medicines = req.body.medicines.map(medicine => ({
+      name: medicine.name,
+      dosage: medicine.dosage,
+      duration: medicine.duration,
+    }));
+
+    const newHealthRecord = await new Prescription({
+      patient: patient,
+      doctor: req.user,
+      medicines: medicines,
+      notes: req.body.notes,
+      filled: req.body.filled,
+    }).save();
+
+    res.status(201).json(newHealthRecord);
+    } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.addAvailableSlot = async (req, res) => {
     
   try {

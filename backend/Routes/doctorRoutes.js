@@ -28,6 +28,8 @@ router.route('/viewDoctorAppointments').get(authMiddlewares.protect, authMiddlew
 
 router.route('/acceptContract').put(doctorController.acceptContract);
 
+router.route('/addHealthRecord').post(protect, restrictTo('doctor'), doctorController.addHealthRecord);
+
 router.route('/scheduleFollowUp').put(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.scheduleFollowUp);
 
 router.route('/viewAvailableSlots').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.viewAvailableSlots);

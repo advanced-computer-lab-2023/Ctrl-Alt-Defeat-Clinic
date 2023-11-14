@@ -61,6 +61,9 @@ function DoctorHome() {
           <Link to="/doctors/search">Search Patient</Link>
         </li>
         <li>
+          <Link to="/doctors/addHealthRecord">Add Health Record</Link>
+        </li>
+        <li>
           <Link to="/doctors/scheduleFollowUp">Schedule Follow-Up</Link>
         </li>
         <li>

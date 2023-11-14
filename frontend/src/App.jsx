@@ -27,6 +27,9 @@ import AddTimeSlot from "./components/AddTimeSlot";
 import ViewAvailableAppointments from "./components/ViewAvailableAppointments";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HealthPackages from "./components/HealthPackages";
+import Contract from "./components/Contract";
+import SubscribeHealthPackages from "./components/SubscribeHealthPackages";
+import  AddHealthRecord  from "./components/AddHealthRecord";
 import VerifyOTP from "./components/VerifyOTP";
 import ForgetPassword from "./components/ForgetPassword";
 import ResetPassword from "./components/ResetPassword";
@@ -88,6 +91,8 @@ function App() {
             element={<MedicalHistoryDoctorViewer />}
           />
           <Route path="/patients/home" element={<PatientHome />} />
+          <Route path="/doctors/AddHealthRecord" element={<AddHealthRecord />} />
+
           <Route
             path="/patients/view-all-patient-appointments"
             element={<ViewAllPatientAppointments />}
