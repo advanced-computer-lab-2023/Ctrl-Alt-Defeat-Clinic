@@ -1,23 +1,32 @@
 const Appointment = require('../Models/Appointment');
+const Doctor = require('../Models/Doctor');
 
 const addAppointment = async (req, res) => {
-  const { patient, doctor, date, status } = req.query;
+  const { patient, doctor, date} = req.query;
 
-  if (!patient || !doctor || !date || !status) return res.status(400).json('There are null values');
+  if (!patient || !doctor || !date) return res.status(400).json('There are null values');
 
   try {
-    const newAppointment = await Appointment.create(req.query);
 
-    const doctor = await Doctor.findOneAndUpdate(
-      { username: doctor },
-      {$pull: { availableSlots: date }},
-      { new: true }
-    );
+    if(patient == 'Me'){
+      const newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, });
 
-    // console.log(newAppointment);
-    res.send('Appointment created successfully!');
+      const tempDoctor = await Doctor.findOneAndUpdate(
+        { username: doctor },
+        {$pull: { availableSlots: date }},
+        { new: true }
+      ).exec();
+  
+      // console.log(newAppointment);
+      res.status(200).json('Appointment created successfully!');
+    }
+    else{
+      //handle familyMember appointments TODO
+    }
+
+    
   } catch {
-    res.send('Appointment not created successfully!');
+    res.status(500).json('Appointment not created successfully!');
   }
 };
 
@@ -70,7 +79,7 @@ const filterAppointments = async (req, res, allAppointments) => {
   } catch (error) {
     // Handle any errors that occur during the process
     console.error('Error:', error);
-    res.status(500).send('Internal server error');
+    res.status(500).json('Internal server error');
   }
 };
 

@@ -4,12 +4,13 @@ import Axios from "axios";
 function ViewAvailableAppointments() {
   const [doctors, setDoctors] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState('');
-  const [appointmentInfo, setAppointmentInfo] = useState(null);
+  const [slotsInfo, setSlotsInfo] = useState(null);
 
   const [selectedPatient, setSelectedPatient] = useState('');
   const [familyMembers, setFamilyMembers] = useState([]);
+  
+  const [appointment, setAppointment]  = useState(null);
 
-  // Fetch the list of doctors when the component mounts
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -28,8 +29,6 @@ function ViewAvailableAppointments() {
         );
         setFamilyMembers(response.data);
         //console.log(response.data);
-        //console.log(response.data.message === 'No family members found for the patient');
-        //console.log(familyMembers.message === 'No family members found for the patient');
       } catch (error) {
         console.error("Error fetching family members:", error);
       }
@@ -39,24 +38,29 @@ function ViewAvailableAppointments() {
     fetchFamilyMembers();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const fetchDataAndUpdateSlots = async () => {
     try {
       const response = await Axios.get(
         `http://localhost:8000/api/v1/patients/viewDoctorSlots?doctorUsername=${selectedDoctor}`,
-        {withCredentials: true}
+        { withCredentials: true }
       );
-      setAppointmentInfo(response.data);
+      setSlotsInfo(response.data);
     } catch (error) {
-      console.error("Error fetching appointments:", error);
+      console.error("Error fetching Slots:", error);
     }
   };
 
-  const renderAppointmentsTable = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await fetchDataAndUpdateSlots();
+    setAppointment(null);
+  };
+
+  const renderSlotsTable = () => {
     return (
       <>
         <br/>
-        {appointmentInfo && appointmentInfo.length > 0 && renderPatientSelection()}
+        {slotsInfo && slotsInfo.length > 0 && renderPatientSelection()}
 
         <table>
           <thead>
@@ -66,12 +70,12 @@ function ViewAvailableAppointments() {
             </tr>
           </thead>
           <tbody>
-            {appointmentInfo.map((dateTime, index) => (
+            {slotsInfo.map((dateTime, index) => (
               <tr key={index}>
                 <td>{new Date(dateTime).toLocaleString()}</td>
                 <td>
                   <button
-                    onClick={() => handleSelectAppointment(dateTime)}
+                    onClick={() => handleSelectAppointments(dateTime)}
                     disabled={!selectedPatient}
                   >
                     Select Appointment
@@ -93,7 +97,7 @@ function ViewAvailableAppointments() {
           <option value="" disabled>Select a patient</option>
           <option value="Me">Me</option>
           {familyMembers.message != 'No family members found for the patient' && familyMembers.map((familyMember) => (
-            <option key={familyMember._id} value={familyMember.name}>
+            <option key={familyMember._id} value={familyMember._id}>
               {familyMember.name}
             </option>
           ))}
@@ -102,9 +106,24 @@ function ViewAvailableAppointments() {
     );
   };
   
-  const handleSelectAppointment = (dateTime) => {
-    // Add logic to handle appointment selection
-    console.log(`Selected appointment at ${dateTime} for patient ${selectedPatient}`);
+  const handleSelectAppointments = async (dateTime) => {
+    try {
+      const response = await Axios.post(
+        `http://localhost:8000/api/v1/appointments/addAppointment?date=${dateTime}&patient=${selectedPatient}&doctor=${selectedDoctor}`,
+        {},
+        { withCredentials: true }
+      );
+  
+      console.log(response.data);
+      setAppointment(response.data);
+  
+      await fetchDataAndUpdateSlots();
+      
+      //console.log(`Selected appointment at ${dateTime} for patient ${selectedPatient} with ${selectedDoctor}`);
+
+    } catch (error) {
+      console.error('Error selecting appointment:', error);
+    }
   };
   
 
@@ -126,7 +145,9 @@ function ViewAvailableAppointments() {
         </div>
       </form>
 
-      {appointmentInfo && appointmentInfo.length > 0 ? renderAppointmentsTable() : <p>No appointments found.</p>}
+      {slotsInfo && slotsInfo.length > 0 ? renderSlotsTable() : <p>No appointments found.</p>}
+      <br/>
+      {appointment && <div>{(appointment)}</div>}
     </div>
   );
 }
