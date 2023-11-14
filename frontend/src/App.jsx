@@ -27,6 +27,7 @@ import HealthPackages from "./components/HealthPackages";
 import Contract from "./components/Contract";
 import SubscribeHealthPackages from "./components/SubscribeHealthPackages";
 import "./App.css";
+import ScheduleFollowUpForm from "./components/ScheduleFollowUp";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
           <Route path="/doctors/my-patients" element={<ViewAllPatients />} />
           <Route path="/doctors/search" element={<SearchPatient />} />
           <Route path="/patients/home" element={<PatientHome />} />
+          <Route path="/doctors/scheduleFollowUp" element={<ScheduleFollowUpForm />} />
         </Routes>
       </BrowserRouter>
       {/* <PatientRegister />
