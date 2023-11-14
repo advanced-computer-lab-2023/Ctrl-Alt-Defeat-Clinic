@@ -12,11 +12,11 @@ const {
   updateAdmin,
   approveDoctor,
 } = require('../Controllers/adminController');
-
+const auth = require('../Middlewares/authMiddlewares');
 //Get requests
 
 // Route handler for getting a list of all admins
-router.get('/', allAdmins);
+router.get('/', auth.protect, auth.restrictTo('admin'), allAdmins);
 // Route handler for getting pending doctor information
 router.get('/pendingdoctors', getPendingDoctors);
 

@@ -15,6 +15,7 @@ function PatientRegister() {
     phoneNumber: "",
     emergencyContactName: "",
     emergencyContactNumber: "",
+    nationalId: "",
   });
 
   const handleChange = (e) => {
@@ -32,6 +33,7 @@ function PatientRegister() {
       dateOfBirth: formData.dob,
       gender: formData.gender,
       mobileNumber: formData.phoneNumber,
+      nationalId: formData.nationalId,
       emergencyContact: {
         fullName: formData.emergencyContactName,
         mobileNumber: formData.emergencyContactNumber,
@@ -55,6 +57,7 @@ function PatientRegister() {
       phoneNumber: "",
       emergencyContactName: "",
       emergencyContactNumber: "",
+      nationalId: "",
     });
     setTimeout(() => navigate("/login"), 3000);
   };
@@ -109,6 +112,16 @@ function PatientRegister() {
             type="date"
             name="dob"
             value={formData.dob}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label>National ID:</label>
+          <input
+            type="number"
+            name="nationalId"
+            value={formData.nationalId}
             onChange={handleChange}
             required
           />

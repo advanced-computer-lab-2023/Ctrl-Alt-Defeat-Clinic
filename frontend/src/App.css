@@ -5,6 +5,11 @@
   text-align: center;
 }
 
+body{
+  margin: 0;
+  padding: 0;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -31,6 +36,12 @@
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .card {
@@ -187,4 +198,17 @@ button:hover {
 
 .family-members strong {
   font-weight: bold;
+}
+
+
+dialog{
+  position: fixed;
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+dialog::backdrop{
+  background-color: rgba(0, 0, 0, 0.5);
 }

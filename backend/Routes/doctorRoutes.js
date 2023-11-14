@@ -26,4 +26,6 @@ router.route('/addAvailableSlot').put(authMiddlewares.protect, authMiddlewares.r
 
 router.route('/viewDoctorAppointments').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.viewDoctorAppointments);
 
+router.route('/acceptContract').put(doctorController.acceptContract);
+
 module.exports = router;

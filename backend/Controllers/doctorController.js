@@ -173,9 +173,7 @@ exports.filterDoctors = async (req, res) => {
   //-------------- SPRINT 2 -------------------
 
   exports.addAvailableSlot = async (req, res) => {
-  
-    //handle past timeSlots and to remove slots that have already passed TODO
-  
+    
     try {
   
       const {slotDate} = req.query;
@@ -200,15 +198,40 @@ exports.filterDoctors = async (req, res) => {
   
   exports.viewDoctorAppointments = async (req,res) => {
   
-    try{
-      
-      //const {username} = req.query; //TODO
+    try{ 
       const appointments = await Appointment.find({doctor: req.user.username}).exec();
-      //res.status(200).json(appointments);
-      
       filterAppointments(req, res, appointments);
   
     } catch(err){
       res.status(500).json({ message: err.message });
     }
   };
+
+
+exports.acceptContract = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    // Find the doctor by username
+    const existingDoctor = await Doctor.findOne({ username });
+    console.log(existingDoctor);
+    // If doctor not found, respond with a 404 error
+    if (!existingDoctor) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+
+    // Update the doctor's registrationStatus to "accepted"
+    const updatedDoctor = await Doctor.findOneAndUpdate(
+      { username },
+      { registrationStatus: 'accepted' },
+      { new: true }
+    );
+
+    // Respond with the updated doctor
+    res.json(updatedDoctor);
+  } catch (error) {
+    // Handle any errors that occur during the process
+    console.error('Error accepting contract:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

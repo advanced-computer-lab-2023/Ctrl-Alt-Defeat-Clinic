@@ -29,7 +29,6 @@ import ViewAvailableAppointments from "./components/ViewAvailableAppointments";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HealthPackages from "./components/HealthPackages";
 import Contract from "./components/Contract";
-import SubscribeHealthPackages from "./components/SubscribeHealthPackages";
 import "./App.css";
 
 function App() {
@@ -41,6 +40,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/patients/register" element={<PatientRegister />} />
+          <Route path="/patients/healthPackages" element={<HealthPackages />} />
           <Route path="/doctors/register" element={<DoctorRegister />} />
           <Route path="/admins/home" element={<AdminHome />} />
           <Route path="/admin/addAdmin" element={<AddAdmin />} />
@@ -105,13 +105,12 @@ function App() {
       <hr /> */}
       {/* <hr />
       <HealthPackages />
-      <hr />
-      <Contract />
-      <hr />
+      <hr /> */}
+
+      {/* <hr />
       <SubscribeHealthPackages />
       <hr /> */}
     </>
-
   );
 }
 
