@@ -33,4 +33,7 @@ router.route('/scheduleFollowUp').put(authMiddlewares.protect, authMiddlewares.r
 router.route('/viewAvailableSlots').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.viewAvailableSlots);
 
 router.route('/addAvailableSlot').put(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.addAvailableSlot);
+
+router.route('/getPatientMedicalHistory').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.getPatientMedicalHistory);
+
 module.exports = router;

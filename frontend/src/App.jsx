@@ -32,6 +32,7 @@ import Contract from "./components/Contract";
 import UploadMedicalHistory from "./components/UploadMedicalHistory";
 import DeleteMedicalHistory from "./components/DeleteMedicalHistory";
 import MedicalHistoryViewer from "./components/MedicalHistoryViewer";
+import MedicalHistoryDoctorViewer from "./components/MedicalHistoryDoctorViewer";
 import "./App.css";
 import ScheduleFollowUpForm from "./components/ScheduleFollowUp";
 
@@ -65,6 +66,7 @@ function App() {
           <Route path="/doctors/view-all-doctor-appointments" element={<ViewAllDoctorAppointments />} />
           <Route path="/doctors/add-time-slot" element={<AddTimeSlot />} />
           <Route path="/doctors/scheduleFollowUp" element={<ScheduleFollowUpForm />} />
+          <Route path="/doctors/view-patient-medical-history" element={<MedicalHistoryDoctorViewer />} />
           <Route path="/patients/home" element={<PatientHome />} />
           <Route path="/patients/upload" element={<UploadMedicalHistory />} />
           <Route path="/patients/delete" element={<DeleteMedicalHistory />} />

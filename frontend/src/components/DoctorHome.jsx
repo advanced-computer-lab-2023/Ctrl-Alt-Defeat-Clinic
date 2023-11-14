@@ -70,6 +70,9 @@ function DoctorHome() {
           <Link to="/doctors/add-time-slot">Add New Time Slot</Link>
         </li>
         <li>
+          <Link to="/doctors/view-patient-medical-history">View Patient Medical History</Link>
+        </li>
+        <li>
           <Link to="/" onClick={handleLogout}>
             Logout
           </Link>
