@@ -51,11 +51,22 @@ const doctorSchema = new mongoose.Schema({
       ref: 'Patient',
     },
   ],
+  availableSlots: [
+    {
+      type: Date,
+      default: null,
+    },
+  ],
+  wallet: {
+    type: Number,
+    default: 0,
+  },
 });
 
 doctorSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(this.password, 12);
-
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 12);
+  }
   next();
 });
 

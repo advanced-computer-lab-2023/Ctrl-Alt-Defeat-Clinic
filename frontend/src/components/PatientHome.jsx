@@ -28,9 +28,16 @@ function PatientHome() {
           <p>name: {patient.name}</p>
           <p>username: {patient.username}</p>
           <p>email: {patient.email}</p>
+          <p>Wallet Balance: {patient.wallet}</p>
         </div>
       )}
       <ul>
+        <li>
+          <Link to="/patients/view-all-patient-appointments">View All My Appointments</Link>
+        </li>
+        <li>
+          <Link to="/patients/view-all-available-appointments">View Available Doctor Appointments</Link>
+        </li>
         <li>
           <Link to="/" onClick={handleLogout}>
             Logout
@@ -39,9 +46,13 @@ function PatientHome() {
         <li>
           <Link to="/patients/healthPackages">Show All Health Packages</Link>
         </li>
-
         <li>
           <Link to="/patients/familyMembers">Manage Family Members</Link>
+        <li>
+          <Link to="/patients/upload">Upload Medical History</Link>
+        </li>
+        <li>
+          <Link to="/patients/delete">Delete Medical History</Link>
         </li>
       </ul>
     </div>
