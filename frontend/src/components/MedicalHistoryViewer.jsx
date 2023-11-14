@@ -1,21 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const MedicalHistoryViewer = () => {
   const [medicalHistoryPaths, setMedicalHistoryPaths] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchMedicalHistoryPaths = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/v1/patients/getAllMedicalHistory', {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          "http://localhost:8000/api/v1/patients/getAllMedicalHistory",
+          {
+            withCredentials: true,
+          }
+        );
         console.log(response.data);
         setMedicalHistoryPaths(response.data.medicalHistory);
       } catch (error) {
-        console.error('Error fetching medical history paths:', error);
-        setError('Error fetching medical history paths');
+        console.error("Error fetching medical history paths:", error);
+        setError("Error fetching medical history paths");
       }
     };
 
@@ -30,7 +34,11 @@ const MedicalHistoryViewer = () => {
       {medicalHistoryPaths && medicalHistoryPaths.length > 0 ? (
         medicalHistoryPaths.map((path, index) => (
           <div key={index}>
-            <a href={`http://localhost:8000/api/v1/patients/${path}`} target="_blank" rel="noopener noreferrer">
+            <a
+              href={`http://localhost:8000/api/v1/patients/${path}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               File {index + 1}
             </a>
           </div>
@@ -38,7 +46,7 @@ const MedicalHistoryViewer = () => {
       ) : (
         <p>No medical history files found.</p>
       )}
-
+      <Link to="/patients/home">Home</Link>
     </div>
   );
 };

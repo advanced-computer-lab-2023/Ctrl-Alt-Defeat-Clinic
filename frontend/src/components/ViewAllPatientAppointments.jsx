@@ -1,20 +1,22 @@
 import { useState } from "react";
 import Axios from "axios";
+import { Link } from "react-router-dom";
 
 function ViewAllPatientAppointments() {
-  
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState("");
-  const [doctorUsername, setDoctorUsername] = useState('');
+  const [doctorUsername, setDoctorUsername] = useState("");
 
   const [appointmentInfo, setAppointmentInfo] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const appointmentInformation = await Axios.get(
-      `http://localhost:8000/api/v1/patients/viewPatientAppointments?username=${doctorUsername}&startDate=${startDate? new Date(startDate) : ""}&endDate=${endDate? new Date(endDate) : ""}&status=${status}`,
-      {withCredentials: true}
+      `http://localhost:8000/api/v1/patients/viewPatientAppointments?username=${doctorUsername}&startDate=${
+        startDate ? new Date(startDate) : ""
+      }&endDate=${endDate ? new Date(endDate) : ""}&status=${status}`,
+      { withCredentials: true }
     );
     console.log(appointmentInformation);
     setAppointmentInfo(appointmentInformation.data);
@@ -46,7 +48,7 @@ function ViewAllPatientAppointments() {
   return (
     <div>
       <h2>View All Appointments</h2>
-      
+
       <label>Patient Username: </label>
       <input
         type="text"
@@ -54,7 +56,7 @@ function ViewAllPatientAppointments() {
         onChange={(e) => setDoctorUsername(e.target.value)}
       />
 
-<     form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div>
           <label>Start Date: </label>
           <input
@@ -73,10 +75,7 @@ function ViewAllPatientAppointments() {
         </div>
         <div>
           <label>Status: </label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
+          <select value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">All</option>
             <option value="upcoming">Upcoming</option>
             <option value="completed">Completed</option>
@@ -88,7 +87,6 @@ function ViewAllPatientAppointments() {
           <button type="submit">View All Appointments</button>
         </div>
       </form>
-
 
       {/* {appointmentInfo &&
         appointmentInfo.map((appointment, index) => (
@@ -106,9 +104,12 @@ function ViewAllPatientAppointments() {
           </div>
         ))} */}
 
-      {appointmentInfo && appointmentInfo.length > 0 && renderAppointmentsTable()}
-      {!appointmentInfo || appointmentInfo.length === 0 && <p>No appointments found.</p>}
-
+      {appointmentInfo &&
+        appointmentInfo.length > 0 &&
+        renderAppointmentsTable()}
+      {!appointmentInfo ||
+        (appointmentInfo.length === 0 && <p>No appointments found.</p>)}
+      <Link to="/patients/home">Home</Link>
     </div>
   );
 }

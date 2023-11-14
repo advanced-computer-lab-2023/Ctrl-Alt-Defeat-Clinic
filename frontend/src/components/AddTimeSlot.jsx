@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import Axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function AddTimeSlot() {
-
   const [res, setRes] = useState(null);
 
   const [dateTime, setDateTime] = useState("");
@@ -11,7 +10,9 @@ function AddTimeSlot() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await Axios.put(
-      `http://localhost:8000/api/v1/doctors/addAvailableSlot?slotDate=${dateTime}`, {} ,{withCredentials: true}
+      `http://localhost:8000/api/v1/doctors/addAvailableSlot?slotDate=${dateTime}`,
+      {},
+      { withCredentials: true }
     );
     console.log(response.data);
     setRes(response.data);
@@ -33,8 +34,11 @@ function AddTimeSlot() {
         </div>
         <button type="submit">Add Time Slot</button>
       </form>
-      {(res && res.modifiedCount!=0) && <div>Time slot added successfully </div>}
-      {(res && res.modifiedCount==0) && <div>Time slot already exists </div>}
+      {res && res.modifiedCount != 0 && (
+        <div>Time slot added successfully </div>
+      )}
+      {res && res.modifiedCount == 0 && <div>Time slot already exists </div>}
+      <Link to="/doctors/home">Home</Link>
     </div>
   );
 }

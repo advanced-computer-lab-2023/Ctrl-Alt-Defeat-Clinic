@@ -64,7 +64,9 @@ function DoctorHome() {
           <Link to="/doctors/scheduleFollowUp">Schedule Follow-Up</Link>
         </li>
         <li>
-          <Link to="/doctors/view-all-doctor-appointments">View All My Appointments</Link>
+          <Link to="/doctors/view-all-doctor-appointments">
+            View All My Appointments
+          </Link>
         </li>
         <li>
           <Link to="/doctors/add-time-slot">Add New Time Slot</Link>
@@ -73,7 +75,9 @@ function DoctorHome() {
           <Link to="/changePassword">change password</Link>
         </li>
         <li>
-          <Link to="/doctors/view-patient-medical-history">View Patient Medical History</Link>
+          <Link to="/doctors/view-patient-medical-history">
+            View Patient Medical History
+          </Link>
         </li>
         <li>
           <Link to="/" onClick={handleLogout}>

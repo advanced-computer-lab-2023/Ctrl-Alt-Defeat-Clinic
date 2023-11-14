@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function SearchPatient() {
   const [searchName, setSearchName] = useState("");
@@ -118,6 +119,7 @@ function SearchPatient() {
           )}
         </>
       )}
+      <Link to="/doctors/home">Home</Link>
     </div>
   );
 }

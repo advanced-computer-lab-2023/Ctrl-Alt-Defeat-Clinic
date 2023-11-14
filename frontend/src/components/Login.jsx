@@ -67,6 +67,8 @@ function Login() {
       </form>
       <Link to="/forgetPassword">forgot password</Link>
       {message && <div>{message}</div>}
+      <br />
+      <Link to="/">Back</Link>
     </div>
   );
 }
