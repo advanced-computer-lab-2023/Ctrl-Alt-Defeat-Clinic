@@ -4,6 +4,8 @@ const { generateToken } = require('./authController');
 const Package = require('../Models/Package');
 const FamilyMember = require('../Models/FamilyMember');
 const Prescription = require('../Models/Prescriptions');
+const path = require('path');
+const fs = require('fs');
 const Appointment = require('../Models/Appointment');
 const { filterAppointments } = require('./appointmentController');
 
@@ -419,5 +421,67 @@ exports.getHealthPackageStatus = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error during cancellation' });
+  }
+};
+
+exports.uploadFile = async (req, res) => {
+  try {
+    const patientId = req.user._id; 
+    const filePath = req.file.path;
+
+    // Update the patient's medicalHistory field by adding to the array
+    await Patient.findByIdAndUpdate(patientId, { $push: { medicalHistory: filePath } });
+
+    res.json({ message: 'File uploaded successfully' });
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    res.status(500).json({ message: 'Error uploading file' });
+  }
+};
+
+
+
+exports.deleteMedicalHistory = async (req, res) => {
+  try {
+    const patientId = req.user._id; 
+    const filePath = req.body.filePath;
+
+    // Update the patient's medicalHistory field by removing the file path from the array
+    await Patient.findByIdAndUpdate(patientId, { $pull: { medicalHistory: filePath } });
+    res.json({ message: 'File deleted successfully' });
+    // Delete the file from the uploads folder
+    const fullPath = path.join(__dirname, '..', '..', filePath);
+
+    console.log('Attempting to delete file at path:', fullPath);
+
+  // if (fs.existsSync(fullPath)) {
+  //   fs.unlinkSync(fullPath);
+  //   res.json({ message: 'File deleted successfully' });
+  // } else {
+  //   res.status(404).json({ message: 'File not found' });
+  // }
+
+  } catch (error) {
+    console.error('Error deleting file:', error);
+    res.status(500).json({ message: 'Error deleting file' });
+  }
+};
+
+exports.getAllMedicalHistory = async (req, res) => {
+  try {
+    const patientId = req.user._id; // Assuming you have the user ID in the request
+
+    const patient = await Patient.findById(patientId);
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const medicalHistory = patient.medicalHistory || [];
+
+    res.status(200).json({ medicalHistory });
+  } catch (error) {
+    console.error('Error fetching medical history:', error);
+    res.status(500).json({ message: 'Error fetching medical history' });
   }
 };
