@@ -20,11 +20,11 @@ const addAppointment = async (req, res) => {
       ).exec();
     }
     else{
-      newAppointment = await Appointment.create({patient: patient, doctor: doctor, date: date, });
+      newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, familyMember: patient});
 
       const tempDoctor = await Doctor.findOneAndUpdate(
         { username: doctor },
-        {$pull: { availableSlots: date }},
+        {$pull: { availableSlots: date }}, // add patient to registeredPatients when familyMember? TODO
         { new: true }
       ).exec();
     }
