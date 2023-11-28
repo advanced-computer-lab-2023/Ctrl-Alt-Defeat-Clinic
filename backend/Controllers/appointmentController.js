@@ -8,23 +8,32 @@ const addAppointment = async (req, res) => {
 
   try {
 
+    let newAppointment;
+
     if(patient == 'Me'){
-      const newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, });
+      newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, });
 
       const tempDoctor = await Doctor.findOneAndUpdate(
         { username: doctor },
         {$pull: { availableSlots: date }, $addToSet: { registeredPatients: req.user._id }},
         { new: true }
       ).exec();
-  
-      // console.log(newAppointment);
-      res.status(200).json('Appointment created successfully!');
     }
     else{
-      //handle familyMember appointments TODO
+      newAppointment = await Appointment.create({patient: patient, doctor: doctor, date: date, });
+
+      const tempDoctor = await Doctor.findOneAndUpdate(
+        { username: doctor },
+        {$pull: { availableSlots: date }},
+        { new: true }
+      ).exec();
     }
 
     
+
+    // console.log(newAppointment);
+    res.status(200).json('Appointment created successfully!');
+
   } catch {
     res.status(500).json('Appointment not created successfully!');
   }
