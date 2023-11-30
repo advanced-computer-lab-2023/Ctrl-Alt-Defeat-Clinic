@@ -37,6 +37,8 @@ import MedicalHistoryViewer from "./components/MedicalHistoryViewer";
 import MedicalHistoryDoctorViewer from "./components/MedicalHistoryDoctorViewer";
 import "./App.css";
 import ScheduleFollowUpForm from "./components/ScheduleFollowUp";
+import ViewSelectedPrescription from "./components/ViewSelectedPrescription";
+import DownloadPrescription from "./components/DownloadPrescription";
 
 function App() {
   return (
@@ -67,6 +69,8 @@ function App() {
             path="/admin/viewDoctorRequest"
             element={<ViewDoctorRequest />}
           />
+          
+          <Route path="/doctors/downloadPrescription" element={<DownloadPrescription />} />
           <Route path="/admin/addPackage" element={<AddPackage />} />
           <Route path="/admin/updatePackage" element={<UpdatePackage />} />
           <Route path="/admin/deletePackage" element={<DeletePackage />} />
@@ -83,6 +87,7 @@ function App() {
             path="/doctors/scheduleFollowUp"
             element={<ScheduleFollowUpForm />}
           />
+
           <Route
             path="/doctors/view-patient-medical-history"
             element={<MedicalHistoryDoctorViewer />}
@@ -102,6 +107,7 @@ function App() {
             path="/patients/view-medical-history"
             element={<MedicalHistoryViewer />}
           />
+          <Route path="/patients/viewSelectedPrescription" element={<ViewSelectedPrescription />} />
         </Routes>
       </BrowserRouter>
     </>
