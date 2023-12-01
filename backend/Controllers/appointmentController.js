@@ -39,6 +39,72 @@ const addAppointment = async (req, res) => {
   }
 };
 
+const rescheduleAppointment = async (req, res) => {
+  try{
+
+    const {appointmentId, rescheduleDate} = req.query;
+    // rescheduleDate is in availableSlot list in for the doctor. "Select from availableSlot in frontend" MOHEMM
+    // "Select appointment'Id' to reschedule from list of appointments in frontend" MOHEMMM
+
+    const appointment = await Appointment.findById(appointmentId);
+
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+    if(new Date(rescheduleDate) < new Date()) return res.status(400).json({ message: 'Date and time has already passed.'});
+    if(new Date(rescheduleDate) <= new Date(appointment.date)) return res.status(400).json({ message: 'Date and time is the same.'});
+
+    const rescheduledAppointment = await Appointment.findByIdAndUpdate(
+      appointmentId,
+      { date: rescheduleDate, status: "rescheduled"},
+      { new: true }
+    );
+
+    const tempDoctor = await Doctor.findOneAndUpdate(
+      { username: appointment.doctor },
+      { $pull: { availableSlots: rescheduleDate}},
+      { new: true }
+    ).exec();
+
+    res.status(200).json({ message: 'Appointment rescheduled successfully', rescheduledAppointment });
+
+  } catch (error){
+    res.status(500).json({ message: 'Error rescheduling appointment', error: error.message });
+  }
+};
+
+const cancelAppointment = async (req, res) => {
+  try{
+
+    const {appointmentId} = req.query;
+
+    const appointment = await Appointment.findById(appointmentId);
+
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+    // Add logic for "Appointments cancelled less than 24 hours before the appointment do not receive a refund"
+
+    const twentyFourHoursBefore = new Date((appointment.date).getTime() - 24 * 60 * 60 * 1000); // Subtract 24 hours (24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
+
+    // console.log( (twentyFourHoursBefore < (new Date())) && ((new Date()) < new Date(appointment.date)) );
+    // if this is (true) then {no refund} else {refund} TODO
+
+    const cancelledAppointment = await Appointment.findByIdAndUpdate(
+      appointmentId, 
+      { status: "cancelled" },
+      { new: true }
+    );
+
+    res.status(200).json({ message: 'Appointment cancelled successfully', cancelledAppointment });
+  }
+  catch(error){
+    res.status(500).json({ message: 'Error cancelling appointment', error: error.message });
+  }
+};
+
 const filterAppointments = async (req, res, allAppointments) => {
   // filter appointments by date/status
 
@@ -92,4 +158,4 @@ const filterAppointments = async (req, res, allAppointments) => {
   }
 };
 
-module.exports = { addAppointment, filterAppointments };
+module.exports = { addAppointment, filterAppointments, rescheduleAppointment, cancelAppointment};

@@ -9,5 +9,7 @@ router.route("/addAppointment").post(authMiddlewares.protect, authMiddlewares.re
 router.route("/filterAppointments").get(filterController.filterAppointments);
 router.route("/filterPatients").get(filterController.filterPatients);
 router.route("/filterDoctors").get(filterController.filterDoctors);
+router.route('/rescheduleAppointment').put(appointmentController.rescheduleAppointment);
+router.route('/cancelAppointment').put(appointmentController.cancelAppointment);
 
 module.exports = router;
