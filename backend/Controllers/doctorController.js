@@ -184,11 +184,11 @@ exports.filterDoctors = async (req, res) => {
      
       const doctor = await Doctor.findOneAndUpdate(
         { username: req.user.username },
-        {$pull: { availableSlots: { $lt: new Date() } }},
+        {$pull: { availableSlots: {start: {$lt: new Date()} } }},
         { new: true }
       );
   
-      const updatedDoctor = await Doctor.updateOne({ username: req.user.username }, { $addToSet: { availableSlots: slotDate } });
+      const updatedDoctor = await Doctor.updateOne({ username: req.user.username }, { $addToSet: { availableSlots:{start: slotDate, }} });
   
       res.status(200).json(updatedDoctor);
     } catch (error) {
@@ -286,7 +286,7 @@ exports.scheduleFollowUp = async (req, res) => {
     //remove the slot from available slots TODO
     const updatedDoctor = await Doctor.findOneAndUpdate(
       { username: doctor.username },
-      { $pull: { availableSlots: dateTime } },
+      { $pull: { availableSlots: {start: dateTime} } },
       { new: true }
     );
 

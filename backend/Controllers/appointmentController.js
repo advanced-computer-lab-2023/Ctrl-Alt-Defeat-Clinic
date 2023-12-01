@@ -1,5 +1,6 @@
 const Appointment = require('../Models/Appointment');
 const Doctor = require('../Models/Doctor');
+const Patient = require('../Models/Patient');
 
 const addAppointment = async (req, res) => {
   const { patient, doctor, date} = req.query;
@@ -9,22 +10,38 @@ const addAppointment = async (req, res) => {
   try {
 
     let newAppointment;
+    let price;
+    let appDoctor = await Doctor.findOne({username: doctor}).exec();
+
+    if (!appDoctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    if( req.user.healthPackage == null){
+      price = appDoctor.hourlyRate;
+    }
+    else{
+      
+      const appPatient = await Patient.findById(req.user._id).populate('healthPackage');
+      price = (1 - (appPatient.healthPackage.discounts.doctorSessionDiscount)) * appDoctor.hourlyRate;
+    }
+    // has health package? yes => 'appointment' price=(hourly rate of doctor * doctorSessionDiscount), no => price=hourly rate of doctor;
 
     if(patient == 'Me'){
-      newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, });
+      newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, price: price, });
 
       const tempDoctor = await Doctor.findOneAndUpdate(
         { username: doctor },
-        {$pull: { availableSlots: date }, $addToSet: { registeredPatients: req.user._id }},
+        {$pull: { availableSlots: {start:date} }, $addToSet: { registeredPatients: req.user._id }},
         { new: true }
       ).exec();
     }
     else{
-      newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, familyMember: patient});
+      newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, familyMember: patient, price: price,});
 
       const tempDoctor = await Doctor.findOneAndUpdate(
         { username: doctor },
-        {$pull: { availableSlots: date }}, // add patient to registeredPatients when familyMember? TODO
+        {$pull: { availableSlots: {start:date} }}, // add patient to registeredPatients when familyMember? TODO
         { new: true }
       ).exec();
     }
@@ -51,6 +68,7 @@ const rescheduleAppointment = async (req, res) => {
     if (!appointment) {
       return res.status(404).json({ message: 'Appointment not found' });
     }
+    if(appointment.status != "upcoming") return res.status(404).json({ message: 'Appointment cannot be rescheduled' });
 
     if(new Date(rescheduleDate) < new Date()) return res.status(400).json({ message: 'Date and time has already passed.'});
     if(new Date(rescheduleDate) <= new Date(appointment.date)) return res.status(400).json({ message: 'Date and time is the same.'});
@@ -63,7 +81,7 @@ const rescheduleAppointment = async (req, res) => {
 
     const tempDoctor = await Doctor.findOneAndUpdate(
       { username: appointment.doctor },
-      { $pull: { availableSlots: rescheduleDate}},
+      { $pull: { availableSlots: {start: rescheduleDate}}},
       { new: true }
     ).exec();
 
@@ -84,13 +102,19 @@ const cancelAppointment = async (req, res) => {
     if (!appointment) {
       return res.status(404).json({ message: 'Appointment not found' });
     }
+    if(appointment.status == "cancelled") return res.status(404).json({ message: 'Appointment already cancelled' });
 
     // Add logic for "Appointments cancelled less than 24 hours before the appointment do not receive a refund"
-
+     // if this is (true) then {refund} else {no refund} TODO
     const twentyFourHoursBefore = new Date((appointment.date).getTime() - 24 * 60 * 60 * 1000); // Subtract 24 hours (24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
 
-    // console.log( (twentyFourHoursBefore < (new Date())) && ((new Date()) < new Date(appointment.date)) );
-    // if this is (true) then {no refund} else {refund} TODO
+    if( !((twentyFourHoursBefore < (new Date())) && ((new Date()) < new Date(appointment.date))) ){
+      const patient = await Patient.findOneAndUpdate(
+        {username: appointment.patient}, 
+        {$inc: { wallet: appointment.price } },
+        { new: true }
+      );
+    }
 
     const cancelledAppointment = await Appointment.findByIdAndUpdate(
       appointmentId, 

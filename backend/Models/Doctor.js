@@ -53,8 +53,20 @@ const doctorSchema = new mongoose.Schema({
   ],
   availableSlots: [
     {
-      type: Date,
-      default: null,
+      _id: false,
+      start: {
+        type: Date,
+        default: null,
+      },
+      end: {
+        type: Date,
+        default: function() {
+          if (this.start) {
+            return new Date(this.start.getTime() + 1 * 60 * 60 * 1000);
+          }
+          return null; // Or any other default value if 'start' is not defined
+        },
+      }
     },
   ],
   wallet: {

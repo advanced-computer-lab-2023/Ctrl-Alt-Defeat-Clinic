@@ -412,7 +412,7 @@ exports.viewDoctorSlots = async (req, res) => {
 
     const updateDoctor = await Doctor.findOneAndUpdate(
       { username: doctorUsername },
-      { $pull: { availableSlots: { $lt: new Date() } } },
+      { $pull: { availableSlots: {start: {$lt: new Date()} } } },
       { new: true }
     );
 
