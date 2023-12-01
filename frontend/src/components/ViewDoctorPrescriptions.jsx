@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from "react-router-dom";
 
 
-const PatientPrescriptions = () => {
+const PrescriptionList = () => {
   const [prescriptions, setPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,10 +12,16 @@ const PatientPrescriptions = () => {
     const fetchPrescriptions = async () => {
       try {
         // Make a GET request to your backend endpoint
-        const response = await axios.get('http://localhost:8000/api/v1/patients/getAllPrescriptionsForPatient');
+        const response = await axios.get('http://localhost:8000/api/v1/doctors/viewAllPrescriptionsByDoctor', { withCredentials: true });
 
         // Extract the data from the response
-        setPrescriptions(response.data);
+        const { success, prescriptions } = response.data;
+
+        if (success) {
+          setPrescriptions(prescriptions);
+        } else {
+          setError('Failed to fetch prescriptions');
+        }
       } catch (error) {
         console.error('Error fetching prescriptions:', error);
         setError('Internal server error');
@@ -38,13 +44,14 @@ const PatientPrescriptions = () => {
 
   return (
     <div>
-      <h1>Patient Prescriptions</h1>
+      <h1>Prescriptions</h1>
       <ul>
         {prescriptions.map((prescription) => (
           <li key={prescription._id}>
             <strong>Medicines:</strong> {prescription.medicines.map((med) => `${med.name} (${med.dosage}, ${med.duration})`).join(', ')}<br />
             <strong>Notes:</strong> {prescription.notes}<br />
             <strong>Filled:</strong> {prescription.filled ? 'Yes' : 'No'}
+            <hr />
           </li>
         ))}
       </ul>
@@ -52,4 +59,4 @@ const PatientPrescriptions = () => {
   );
 };
 
-export default PatientPrescriptions;
+export default PrescriptionList;

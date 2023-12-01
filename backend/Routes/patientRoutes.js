@@ -7,7 +7,9 @@ const { protect, restrictTo } = require('../Middlewares/authMiddlewares');
 const router = express.Router();
 
 router.route('/register').post(patientController.registerPatient);
-router.route('/getAllPrescriptionsForPatient').get(patientController.getAllPrescriptionsForPatient);
+router
+  .route('/getAllPrescriptionsForPatient')
+  .get(protect, restrictTo('patient'), patientController.getAllPrescriptionsForPatient);
 router.route('/getPrescriptionById').get(patientController.getPrescriptionById);
 router.route('/filterPrescriptions').get(patientController.filterPrescriptions);
 router.route('/viewDoctors/:username').get(patientController.viewAllDoctors);

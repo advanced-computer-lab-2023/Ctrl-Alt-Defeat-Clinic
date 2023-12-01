@@ -80,6 +80,11 @@ function DoctorHome() {
           </Link>
         </li>
         <li>
+          <Link to="/doctors/view-all-prescriptions">
+            View All Prescriptions
+          </Link>
+        </li>
+        <li>
           <Link to="/" onClick={handleLogout}>
             Logout
           </Link>

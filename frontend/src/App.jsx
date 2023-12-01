@@ -37,6 +37,8 @@ import MedicalHistoryViewer from "./components/MedicalHistoryViewer";
 import MedicalHistoryDoctorViewer from "./components/MedicalHistoryDoctorViewer";
 import "./App.css";
 import ScheduleFollowUpForm from "./components/ScheduleFollowUp";
+import ViewDoctorPrescriptions from "./components/ViewDoctorPrescriptions";
+import ViewPatientPrescription from "./components/ViewPatientPrescription";
 
 function App() {
   return (
@@ -102,6 +104,17 @@ function App() {
             path="/patients/view-medical-history"
             element={<MedicalHistoryViewer />}
           />
+        </Routes>
+        <Routes>
+          <Route
+           path="/doctors/view-all-prescriptions" 
+           element={<ViewDoctorPrescriptions />} />
+        </Routes>
+        <Routes>
+          <Route
+            path="/patients/view-patient-prescriptions"
+            element={<ViewPatientPrescription />}
+          />  
         </Routes>
       </BrowserRouter>
     </>

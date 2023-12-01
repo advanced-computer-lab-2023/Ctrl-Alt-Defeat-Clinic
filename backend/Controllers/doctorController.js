@@ -69,7 +69,7 @@ exports.selectPatient = async (req, res) => {
 };
 
 exports.viewAllPatients = async (req, res) => {
-  const  doctorUsername  = req.user.username; //modifed to be used in scedule follow up
+  const doctorUsername = req.user.username; //modifed to be used in scedule follow up
   try {
     const doctor = await Doctor.findOne({ username: doctorUsername }).populate('registeredPatients');
     res.status(200).send(doctor.registeredPatients);
@@ -170,43 +170,41 @@ exports.filterDoctors = async (req, res) => {
   }
 };
 
-  //-------------- SPRINT 2 -------------------
+//-------------- SPRINT 2 -------------------
 
-  exports.addAvailableSlot = async (req, res) => {
-    
-    try {
-  
-      const {slotDate} = req.query;
-  
-      if(!slotDate) return res.status(400).json({ message: 'Enter the slot time and date.'});
+exports.addAvailableSlot = async (req, res) => {
+  try {
+    const { slotDate } = req.query;
 
-      if(slotDate < new Date()) res.status(400).json({ message: 'Date and time has already passed.'});
+    if (!slotDate) return res.status(400).json({ message: 'Enter the slot time and date.' });
 
-      const doctor = await Doctor.findOneAndUpdate(
-        { username: req.user.username },
-        {$pull: { availableSlots: { $lt: new Date() } }},
-        { new: true }
-      );
-  
-      const updatedDoctor = await Doctor.updateOne({ username: req.user.username }, { $addToSet: { availableSlots: slotDate } });
-  
-      res.status(200).json(updatedDoctor);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-  
-  exports.viewDoctorAppointments = async (req,res) => {
-  
-    try{ 
-      const appointments = await Appointment.find({doctor: req.user.username}).exec();
-      filterAppointments(req, res, appointments);
-  
-    } catch(err){
-      res.status(500).json({ message: err.message });
-    }
-  };
+    if (slotDate < new Date()) res.status(400).json({ message: 'Date and time has already passed.' });
 
+    const doctor = await Doctor.findOneAndUpdate(
+      { username: req.user.username },
+      { $pull: { availableSlots: { $lt: new Date() } } },
+      { new: true }
+    );
+
+    const updatedDoctor = await Doctor.updateOne(
+      { username: req.user.username },
+      { $addToSet: { availableSlots: slotDate } }
+    );
+
+    res.status(200).json(updatedDoctor);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.viewDoctorAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({ doctor: req.user.username }).exec();
+    filterAppointments(req, res, appointments);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 exports.acceptContract = async (req, res) => {
   try {
@@ -237,22 +235,23 @@ exports.acceptContract = async (req, res) => {
 };
 
 exports.addAvailableSlot = async (req, res) => {
-    
   try {
+    const { slotDate } = req.query;
 
-    const {slotDate} = req.query;
+    if (!slotDate) return res.status(400).json({ message: 'Enter the slot time and date.' });
 
-    if(!slotDate) return res.status(400).json({ message: 'Enter the slot time and date.'});
-
-    if(slotDate < new Date()) res.status(400).json({ message: 'Date and time has already passed.'});
+    if (slotDate < new Date()) res.status(400).json({ message: 'Date and time has already passed.' });
 
     const doctor = await Doctor.findOneAndUpdate(
       { username: req.user.username },
-      {$pull: { availableSlots: { $lt: new Date() } }},
+      { $pull: { availableSlots: { $lt: new Date() } } },
       { new: true }
     );
 
-    const updatedDoctor = await Doctor.updateOne({ username: req.user.username }, { $addToSet: { availableSlots: slotDate } });
+    const updatedDoctor = await Doctor.updateOne(
+      { username: req.user.username },
+      { $addToSet: { availableSlots: slotDate } }
+    );
 
     res.status(200).json(updatedDoctor);
   } catch (error) {
@@ -262,7 +261,6 @@ exports.addAvailableSlot = async (req, res) => {
 
 exports.scheduleFollowUp = async (req, res) => {
   try {
-
     const { patientId, dateTime } = req.body;
 
     const [date, time] = dateTime.split('T');
@@ -270,7 +268,7 @@ exports.scheduleFollowUp = async (req, res) => {
     const doctorId = req.user._id;
 
     // Use populate to get the registered patients' data
-    
+
     const doctor = await Doctor.findById(doctorId);
 
     const registeredPatients = await doctor.populate('registeredPatients');
@@ -279,7 +277,6 @@ exports.scheduleFollowUp = async (req, res) => {
     if (!doctor) {
       return res.status(404).json({ error: 'Doctor not found' });
     }
-
 
     // Find the patient by id
     const patient = await Patient.findById(patientId);
@@ -290,9 +287,7 @@ exports.scheduleFollowUp = async (req, res) => {
     }
 
     // Check if patient is registered with the doctor
-    const isPatientRegistered = doctor.registeredPatients.some(
-      (registeredPatient) => registeredPatient.id === patientId
-    );
+    const isPatientRegistered = doctor.registeredPatients.some(registeredPatient => registeredPatient.id === patientId);
 
     if (!isPatientRegistered) {
       return res.status(404).json({ error: 'Patient not registered with this doctor' });
@@ -305,7 +300,6 @@ exports.scheduleFollowUp = async (req, res) => {
       date: date,
       time: time,
       status: 'upcoming',
-
     });
     //remove the slot from available slots TODO
     const updatedDoctor = await Doctor.findOneAndUpdate(
@@ -338,7 +332,7 @@ exports.viewAvailableSlots = async (req, res) => {
 
 exports.getPatientMedicalHistory = async (req, res) => {
   try {
-    const {patientId} = req.query;
+    const { patientId } = req.query;
 
     const patient = await Patient.findById(patientId);
 
@@ -352,5 +346,20 @@ exports.getPatientMedicalHistory = async (req, res) => {
   } catch (error) {
     console.error('Error fetching medical history:', error);
     res.status(500).json({ message: 'Error fetching medical history' });
+  }
+};
+
+exports.viewAllPrescriptionsByDoctor = async (req, res) => {
+  try {
+    // Find the doctor
+    const doctorId = req.user._id;
+
+    // Find all prescriptions made by the doctor
+    const prescriptions = await Prescription.find({ doctor: doctorId });
+
+    res.status(200).json({ success: true, prescriptions });
+  } catch (error) {
+    console.error('Error fetching prescriptions:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };

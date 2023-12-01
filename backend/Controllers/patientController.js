@@ -124,9 +124,11 @@ exports.viewAllPatients = async (req, res) => {
 
 exports.getAllPrescriptionsForPatient = async (req, res) => {
   try {
-    const username = req.query.username;
-    const patient = await Patient.findOne({ username: username });
-    const patientId = patient.id;
+    const patientId = req.user._id;
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
 
     const prescriptions = await Prescription.find({ patient: patientId }).populate('doctor');
 

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from "react-router-dom";
-
 
 const PatientPrescriptions = () => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -12,7 +10,7 @@ const PatientPrescriptions = () => {
     const fetchPrescriptions = async () => {
       try {
         // Make a GET request to your backend endpoint
-        const response = await axios.get('http://localhost:8000/api/v1/patients/getAllPrescriptionsForPatient');
+        const response = await axios.get('http://localhost:8000/api/v1/patients/getAllPrescriptionsForPatient', { withCredentials: true });
 
         // Extract the data from the response
         setPrescriptions(response.data);
@@ -42,11 +40,15 @@ const PatientPrescriptions = () => {
       <ul>
         {prescriptions.map((prescription) => (
           <li key={prescription._id}>
+            <strong>Doctor:</strong> {prescription.doctor.name}<br />
             <strong>Medicines:</strong> {prescription.medicines.map((med) => `${med.name} (${med.dosage}, ${med.duration})`).join(', ')}<br />
             <strong>Notes:</strong> {prescription.notes}<br />
             <strong>Filled:</strong> {prescription.filled ? 'Yes' : 'No'}
+            <hr />
+
           </li>
         ))}
+
       </ul>
     </div>
   );
