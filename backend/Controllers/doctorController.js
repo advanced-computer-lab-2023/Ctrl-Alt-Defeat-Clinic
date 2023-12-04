@@ -372,24 +372,27 @@ exports.addPrescription = async (req, res) => {
 
 exports.updatePrescription = async (req, res) => {
   try {
-    const { prescriptionId } = req.params; // Assuming prescription ID is in the URL params
-    const { medicines, notes, filled } = req.body; // Updated details sent in the request body
+    const { prescriptionId } = req.params;
+    const { medicines, notes, filled } = req.body;
 
-    const updatedPrescription = await Prescription.findByIdAndUpdate(
-      prescriptionId,
-      {
-        $set: {
-          medicines,
-          notes,
-          filled,
-        },
-      },
-      { new: true }
-    );
+    const prescription = await Prescription.findById(prescriptionId);
 
-    if (!updatedPrescription) {
+    if (!prescription) {
       return res.status(404).json({ error: 'Prescription not found' });
     }
+
+    // Update prescription fields only if the corresponding request body fields are not null
+    if (medicines[0].name !== '') {
+      prescription.medicines = medicines;
+    }
+    if (notes !== '') {
+      prescription.notes = notes;
+    }
+    if (filled !== prescription.filled) {
+      prescription.filled = filled;
+    }
+
+    const updatedPrescription = await prescription.save();
 
     res.status(200).json({ message: 'Prescription updated successfully', updatedPrescription });
   } catch (error) {
