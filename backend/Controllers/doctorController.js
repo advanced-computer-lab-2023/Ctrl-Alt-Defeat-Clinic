@@ -351,7 +351,7 @@ exports.getPatientMedicalHistory = async (req, res) => {
 
 exports.addPrescription = async (req, res) => {
   try {
-    const { patientId, medicines, notes } = req.body; // Assuming these details are sent in the request body
+    const { patientId, medicines, notes, filled } = req.body; // Assuming these details are sent in the request body
     const doctorId = req.user.id;
 
     const prescription = new Prescription({
@@ -359,6 +359,7 @@ exports.addPrescription = async (req, res) => {
       doctor: doctorId,
       medicines,
       notes,
+      filled,
     });
 
     await prescription.save();
@@ -368,8 +369,6 @@ exports.addPrescription = async (req, res) => {
     res.status(500).json({ error: 'Could not add prescription' });
   }
 };
-
-const Prescription = require('../models/Prescription');
 
 exports.updatePrescription = async (req, res) => {
   try {

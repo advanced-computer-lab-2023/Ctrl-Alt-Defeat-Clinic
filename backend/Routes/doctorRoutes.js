@@ -57,10 +57,6 @@ router
   .post(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'), doctorController.addPrescription);
 
 router
-  .route('/updatePrescription')
-  .post(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'), doctorController.addPrescription);
-
-router
   .route('/prescription/:prescriptionId/update')
   .put(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'), doctorController.updatePrescription);
 
