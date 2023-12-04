@@ -35,4 +35,6 @@ router
   .route('/subscribeToHealthPackageByWallet')
   .post(protect, restrictTo('patient'), patientController.subscribeToHealthPackageByWallet);
 
+router.route('/getPrescriptionsForPatient').get(protect, restrictTo('patient'), patientController.getPrescriptionsForPatient);
+
 module.exports = router;

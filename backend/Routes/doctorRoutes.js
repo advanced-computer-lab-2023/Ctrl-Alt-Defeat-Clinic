@@ -36,4 +36,6 @@ router.route('/addAvailableSlot').put(authMiddlewares.protect, authMiddlewares.r
 
 router.route('/getPatientMedicalHistory').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.getPatientMedicalHistory);
 
+router.route('/viewAllPrescriptions').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.viewAllPrescriptions);
+
 module.exports = router;
