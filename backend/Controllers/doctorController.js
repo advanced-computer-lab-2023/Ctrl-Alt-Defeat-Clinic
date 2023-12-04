@@ -396,3 +396,13 @@ exports.updatePrescription = async (req, res) => {
     res.status(500).json({ error: 'Could not update prescription' });
   }
 };
+
+exports.viewAllPrescriptions = async (req, res) => {
+  try {
+    const prescriptions = await Prescription.find({ doctor: req.user._id }).populate('patient');
+
+    res.status(200).json(prescriptions);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

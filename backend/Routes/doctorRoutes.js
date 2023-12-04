@@ -60,4 +60,6 @@ router
   .route('/prescription/:prescriptionId/update')
   .put(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'), doctorController.updatePrescription);
 
+router.route('/viewAllPrescriptions').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.viewAllPrescriptions);
+
 module.exports = router;
