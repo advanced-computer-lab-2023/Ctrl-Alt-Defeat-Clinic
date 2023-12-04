@@ -37,6 +37,7 @@ import MedicalHistoryViewer from "./components/MedicalHistoryViewer";
 import MedicalHistoryDoctorViewer from "./components/MedicalHistoryDoctorViewer";
 import "./App.css";
 import ScheduleFollowUpForm from "./components/ScheduleFollowUp";
+import AddUpdatePrescription from "./components/AddUpdatePrescription";
 import ViewSelectedPrescription from "./components/ViewSelectedPrescription";
 import DownloadPrescription from "./components/DownloadPrescription";
 
@@ -82,7 +83,12 @@ function App() {
             path="/doctors/view-all-doctor-appointments"
             element={<ViewAllDoctorAppointments />}
           />
+
           <Route path="/doctors/add-time-slot" element={<AddTimeSlot />} />
+          <Route
+            path="/doctors/Prescriptions"
+            element={<AddUpdatePrescription />}
+          />
           <Route
             path="/doctors/scheduleFollowUp"
             element={<ScheduleFollowUpForm />}
