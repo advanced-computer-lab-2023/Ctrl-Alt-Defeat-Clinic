@@ -35,4 +35,6 @@ router
   .route('/subscribeToHealthPackageByWallet')
   .post(protect, restrictTo('patient'), patientController.subscribeToHealthPackageByWallet);
 
+router.route('/requestFollowUp').put(protect, restrictTo('patient'), patientController.requestFollowUp);
+
 module.exports = router;

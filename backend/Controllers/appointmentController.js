@@ -41,7 +41,7 @@ const addAppointment = async (req, res) => {
 
       const tempDoctor = await Doctor.findOneAndUpdate(
         { username: doctor },
-        {$pull: { availableSlots: {start:date} }}, // add patient to registeredPatients when familyMember? TODO
+        {$pull: { availableSlots: {start:date} }, $addToSet: { registeredPatients: req.user._id }}, // add patient to registeredPatients when familyMember? TODO
         { new: true }
       ).exec();
     }

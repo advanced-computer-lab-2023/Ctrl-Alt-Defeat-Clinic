@@ -539,3 +539,49 @@ exports.getAllMedicalHistory = async (req, res) => {
     res.status(500).json({ message: 'Error fetching medical history' });
   }
 };
+
+exports.requestFollowUp = async (req, res) =>{
+  try{
+
+    const {familyMember, doctor, date} = req.query;
+
+    let appDoctor = await Doctor.findOne({username: doctor}).populate('registeredPatients').exec();
+
+    if (!appDoctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const isPatientRegistered = appDoctor.registeredPatients.some(
+      (registeredPatient) => registeredPatient.id == req.user._id
+    );
+
+    if (!isPatientRegistered) {
+      return res.status(404).json({ error: 'Patient not registered with this doctor' });
+    }
+
+    // add to followUpRequests in doctor 
+    let updatedDoctor; 
+
+    if(familyMember){
+      updatedDoctor = await Doctor.findOneAndUpdate(
+        { username: doctor },
+        { $addToSet: { followUpRequests: {patient: req.user.username, familyMember: familyMember, date: new Date(date)} } },
+        { new: true }
+      ).exec();
+    }
+    else{
+      updatedDoctor = await Doctor.findOneAndUpdate(
+        { username: doctor },
+        { $addToSet: { followUpRequests: {patient: req.user.username, date: new Date(date), } } },
+        { new: true, lean: true }
+      ).exec();
+    }
+
+    res.status(200).json(updatedDoctor.followUpRequests);
+
+  }
+  catch (error){
+    res.status(500).json({ message: 'Error requesting follow-up', error: error.message });
+  }
+
+};
