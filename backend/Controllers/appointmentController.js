@@ -3,9 +3,9 @@ const Doctor = require('../Models/Doctor');
 const Patient = require('../Models/Patient');
 
 const addAppointment = async (req, res) => {
-  const { patient, doctor, date} = req.query;
+  const { familyMember, doctor, date} = req.query;
 
-  if (!patient || !doctor || !date) return res.status(400).json('There are null values');
+  if (!doctor || !date) return res.status(400).json('There are null values');
 
   try {
 
@@ -27,9 +27,10 @@ const addAppointment = async (req, res) => {
     }
     // has health package? yes => 'appointment' price=(hourly rate of doctor * (1-doctorSessionDiscount)), no => price=hourly rate of doctor;
 
-    if(patient == 'Me'){
+    if(!familyMember){
+      
       newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, price: price, });
-
+      
       const tempDoctor = await Doctor.findOneAndUpdate(
         { username: doctor },
         {$pull: { availableSlots: {start:date} }, $addToSet: { registeredPatients: req.user._id }},
@@ -37,8 +38,8 @@ const addAppointment = async (req, res) => {
       ).exec();
     }
     else{
-      newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, familyMember: patient, price: price,});
-
+      newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, familyMember: familyMember, price: price,});
+      
       const tempDoctor = await Doctor.findOneAndUpdate(
         { username: doctor },
         {$pull: { availableSlots: {start:date} }, $addToSet: { registeredPatients: req.user._id }}, // add patient to registeredPatients when familyMember? TODO
@@ -51,8 +52,8 @@ const addAppointment = async (req, res) => {
     // console.log(newAppointment);
     res.status(200).json('Appointment created successfully!');
 
-  } catch {
-    res.status(500).json('Appointment not created successfully!');
+  } catch (error){
+    res.status(500).json({ message: 'Appointment not created successfully!', error: error.message });
   }
 };
 
