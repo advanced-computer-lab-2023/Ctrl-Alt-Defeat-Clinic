@@ -25,7 +25,7 @@ const addAppointment = async (req, res) => {
       const appPatient = await Patient.findById(req.user._id).populate('healthPackage');
       price = (1 - (appPatient.healthPackage.discounts.doctorSessionDiscount)) * appDoctor.hourlyRate;
     }
-    // has health package? yes => 'appointment' price=(hourly rate of doctor * doctorSessionDiscount), no => price=hourly rate of doctor;
+    // has health package? yes => 'appointment' price=(hourly rate of doctor * (1-doctorSessionDiscount)), no => price=hourly rate of doctor;
 
     if(patient == 'Me'){
       newAppointment = await Appointment.create({patient: req.user.username, doctor: doctor, date: date, price: price, });
@@ -105,10 +105,12 @@ const cancelAppointment = async (req, res) => {
     if(appointment.status == "cancelled") return res.status(404).json({ message: 'Appointment already cancelled' });
 
     // Add logic for "Appointments cancelled less than 24 hours before the appointment do not receive a refund"
-     // if this is (true) then {refund} else {no refund} TODO
+    // if this is (true) then {refund} else {no refund}
     const twentyFourHoursBefore = new Date((appointment.date).getTime() - 24 * 60 * 60 * 1000); // Subtract 24 hours (24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
 
-    if( !((twentyFourHoursBefore < (new Date())) && ((new Date()) < new Date(appointment.date))) ){
+    const doctor = await Doctor.findById(req.user._id); // if currentUser = doctor, refund regardless? ASK ABT THIS
+
+    if( (doctor) || !((twentyFourHoursBefore < (new Date())) && ((new Date()) < new Date(appointment.date))) ){
       const patient = await Patient.findOneAndUpdate(
         {username: appointment.patient}, 
         {$inc: { wallet: appointment.price } },
