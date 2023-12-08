@@ -29,6 +29,7 @@ exports.protect = async (req, res, next) => {
       message: `this user doesn't exist`,
     });
   } else {
+    req.role = decoded.role;
     req.user = currentUser;
     next();
   }

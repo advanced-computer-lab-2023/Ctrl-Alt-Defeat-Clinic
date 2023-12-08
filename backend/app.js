@@ -13,20 +13,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// app.options('*', (req, res) => {
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//   res.header('Access-Control-Allow-Origin', 'http://localhost:5173'); // Replace with your frontend URL
-//   res.header('Access-Control-Allow-Credentials', 'true');
-//   res.sendStatus(200);
-// });
-
 const patientRouter = require('./Routes/patientRoutes.js');
 const doctorRouter = require('./Routes/doctorRoutes.js');
 const adminRoutes = require('./Routes/adminRoutes');
 const appointmentRouter = require('./Routes/appointmentRoutes.js');
 const packageRouter = require('./Routes/packageRoutes');
 const authRouter = require('./Routes/authRoutes');
+const chatRouter = require('./Routes/chatRoutes');
 
 app.use('/api/v1/patients', patientRouter);
 app.use('/api/v1/doctors', doctorRouter);
@@ -34,8 +27,42 @@ app.use('/api/v1/admins', adminRoutes);
 app.use('/api/v1/appointments', appointmentRouter);
 app.use('/api/v1/packages', packageRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/chats', chatRouter);
 
 connectToMongoDB();
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
+});
+
+const io = require('socket.io')(server, {
+  cors: {
+    origin: 'http://localhost:5173',
+  },
+});
+
+io.on('connection', socket => {
+  console.log('Connected to socket. congrats');
+  socket.on('setup', userData => {
+    console.log('setup completed. congrats');
+    socket.join(userData);
+    socket.emit('connected');
+  });
+
+  socket.on('join chat', room => {
+    socket.join(room);
+    console.log('User Joined Room: ' + room);
+  });
+  // socket.on("typing", (room) => socket.in(room).emit("typing"));
+  // socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
+  socket.on('new message', newMessageRecieved => {
+    // if (!chat.users) return console.log("chat.users not defined");
+
+    // chat.users.forEach((user) => {
+    //   if (user._id == newMessageRecieved.sender._id) return;
+
+    //   socket.in(user._id).emit("message recieved", newMessageRecieved);
+    // });
+    console.log('Message Recieved: ' + newMessageRecieved);
+  });
 });

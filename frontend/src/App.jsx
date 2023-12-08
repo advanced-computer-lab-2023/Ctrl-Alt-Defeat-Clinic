@@ -40,6 +40,7 @@ import ScheduleFollowUpForm from "./components/ScheduleFollowUp";
 import AddUpdatePrescription from "./components/AddUpdatePrescription";
 import ViewSelectedPrescription from "./components/ViewSelectedPrescription";
 import DownloadPrescription from "./components/DownloadPrescription";
+import ChatPage from "./components/ChatPage";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
             path="/patients/familyMembers"
             element={<FamilyMembersViewer />}
           />
+          <Route path="/chats" element={<ChatPage />} />
 
           <Route path="/doctors/register" element={<DoctorRegister />} />
           <Route path="/admins/home" element={<AdminHome />} />
@@ -70,8 +72,11 @@ function App() {
             path="/admin/viewDoctorRequest"
             element={<ViewDoctorRequest />}
           />
-          
-          <Route path="/doctors/downloadPrescription" element={<DownloadPrescription />} />
+
+          <Route
+            path="/doctors/downloadPrescription"
+            element={<DownloadPrescription />}
+          />
           <Route path="/admin/addPackage" element={<AddPackage />} />
           <Route path="/admin/updatePackage" element={<UpdatePackage />} />
           <Route path="/admin/deletePackage" element={<DeletePackage />} />
@@ -113,7 +118,10 @@ function App() {
             path="/patients/view-medical-history"
             element={<MedicalHistoryViewer />}
           />
-          <Route path="/patients/viewSelectedPrescription" element={<ViewSelectedPrescription />} />
+          <Route
+            path="/patients/viewSelectedPrescription"
+            element={<ViewSelectedPrescription />}
+          />
         </Routes>
       </BrowserRouter>
     </>
