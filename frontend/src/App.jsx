@@ -41,6 +41,7 @@ import AddUpdatePrescription from "./components/AddUpdatePrescription";
 import ViewSelectedPrescription from "./components/ViewSelectedPrescription";
 import DownloadPrescription from "./components/DownloadPrescription";
 import ChatPage from "./components/ChatPage";
+import VideoChatPage from "./components/VideoChatPage";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
             element={<FamilyMembersViewer />}
           />
           <Route path="/chats" element={<ChatPage />} />
+          <Route path="/chats/video-chat" element={<VideoChatPage />} />
 
           <Route path="/doctors/register" element={<DoctorRegister />} />
           <Route path="/admins/home" element={<AdminHome />} />

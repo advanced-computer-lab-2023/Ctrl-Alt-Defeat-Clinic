@@ -54,12 +54,26 @@ io.on('connection', socket => {
     socket.join(room.chat);
     console.log(room.username + ' Joined chat with id: ' + room.chat);
   });
-  // socket.on("typing", (room) => socket.in(room).emit("typing"));
-  // socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
+  socket.emit('me', socket.id);
 
   socket.on('new message', newMessageRecieved => {
     if (newMessageRecieved.msg.sender === newMessageRecieved.loggedIn) return;
     socket.in(newMessageRecieved.msg.chat).emit('message recieved', newMessageRecieved.msg);
     console.log('Message Recieved: ' + newMessageRecieved.msg.content);
+  });
+
+  socket.on('disconnect', () => {
+    socket.broadcast.emit('callEnded');
+  });
+
+  socket.on('callUser', data => {
+    // console.log('NOW CAAAAAAAAAAAAALLLLLLLIIIIIIIIIINNNNNNG       ' + data.to);
+    // console.log(data.signalData);
+    socket.to(data.userToCall).emit('callUser', { signal: data.signalData, from: data.from, name: data.name });
+  });
+
+  socket.on('answerCall', data => {
+    socket.to(data.to).emit('callAccepted', data.signal);
   });
 });

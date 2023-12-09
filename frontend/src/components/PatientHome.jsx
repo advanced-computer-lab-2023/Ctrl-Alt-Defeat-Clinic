@@ -72,6 +72,9 @@ function PatientHome() {
           <Link to="/chats">Chats</Link>
         </li>
         <li>
+          <Link to="/chats/video-chat">Video Chats</Link>
+        </li>
+        <li>
           <Link to="/" onClick={handleLogout}>
             Logout
           </Link>
