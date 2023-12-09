@@ -20,6 +20,7 @@ const appointmentRouter = require('./Routes/appointmentRoutes.js');
 const packageRouter = require('./Routes/packageRoutes');
 const authRouter = require('./Routes/authRoutes');
 const chatRouter = require('./Routes/chatRoutes');
+const notificationRouter = require('./Routes/notificationRoutes');
 
 app.use('/api/v1/patients', patientRouter);
 app.use('/api/v1/doctors', doctorRouter);
@@ -28,6 +29,7 @@ app.use('/api/v1/appointments', appointmentRouter);
 app.use('/api/v1/packages', packageRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/chats', chatRouter);
+app.use('/api/v1/notifications', notificationRouter);
 
 connectToMongoDB();
 const server = app.listen(port, () => {
