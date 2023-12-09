@@ -83,9 +83,10 @@ function DoctorHome() {
           <Link to="/doctors/Prescriptions">Add or Update Prescriptions</Link>
         </li>
         <li>
-          <Link to="/doctors/downloadPrescription">
-            Download Prescription
-          </Link>
+          <Link to="/doctors/downloadPrescription">Download Prescription</Link>
+        </li>
+        <li>
+          <Link to="/chats">Chats</Link>
         </li>
         <li>
           <Link to="/" onClick={handleLogout}>

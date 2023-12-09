@@ -10,7 +10,30 @@ const ChatPage = () => {
   const [existingChats, setExistingChats] = useState(["User1", "User2"]);
   const [socketConnected, setSocketConnected] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [loggedIn, setLoggedIn] = useState({});
+  const [chatId, setChatId] = useState(null);
 
+  useEffect(() => {
+    (async () => {
+      const resp = await axios.get("http://localhost:8000/api/v1/auth/getMe", {
+        withCredentials: true,
+      });
+      console.log(resp.data.loggedIn);
+      setLoggedIn(resp.data.loggedIn);
+      const res = await axios.get(
+        "http://localhost:8000/api/v1/chats/my-chats",
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(res.data.chats);
+      setExistingChats(res.data.chats);
+    })();
+  }, []);
+  const getUserName = (e) => {
+    if (loggedIn.username === e.patient) return e.doctor;
+    else return e.patient;
+  };
   useEffect(() => {
     socket = io("http://localhost:8000");
     if (socket) {
@@ -20,21 +43,14 @@ const ChatPage = () => {
         setSocketConnected(true);
       });
       console.log("sock " + socketConnected);
-    }
-  }, []);
 
-  useEffect(() => {
-    (async () => {
-      const res = await axios.get(
-        "http://localhost:8000/api/v1/chats/my-chats",
-        {
-          withCredentials: true,
+      socket.on("message recieved", (newMessageRecieved) => {
+        if (newMessageRecieved.sender != loggedIn.username) {
+          console.log("logged in user that receives: " + loggedIn.username);
+          setMessages((messages) => [...messages, newMessageRecieved]);
         }
-      );
-      // res.data.chats
-      console.log(res.data.chats);
-      setExistingChats(res.data.chats.map((e) => e._id));
-    })();
+      });
+    }
   }, []);
 
   const handleSearch = (e) => {
@@ -42,23 +58,43 @@ const ChatPage = () => {
     setFoundUsers(["User3", "User4"]);
   };
 
-  // Function to handle selecting a user from the search results
-  const handleUserSelect = (e) => {
+  const handleUserSelect = async (e, id) => {
     e.preventDefault();
+    console.log("e.target.key: " + id);
+    socket.emit("join chat", { username: loggedIn.username, chat: id });
+    setChatId(id);
+    const res = await axios.get("http://localhost:8000/api/v1/chats/" + id, {
+      withCredentials: true,
+    });
+    console.log(res.data);
+    setMessages(res.data.messages);
     setSelectedUser("username");
-    setFoundUsers([]); // Clear the search results after selecting a user
+    setFoundUsers([]);
   };
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    socket.emit("new message", messageInput);
+    const res = await axios.post(
+      "http://localhost:8000/api/v1/chats/send-message",
+      {
+        content: messageInput,
+        chatId: chatId,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    socket.emit("new message", {
+      msg: res.data.messageSent,
+      loggedIn: loggedIn,
+    });
+    setMessages((messages) => [...messages, res.data.messageSent]);
     console.log(`Sending message to ${selectedUser}: ${messageInput}`);
-    setMessageInput(""); // Clear the message input after sending
+    setMessageInput("");
   };
 
   return (
     <div>
-      {/* Section 1: Search for a user */}
       <div>
         <input
           type="text"
@@ -80,7 +116,6 @@ const ChatPage = () => {
         )}
       </div>
 
-      {/* Section 2: Chat box */}
       {selectedUser && (
         <div
           style={{
@@ -90,16 +125,26 @@ const ChatPage = () => {
           }}
         >
           <div>
-            {/* Display messages box here */}
-            <div>
+            <div
+              style={{
+                height: "200px",
+                overflowY: "scroll",
+              }}
+            >
               <ul>
-                {/* {foundUsers.map((user) => (
-                  <li key={user}>
-                    <a href="" onClick={handleUserSelect}>
-                      {user}
-                    </a>
+                {messages.map((m) => (
+                  <li
+                    key={m._id}
+                    style={{
+                      textAlign:
+                        m.sender == loggedIn.username ? "right" : "left",
+                    }}
+                  >
+                    {m.sender == loggedIn.username
+                      ? `${m.sender}: ` + m.content
+                      : `not me: ` + m.content}
                   </li>
-                ))} */}
+                ))}
               </ul>
             </div>
           </div>
@@ -113,14 +158,17 @@ const ChatPage = () => {
         </div>
       )}
 
-      {/* Section 3: Existing chats */}
       <div>
         <p>Existing Chats:</p>
         <ul>
           {existingChats.map((chatUser) => (
             <li key={chatUser}>
-              <a href="" onClick={handleUserSelect}>
-                {chatUser}
+              <a
+                key={chatUser._id}
+                href=""
+                onClick={(e) => handleUserSelect(e, chatUser._id)}
+              >
+                {getUserName(chatUser)}
               </a>
             </li>
           ))}

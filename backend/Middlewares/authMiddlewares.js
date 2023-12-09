@@ -12,13 +12,13 @@ exports.protect = async (req, res, next) => {
     token = req.cookies.jwt;
     console.log('token: ' + token);
   }
-  console.log(token == null);
+  //console.log(token == null);
   if (!token) {
     return next(new Error(`your're not logged in. Please log in`));
   }
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log('role: ' + decoded.role);
+  //console.log('role: ' + decoded.role);
   let currentUser;
   if (decoded.role === 'doctor') currentUser = await Doctor.findById(decoded.id);
   else if (decoded.role === 'patient') currentUser = await Patient.findById(decoded.id);

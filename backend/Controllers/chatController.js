@@ -1,5 +1,6 @@
 const Chat = require('../Models/Chat');
 const Message = require('../Models/Message');
+const Appointment = require('../Models/Appointment');
 
 exports.getChat = async (req, res) => {
   // search for the chat by the 2 users (req.user._id) and doctor id
@@ -8,20 +9,26 @@ exports.getChat = async (req, res) => {
   let chat;
   let newChat;
   if (req.role === 'doctor') {
+    const appointments = await Appointment.find({ patient: receiver, doctor: req.user.username });
     chat = await Chat.findOne({ patient: receiver, doctor: req.user.username });
     if (chat) {
       res.status(200).json({ chat });
-    } else {
+    } else if (appointments) {
       newChat = await Chat.create({ patient: receiver, doctor: req.user.username });
       res.status(200).json({ newChat });
+    } else {
+      res.status(200).json({});
     }
   } else if (req.role === 'patient') {
+    const appointments = await Appointment.find({ patient: req.user.username, doctor: receiver });
     chat = await Chat.findOne({ patient: req.user.username, doctor: receiver });
     if (chat) {
       res.status(200).json({ chat });
-    } else {
+    } else if (appointments) {
       newChat = await Chat.create({ patient: req.user.username, doctor: receiver });
       res.status(200).json({ newChat });
+    } else {
+      res.status(200).json({});
     }
   }
   // if chat exists return it as a response
