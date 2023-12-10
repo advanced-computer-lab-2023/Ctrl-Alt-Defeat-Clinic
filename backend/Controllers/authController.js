@@ -50,7 +50,7 @@ exports.login = async (req, res) => {
   if (!username || !password) {
     res.status(401).json({
       status: 'failed',
-      message: 'missing fields',
+      message: 'Missing fields',
     });
     return;
   }
@@ -58,7 +58,7 @@ exports.login = async (req, res) => {
   if (!user || !(await bcrypt.compare(password, user.password))) {
     res.status(404).json({
       status: 'failed',
-      message: !user ? 'this user does not exist' : 'incorrect username or password',
+      message: 'Incorrect username or password',
     });
     return;
   }
