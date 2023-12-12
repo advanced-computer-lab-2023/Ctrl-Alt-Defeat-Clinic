@@ -7,6 +7,9 @@ const { protect, restrictTo } = require('../Middlewares/authMiddlewares');
 const router = express.Router();
 
 router.route('/register').post(patientController.registerPatient);
+router
+  .route('/UploadMedicalDocuments')
+  .post(protect, restrictTo('patient'), patientController.uploadPDocuments, patientController.uploadPatientDocuments);
 router.route('/getAllPrescriptionsForPatient').get(patientController.getAllPrescriptionsForPatient);
 router.route('/getPrescriptionById').get(patientController.getPrescriptionById);
 router.route('/filterPrescriptions').get(patientController.filterPrescriptions);
@@ -35,6 +38,8 @@ router
   .route('/subscribeToHealthPackageByWallet')
   .post(protect, restrictTo('patient'), patientController.subscribeToHealthPackageByWallet);
 
-router.route('/getPrescriptionsForPatient').get(protect, restrictTo('patient'), patientController.getPrescriptionsForPatient);
+router
+  .route('/getPrescriptionsForPatient')
+  .get(protect, restrictTo('patient'), patientController.getPrescriptionsForPatient);
 
 module.exports = router;

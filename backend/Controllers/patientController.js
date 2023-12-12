@@ -8,6 +8,50 @@ const path = require('path');
 const fs = require('fs');
 const Appointment = require('../Models/Appointment');
 const { filterAppointments } = require('./appointmentController');
+const multer = require('multer');
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/MedicalHistory');
+  },
+  filename: (req, file, cb) => {
+    console.log(file);
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `Patient-${req.user.username}.${ext}`);
+  },
+});
+
+const upload = multer({ storage: multerStorage }).array('medicalHistory', 100);
+
+exports.uploadPDocuments = upload;
+
+exports.uploadPatientDocuments = async (req, res) => {
+  try {
+    const patientUsername = req.user.username;
+
+    let updateData = {};
+
+    if (req.files) {
+      updateData.medicalHistory = req.files.map(file => file.filename);
+    }
+
+    const updatedPatient = await Patient.findOneAndUpdate(
+      { username: patientUsername },
+      { $push: { medicalHistory: { $each: updateData.medicalHistory } } },
+      { new: true, useFindAndModify: false }
+    );
+
+    res.status(200).json({
+      message: 'Patient documents updated successfully',
+      data: updatedPatient,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'fail',
+      message: error.message,
+    });
+  }
+};
 
 exports.registerPatient = async (req, res) => {
   const newPatient = await Patient.create(req.body);
