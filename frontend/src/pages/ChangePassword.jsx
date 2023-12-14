@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -37,19 +37,30 @@ const ChangePassword = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100vw",
+        height: "calc(100vh - 52px)",
+      }}
+    >
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
+          // marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#FFF",
+          borderRadius: "5px",
+          boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
         }}
       >
-        <Typography component="h1" variant="h5">
-          Change Password
-        </Typography>
         <Box
           component="form"
           noValidate
@@ -57,8 +68,21 @@ const ChangePassword = () => {
             e.preventDefault();
             handleSave();
           }}
-          sx={{ mt: 3 }}
+          sx={{
+            mt: 3,
+            textAlign: "center",
+            width: "50vw",
+            height: "40vh",
+            padding: "10px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
+          <Typography component="h1" variant="h5">
+            Change Password
+          </Typography>
           <TextField
             margin="normal"
             fullWidth
@@ -68,6 +92,7 @@ const ChangePassword = () => {
             variant="outlined"
             value={currentPassword}
             onChange={handleCurrentPasswordChange}
+            sx={{ width: "50%" }}
           />
           <TextField
             margin="normal"
@@ -78,8 +103,14 @@ const ChangePassword = () => {
             variant="outlined"
             value={newPassword}
             onChange={handleNewPasswordChange}
+            sx={{ width: "50%" }}
           />
-          <Button type="submit" fullWidth variant="contained">
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ width: "50%" }}
+          >
             Save
           </Button>
 

@@ -16,7 +16,7 @@ import Home from "./components/Home";
 import Login from "./pages/Login";
 // import AdminHome from "./components/AdminHome";
 import AdminPage from "./pages/AdminPage";
-import DoctorHome from "./components/DoctorHome";
+import DoctorHome from "./pages/DoctorHome";
 import PatientHome from "./components/PatientHome";
 import ViewAllDoctorAppointments from "./components/ViewAllDoctorAppointments";
 import ViewAllPatientAppointments from "./components/ViewAllPatientAppointments";
