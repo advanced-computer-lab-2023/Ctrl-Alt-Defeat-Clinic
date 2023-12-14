@@ -539,3 +539,19 @@ exports.getAllMedicalHistory = async (req, res) => {
     res.status(500).json({ message: 'Error fetching medical history' });
   }
 };
+
+exports.getPrescriptionsForPatient = async (req, res) => {
+  try {
+    const patientId = req.user._id;
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const prescriptions = await Prescription.find({ patient: patientId }).populate('doctor');
+
+    res.status(200).json(prescriptions);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
