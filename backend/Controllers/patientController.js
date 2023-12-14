@@ -412,7 +412,7 @@ exports.viewDoctorSlots = async (req, res) => {
 
     const updateDoctor = await Doctor.findOneAndUpdate(
       { username: doctorUsername },
-      { $pull: { availableSlots: { $lt: new Date() } } },
+      { $pull: { availableSlots: {start: {$lt: new Date()} } } },
       { new: true }
     );
 
@@ -424,7 +424,7 @@ exports.viewDoctorSlots = async (req, res) => {
 
 exports.viewPatientAppointments = async (req, res) => {
   try {
-    const appointments = await Appointment.find({ patient: req.user.username }).exec();
+    const appointments = await Appointment.find({ patient: req.user.username }).populate('familyMember').exec();
     filterAppointments(req, res, appointments);
   } catch (err) {
     res.status(500).json({ message: err.message });

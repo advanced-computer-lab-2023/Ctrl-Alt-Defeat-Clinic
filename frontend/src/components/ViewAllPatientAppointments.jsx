@@ -30,6 +30,7 @@ function ViewAllPatientAppointments() {
             <th>Date and Time</th>
             <th>Doctor</th>
             <th>Status</th>
+            <th>Family Member</th>
           </tr>
         </thead>
         <tbody>
@@ -38,6 +39,12 @@ function ViewAllPatientAppointments() {
               <td>{new Date(appointment.date).toLocaleString()}</td>
               <td>{appointment.doctor}</td>
               <td>{appointment.status}</td>
+              {appointment.familyMember ? (
+              <td>{appointment.familyMember.name}</td>
+            ) : (
+              <td></td>
+            )}
+
             </tr>
           ))}
         </tbody>
@@ -48,13 +55,6 @@ function ViewAllPatientAppointments() {
   return (
     <div>
       <h2>View All Appointments</h2>
-
-      <label>Patient Username: </label>
-      <input
-        type="text"
-        value={doctorUsername}
-        onChange={(e) => setDoctorUsername(e.target.value)}
-      />
 
       <form onSubmit={handleSubmit}>
         <div>

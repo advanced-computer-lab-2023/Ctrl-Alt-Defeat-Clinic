@@ -1,13 +1,15 @@
 const express = require("express");
 const appointmentController = require("../Controllers/appointmentController");
 const filterController = require("../Controllers/filterController");
-const authMiddlewares = require("../Middlewares/authMiddlewares");
+const { protect, restrictTo } = require('../Middlewares/authMiddlewares');
 
 const router = express.Router();
 
-router.route("/addAppointment").post(authMiddlewares.protect, authMiddlewares.restrictTo('patient'), appointmentController.addAppointment);
+router.route("/addAppointment").post(protect, restrictTo('patient'), appointmentController.addAppointment);
 router.route("/filterAppointments").get(filterController.filterAppointments);
 router.route("/filterPatients").get(filterController.filterPatients);
 router.route("/filterDoctors").get(filterController.filterDoctors);
+router.route('/rescheduleAppointment').put(protect, restrictTo('patient', 'doctor'), appointmentController.rescheduleAppointment);
+router.route('/cancelAppointment').put(protect, restrictTo('patient', 'doctor'), appointmentController.cancelAppointment);
 
 module.exports = router;
