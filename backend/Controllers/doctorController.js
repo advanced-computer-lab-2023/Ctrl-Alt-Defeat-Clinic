@@ -3,6 +3,22 @@ const Patient = require('../Models/Patient');
 const Appointment = require('../Models/Appointment');
 const Prescription = require('../Models/Prescriptions');
 const { filterAppointments } = require('./appointmentController');
+const multer = require('multer');
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/DoctorDocuments');
+  },
+  filename: (req, file, cb) => {
+    console.log(file);
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `Doctor-${req.body.username}.${ext}`);
+  },
+});
+
+const upload = multer({ storage: multerStorage }).array('Documents', 100);
+
+exports.uploadDDocuments = upload;
 
 exports.viewAllDoctors = async (req, res) => {
   try {
@@ -14,7 +30,12 @@ exports.viewAllDoctors = async (req, res) => {
 };
 
 exports.registerDoctor = async (req, res) => {
-  const newDoctor = await Doctor.create(req.body);
+  let newDoc = req.body;
+
+  if (req.files) {
+    newDoc.Documents = req.files.map(file => file.filename);
+  }
+  const newDoctor = await Doctor.create(newDoc);
 
   newDoctor.registrationStatus = undefined;
   res.status(201).json({
@@ -69,7 +90,7 @@ exports.selectPatient = async (req, res) => {
 };
 
 exports.viewAllPatients = async (req, res) => {
-  const  doctorUsername  = req.user.username; //modifed to be used in scedule follow up
+  const doctorUsername = req.user.username; //modifed to be used in scedule follow up
   try {
     const doctor = await Doctor.findOne({ username: doctorUsername }).populate('registeredPatients');
     res.status(200).send(doctor.registeredPatients);
@@ -207,6 +228,14 @@ exports.filterDoctors = async (req, res) => {
     }
   };
 
+exports.viewDoctorAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({ doctor: req.user.username }).exec();
+    filterAppointments(req, res, appointments);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 exports.acceptContract = async (req, res) => {
   try {
@@ -238,7 +267,6 @@ exports.acceptContract = async (req, res) => {
 
 exports.scheduleFollowUp = async (req, res) => {
   try {
-
     const { patientId, dateTime } = req.body;
 
     const [date, time] = dateTime.split('T');
@@ -246,7 +274,7 @@ exports.scheduleFollowUp = async (req, res) => {
     const doctorId = req.user._id;
 
     // Use populate to get the registered patients' data
-    
+
     const doctor = await Doctor.findById(doctorId);
 
     const registeredPatients = await doctor.populate('registeredPatients');
@@ -255,7 +283,6 @@ exports.scheduleFollowUp = async (req, res) => {
     if (!doctor) {
       return res.status(404).json({ error: 'Doctor not found' });
     }
-
 
     // Find the patient by id
     const patient = await Patient.findById(patientId);
@@ -266,9 +293,7 @@ exports.scheduleFollowUp = async (req, res) => {
     }
 
     // Check if patient is registered with the doctor
-    const isPatientRegistered = doctor.registeredPatients.some(
-      (registeredPatient) => registeredPatient.id === patientId
-    );
+    const isPatientRegistered = doctor.registeredPatients.some(registeredPatient => registeredPatient.id === patientId);
 
     if (!isPatientRegistered) {
       return res.status(404).json({ error: 'Patient not registered with this doctor' });
@@ -281,7 +306,6 @@ exports.scheduleFollowUp = async (req, res) => {
       date: date,
       time: time,
       status: 'upcoming',
-
     });
     //remove the slot from available slots TODO
     const updatedDoctor = await Doctor.findOneAndUpdate(
@@ -314,7 +338,7 @@ exports.viewAvailableSlots = async (req, res) => {
 
 exports.getPatientMedicalHistory = async (req, res) => {
   try {
-    const {patientId} = req.query;
+    const { patientId } = req.query;
 
     const patient = await Patient.findById(patientId);
 
@@ -328,5 +352,63 @@ exports.getPatientMedicalHistory = async (req, res) => {
   } catch (error) {
     console.error('Error fetching medical history:', error);
     res.status(500).json({ message: 'Error fetching medical history' });
+  }
+};
+
+exports.addPrescription = async (req, res) => {
+  try {
+    const { patientId, medicines, notes, filled } = req.body; // Assuming these details are sent in the request body
+    const doctorId = req.user.id;
+
+    const prescription = new Prescription({
+      patient: patientId,
+      doctor: doctorId,
+      medicines,
+      notes,
+      filled,
+    });
+
+    await prescription.save();
+
+    res.status(201).json({ message: 'Prescription added successfully', prescription });
+  } catch (error) {
+    res.status(500).json({ error: 'Could not add prescription' });
+  }
+};
+
+exports.updatePrescription = async (req, res) => {
+  try {
+    const { prescriptionId } = req.params; // Assuming prescription ID is in the URL params
+    const { medicines, notes, filled } = req.body; // Updated details sent in the request body
+
+    const updatedPrescription = await Prescription.findByIdAndUpdate(
+      prescriptionId,
+      {
+        $set: {
+          medicines,
+          notes,
+          filled,
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedPrescription) {
+      return res.status(404).json({ error: 'Prescription not found' });
+    }
+
+    res.status(200).json({ message: 'Prescription updated successfully', updatedPrescription });
+  } catch (error) {
+    res.status(500).json({ error: 'Could not update prescription' });
+  }
+};
+
+exports.viewAllPrescriptions = async (req, res) => {
+  try {
+    const prescriptions = await Prescription.find({ doctor: req.user._id }).populate('patient');
+
+    res.status(200).json(prescriptions);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
