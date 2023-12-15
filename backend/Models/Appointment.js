@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const FamilyMember = require('./FamilyMember');
 
 const appointmentSchema = new mongoose.Schema({
   patient: {
@@ -18,6 +19,15 @@ const appointmentSchema = new mongoose.Schema({
     enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
     default: 'upcoming',
   },
+  familyMember: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: FamilyMember,
+    default: null,
+  },
+  price: {
+    type: Number,
+    required: true,
+  }
 });
 
 appointmentSchema.index({ doctor: 1, date: 1 }, { unique: true });

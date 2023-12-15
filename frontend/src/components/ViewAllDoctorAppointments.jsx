@@ -27,8 +27,9 @@ function ViewAllDoctorAppointments() {
         <thead>
           <tr>
             <th>Date and Time</th>
-            <th>Patient</th>
+            <th>Patient Username</th>
             <th>Status</th>
+            <th>Family Member</th>
           </tr>
         </thead>
         <tbody>
@@ -37,6 +38,11 @@ function ViewAllDoctorAppointments() {
               <td>{new Date(appointment.date).toLocaleString()}</td>
               <td>{appointment.patient}</td>
               <td>{appointment.status}</td>
+              {appointment.familyMember ? (
+              <td>{appointment.familyMember.name}</td>
+            ) : (
+              <td></td>
+            )}
             </tr>
           ))}
         </tbody>

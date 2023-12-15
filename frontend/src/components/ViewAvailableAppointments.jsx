@@ -7,7 +7,7 @@ function ViewAvailableAppointments() {
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const [slotsInfo, setSlotsInfo] = useState(null);
 
-  const [selectedPatient, setSelectedPatient] = useState("");
+  const [selectedPatient, setSelectedPatient] = useState("Me");
   const [familyMembers, setFamilyMembers] = useState([]);
 
   const [appointment, setAppointment] = useState(null);
@@ -76,10 +76,10 @@ function ViewAvailableAppointments() {
           <tbody>
             {slotsInfo.map((dateTime, index) => (
               <tr key={index}>
-                <td>{new Date(dateTime).toLocaleString()}</td>
+                <td>{new Date(dateTime.start).toLocaleString()}</td>
                 <td>
                   <button
-                    onClick={() => handleSelectAppointments(dateTime)}
+                    onClick={() => handleSelectAppointments(dateTime.start)}
                     disabled={!selectedPatient}
                   >
                     Select Appointment
@@ -98,12 +98,9 @@ function ViewAvailableAppointments() {
       <div>
         <label>Select a Patient: </label>
         <select
-          value={selectedPatient}
+          value={selectedPatient || 'Me'}
           onChange={(e) => setSelectedPatient(e.target.value)}
         >
-          <option value="" disabled>
-            Select a patient
-          </option>
           <option value="Me">Me</option>
           {familyMembers.message != "No family members found for the patient" &&
             familyMembers.map((familyMember) => (
@@ -118,8 +115,9 @@ function ViewAvailableAppointments() {
 
   const handleSelectAppointments = async (dateTime) => {
     try {
+
       const response = await Axios.post(
-        `http://localhost:8000/api/v1/appointments/addAppointment?date=${dateTime}&patient=${selectedPatient}&doctor=${selectedDoctor}`,
+        `http://localhost:8000/api/v1/appointments/addAppointment?date=${dateTime}&doctor=${selectedDoctor}${(selectedPatient === 'Me')? "" : "&familyMember="+selectedPatient}`,
         {},
         { withCredentials: true }
       );

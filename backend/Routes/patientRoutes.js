@@ -38,6 +38,8 @@ router
   .route('/subscribeToHealthPackageByWallet')
   .post(protect, restrictTo('patient'), patientController.subscribeToHealthPackageByWallet);
 
+router.route('/requestFollowUp').put(protect, restrictTo('patient'), patientController.requestFollowUp);
+
 router
   .route('/getPrescriptionsForPatient')
   .get(protect, restrictTo('patient'), patientController.getPrescriptionsForPatient);
