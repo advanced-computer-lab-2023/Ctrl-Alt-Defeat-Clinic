@@ -3,6 +3,22 @@ const Patient = require('../Models/Patient');
 const Appointment = require('../Models/Appointment');
 const Prescription = require('../Models/Prescriptions');
 const { filterAppointments } = require('./appointmentController');
+const multer = require('multer');
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/DoctorDocuments');
+  },
+  filename: (req, file, cb) => {
+    console.log(file);
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `Doctor-${req.body.username}.${ext}`);
+  },
+});
+
+const upload = multer({ storage: multerStorage }).array('Documents', 100);
+
+exports.uploadDDocuments = upload;
 
 exports.viewAllDoctors = async (req, res) => {
   try {
@@ -14,7 +30,12 @@ exports.viewAllDoctors = async (req, res) => {
 };
 
 exports.registerDoctor = async (req, res) => {
-  const newDoctor = await Doctor.create(req.body);
+  let newDoc = req.body;
+
+  if (req.files) {
+    newDoc.Documents = req.files.map(file => file.filename);
+  }
+  const newDoctor = await Doctor.create(newDoc);
 
   newDoctor.registrationStatus = undefined;
   res.status(201).json({
