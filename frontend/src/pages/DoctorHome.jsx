@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   IconButton,
@@ -12,22 +12,38 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
-// import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import LockIcon from "@mui/icons-material/Lock";
+import { Person } from "@mui/icons-material";
+import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import ChangePassword from "./ChangePassword";
-import AddTimeSlot from "../components/AddTimeSlot";
-import SearchPatient from "../components/SearchPatient";
 import AppointmentsPage from "./AppointmentsPage";
 import MyPatientsPage from "./MyPatientsPage";
+import UpdateInfoPage from "./UpdateInfoPage";
+import PasswordIcon from "@mui/icons-material/Password";
+import axios from "axios";
+import Contract from "../components/Contract";
 
 function DoctorHome() {
   const [showSideNav, setShowSideNav] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(null);
   const handleToggleSideNav = () => {
     setShowSideNav(!showSideNav);
   };
+
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get("http://localhost:8000/api/v1/auth/getMe", {
+        withCredentials: true,
+      });
+
+      console.log(res.data.loggedIn);
+
+      setLoggedIn(res.data.loggedIn);
+    })();
+  }, []);
+
   const handleLogout = () => {};
 
   const menuOptions = [
@@ -35,14 +51,19 @@ function DoctorHome() {
     {
       label: "Appointments",
       icon: <AssignmentIcon />,
-      to: "/doctors/add-time-slot",
+      to: "/doctors/",
     },
     {
       label: "My Patients",
-      icon: <ShoppingCartIcon />,
-      to: "/admin/removeDoctor",
+      icon: <Person />,
+      to: "/doctors/",
     },
-    { label: "Change Password", icon: <LockIcon />, to: "/changePassword" },
+    {
+      label: "Update My Info",
+      icon: <FolderSharedIcon />,
+      to: "/doctors/",
+    },
+    { label: "Change Password", icon: <PasswordIcon />, to: "/changePassword" },
   ];
 
   const handleOptionClick = (option) => {
@@ -51,9 +72,7 @@ function DoctorHome() {
 
   const renderComponent = () => {
     if (!selectedOption) {
-      return (
-        <Typography variant="h5">Select an option to view content.</Typography>
-      );
+      return renderHome();
     }
 
     switch (selectedOption.label) {
@@ -63,129 +82,111 @@ function DoctorHome() {
         return <MyPatientsPage />;
       case "Change Password":
         return <ChangePassword />;
+      case "Update My Info":
+        return <UpdateInfoPage />;
       default:
-        return null;
+        return renderHome();
     }
   };
-  return (
-    <div style={{ width: "100%", height: "100vh" }}>
-      <div>
-        <div
-          style={{
-            backgroundColor: "#0076c0",
-            overflow: "hidden",
-            display: "flex",
-          }}
-        >
-          <IconButton onClick={handleToggleSideNav}>
-            <MenuIcon />
-          </IconButton>
-          <Link
-            to="/patients/home"
-            style={{
-              float: "left",
-              display: "block",
-              color: "#fff",
-              padding: "14px 16px",
-              textDecoration: "none",
-            }}
-          >
-            CTRL-ALT-DEFEAT Clinic
-          </Link>
-        </div>
-        <Drawer anchor="left" open={showSideNav} onClose={handleToggleSideNav}>
-          <List>
-            {menuOptions.map((option, index) => (
-              <ListItem
-                button
-                key={index}
-                onClick={() => handleOptionClick(option)}
-              >
-                <ListItemIcon>{option.icon}</ListItemIcon>
-                <ListItemText primary={option.label} />
-              </ListItem>
-            ))}
-            {/* <ListItem
-              button
-              component={Link}
-              to="/patients/home"
-              onClick={handleToggleSideNav}
-            >
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
-            <ListItem
-              button
-              component={Link}
-              to="/patients/medicines"
-              onClick={handleToggleSideNav}
-            >
-              <ListItemIcon>
-                <LocalPharmacyIcon />
-              </ListItemIcon>
-              <ListItemText primary="Appointments" />
-            </ListItem>
-            <ListItem
-              button
-              component={Link}
-              to="/patients/viewOrder"
-              onClick={handleToggleSideNav}
-            >
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="My Patients" />
-            </ListItem>
-            <ListItem
-              button
-              component={Link}
-              to="/patients/viewCart"
-              onClick={handleToggleSideNav}
-            >
-              <ListItemIcon>
-                <ShoppingCartIcon />
-              </ListItemIcon>
-              <ListItemText primary="Update Account Info" />
-            </ListItem>
-            <ListItem
-              button
-              component={Link}
-              to="/changePassword"
-              onClick={handleToggleSideNav}
-            >
-              <ListItemIcon>
-                <LockIcon />
-              </ListItemIcon>
-              <ListItemText primary="Change password" />
-            </ListItem> */}
-            <hr className="hr" />
-            <ListItem
-              button
-              component={Link}
-              to="/"
-              className="right"
-              onClick={handleLogout}
-            >
-              <ListItemIcon>
-                <LockIcon />
-              </ListItemIcon>
-              <ListItemText primary="Logout" />
-            </ListItem>
-          </List>
-        </Drawer>
-      </div>
-      <Container
-        sx={{
+
+  const renderHome = () => {
+    return (
+      <div
+        style={{
           display: "flex",
-          justifyContent: "center",
           alignItems: "center",
-          height: "calc(100vh - 46.4px)",
+          flexDirection: "column",
+          width: "100%",
+          height: "75%",
+          backgroundColor: "#FFF",
+          borderRadius: "5px",
+          boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
         }}
       >
-        {renderComponent()}
-      </Container>
+        home
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ width: "100%", height: "100vh" }}>
+      {loggedIn && loggedIn.registrationStatus === "partially accepted" ? (
+        <div>
+          <Contract
+            username={loggedIn.username}
+            hourlyRate={loggedIn.hourlyRate}
+          />
+        </div>
+      ) : (
+        <div>
+          <div>
+            <div
+              style={{
+                backgroundColor: "#0076c0",
+                overflow: "hidden",
+                display: "flex",
+              }}
+            >
+              <IconButton onClick={handleToggleSideNav}>
+                <MenuIcon sx={{ color: "white" }} />
+              </IconButton>
+              <Link
+                to="/patients/home"
+                style={{
+                  float: "left",
+                  display: "block",
+                  color: "#fff",
+                  padding: "14px 16px",
+                  textDecoration: "none",
+                }}
+              >
+                CTRL-ALT-DEFEAT Clinic
+              </Link>
+            </div>
+            <Drawer
+              anchor="left"
+              open={showSideNav}
+              onClose={handleToggleSideNav}
+            >
+              <List>
+                {menuOptions.map((option, index) => (
+                  <ListItem
+                    button
+                    key={index}
+                    onClick={() => handleOptionClick(option)}
+                  >
+                    <ListItemIcon>{option.icon}</ListItemIcon>
+                    <ListItemText primary={option.label} />
+                  </ListItem>
+                ))}
+                <hr className="hr" />
+                <ListItem
+                  button
+                  component={Link}
+                  to="/"
+                  className="right"
+                  onClick={handleLogout}
+                >
+                  <ListItemIcon>
+                    <LockIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+                </ListItem>
+              </List>
+            </Drawer>
+          </div>
+          <Container
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "calc(100vh - 46.4px)",
+            }}
+          >
+            {renderComponent()}
+          </Container>
+        </div>
+      )}
     </div>
   );
 }

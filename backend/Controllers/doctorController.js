@@ -47,9 +47,11 @@ exports.updateDoctor = async (req, res) => {
 exports.searchPatientsByName = async (req, res) => {
   // const { name, doctorUsername } = req.query;
   const { name } = req.query;
+  console.log('🚀 ~ file: doctorController.js:50 ~ exports.searchPatientsByName= ~ name:', name);
   try {
     const doctor = await Doctor.findById(req.user._id).populate('registeredPatients');
     const patients = doctor.registeredPatients;
+    console.log('🚀 ~ file: doctorController.js:53 ~ exports.searchPatientsByName= ~ patients:', patients);
     const resultedPatients = patients.filter(patient => patient.name.toLowerCase().includes(name.toLowerCase()));
     res.status(200).send(resultedPatients);
   } catch (err) {
@@ -169,42 +171,41 @@ exports.filterDoctors = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-  //-------------- SPRINT 2 -------------------
+//-------------- SPRINT 2 -------------------
 
-  exports.addAvailableSlot = async (req, res) => {
-    
-    try {
-  
-      const {slotDate} = req.query;
-  
-      if(!slotDate) return res.status(400).json({ message: 'Enter the slot time and date.'});
+exports.addAvailableSlot = async (req, res) => {
+  try {
+    const { slotDate } = req.query;
 
-      if(new Date(slotDate) < new Date()) return res.status(400).json({ message: 'Date and time has already passed.'});
-     
-      const doctor = await Doctor.findOneAndUpdate(
-        { username: req.user.username },
-        {$pull: { availableSlots: {start: {$lt: new Date()} } }},
-        { new: true }
-      );
-  
-      const updatedDoctor = await Doctor.updateOne({ username: req.user.username }, { $addToSet: { availableSlots:{start: slotDate, }} });
-  
-      res.status(200).json(updatedDoctor);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-  
-  exports.viewDoctorAppointments = async (req,res) => {
-  
-    try{ 
-      const appointments = await Appointment.find({doctor: req.user.username}).populate('familyMember').exec();
-      filterAppointments(req, res, appointments);
-  
-    } catch(err){
-      res.status(500).json({ message: err.message });
-    }
-  };
+    if (!slotDate) return res.status(400).json({ message: 'Enter the slot time and date.' });
+
+    if (new Date(slotDate) < new Date()) return res.status(400).json({ message: 'Date and time has already passed.' });
+
+    const doctor = await Doctor.findOneAndUpdate(
+      { username: req.user.username },
+      { $pull: { availableSlots: { start: { $lt: new Date() } } } },
+      { new: true }
+    );
+
+    const updatedDoctor = await Doctor.updateOne(
+      { username: req.user.username },
+      { $addToSet: { availableSlots: { start: slotDate } } }
+    );
+
+    res.status(200).json(updatedDoctor);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.viewDoctorAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({ doctor: req.user.username }).populate('familyMember').exec();
+    filterAppointments(req, res, appointments);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 exports.viewDoctorAppointments = async (req, res) => {
   try {
@@ -288,7 +289,7 @@ exports.scheduleFollowUp = async (req, res) => {
     //remove the slot from available slots TODO
     const updatedDoctor = await Doctor.findOneAndUpdate(
       { username: doctor.username },
-      { $pull: { availableSlots: {start: dateTime} } },
+      { $pull: { availableSlots: { start: dateTime } } },
       { new: true }
     );
 

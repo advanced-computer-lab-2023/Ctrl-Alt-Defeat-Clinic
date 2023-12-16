@@ -71,13 +71,13 @@ function AddTimeSlot() {
             alignItems: "center",
           }}
         >
-          <Button
+          {/* <Button
             variant="outlined"
             sx={{ backgroundColor: "white" }}
             onClick={handleToggle}
           >
             Back
-          </Button>
+          </Button> */}
         </div>
         <Typography
           component="h1"
@@ -234,7 +234,7 @@ function AddTimeSlot() {
                     marginBottom: "10px",
                   }}
                 >
-                  {new Date(slot).toLocaleString()}
+                  {new Date(slot.start).toLocaleString()}
                 </div>
               );
             })}
