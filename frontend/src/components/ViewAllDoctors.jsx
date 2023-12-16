@@ -32,11 +32,18 @@ function ViewAllDoctors() {
   const [openDialog, setOpenDialog] = useState(false);
   const [filterSpeciality, setFilterSpeciality] = useState('');
   const [filterDateTime, setFilterDateTime] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [familyMembers, setFamilyMembers] = useState([]);
+  const [forFamilyMember, setForFamilyMember] = useState(false);
+  const [selectedFamilyMember, setSelectedFamilyMember] = useState(null);
+  const [dateTime, setDateTime] = useState(null);
 
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await Axios.get('http://localhost:8000/api/v1/patients/viewDoctors');
+        const response = await Axios.get('http://localhost:8000/api/v1/patients/viewDoctors', {
+          withCredentials: true,
+        });
         setUserInfo(response.data);
         setLoading(false);
       } catch (error) {
@@ -45,8 +52,45 @@ function ViewAllDoctors() {
       }
     };
 
+    const fetchFamilyMembers = async () => {
+      try {
+        const response = await Axios.get(`http://localhost:8000/api/v1/patients/viewFamilyMembers`, {
+          withCredentials: true,
+        });
+        setFamilyMembers(Array.isArray(response.data) ? response.data : []);
+        //console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching family members:', error);
+      }
+    };
+
     fetchDoctors();
+    fetchFamilyMembers();
   }, []);
+
+  const handleSelectAppointments = async () => {
+    console.log(selectedDoctor.username, dateTime);
+    try {
+      const response = await Axios.post(
+        `http://localhost:8000/api/v1/appointments/addAppointment?date=${dateTime}&doctor=${selectedDoctor.usermane}${
+          !selectedFamilyMember ? '' : '&familyMember=' + selectedFamilyMember
+        }`,
+        {},
+        { withCredentials: true }
+      );
+
+      console.log(response.data);
+
+      alert('Appointment Booked Successfully');
+      setShowModal(false);
+      setOpenDialog(false);
+
+      //console.log(`Selected appointment at ${dateTime} for patient ${selectedPatient} with ${selectedDoctor}`);
+    } catch (error) {
+      console.error('Error selecting appointment:', error);
+      alert('Error selecting appointment');
+    }
+  };
 
   const handleSearchChange = e => {
     setSearchTerm(e.target.value);
@@ -153,20 +197,75 @@ function ViewAllDoctors() {
 
         {/* Doctor Details Dialog */}
         <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>{selectedDoctor && `Doctor Information`}</DialogTitle>
+          <DialogTitle style={{ fontWeight: 'bold' }}>{selectedDoctor && `Doctor Information`}</DialogTitle>
           <DialogContent>
             <DialogContentText>
               {selectedDoctor && (
                 <>
-                  <strong>Name:</strong> {selectedDoctor.name}
-                  <br />
-                  <strong>Speciality:</strong> {selectedDoctor.speciality}
-                  <br />
-                  <strong>Session Price:</strong> {selectedDoctor.sessionPrice}
-                  <br />
-                  <strong>Affiliation:</strong> {selectedDoctor.affiliation}
-                  <br />
-                  <strong>Educational Background:</strong> {selectedDoctor.educationalBackground}
+                  <div style={{ marginBottom: '15px' }}>
+                    <strong>Name:</strong> {selectedDoctor.name}
+                  </div>
+                  <div style={{ marginBottom: '15px' }}>
+                    <strong>Speciality:</strong> {selectedDoctor.speciality}
+                  </div>
+                  <div style={{ marginBottom: '15px' }}>
+                    <strong>Session Price:</strong> {selectedDoctor.sessionPrice}
+                  </div>
+                  <div style={{ marginBottom: '15px' }}>
+                    <strong>Affiliation:</strong> {selectedDoctor.affiliation}
+                  </div>
+                  <div style={{ marginBottom: '15px' }}>
+                    <strong>Educational Background:</strong> {selectedDoctor.educationalBackground}
+                  </div>
+                  <div style={{ marginBottom: '15px' }}>
+                    <strong>Available Time Slots:</strong>
+                    {selectedDoctor.availableSlots.length > 0 ? (
+                      <ul style={{ listStyleType: 'none', paddingLeft: '0', marginTop: '8px' }}>
+                        {selectedDoctor.availableSlots.map((slot, index) => (
+                          <li
+                            key={index}
+                            style={{
+                              marginBottom: '8px',
+                              border: '1px solid #ddd',
+                              borderRadius: '5px',
+                              padding: '8px',
+                              backgroundColor: '#f8f8f8',
+                              cursor: 'pointer',
+                            }}
+                          >
+                            <strong>Date:</strong> {new Date(slot.start).toLocaleDateString()} <strong>Time:</strong>{' '}
+                            {new Date(slot.start).toLocaleTimeString()} - {new Date(slot.end).toLocaleTimeString()}
+                            <div style={{ display: 'flex', gap: '5px' }}>
+                              <Button
+                                variant="outlined"
+                                style={{ marginTop: '5px' }}
+                                onClick={() => {
+                                  setShowModal(true);
+                                  setDateTime(slot.start);
+                                  setForFamilyMember(false);
+                                }}
+                              >
+                                Select For Me
+                              </Button>
+                              <Button
+                                variant="outlined"
+                                style={{ marginTop: '5px' }}
+                                onClick={() => {
+                                  setShowModal(true);
+                                  setForFamilyMember(true);
+                                  setDateTime(slot.start);
+                                }}
+                              >
+                                Select For Family Member
+                              </Button>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>N/A</p>
+                    )}
+                  </div>
                 </>
               )}
             </DialogContentText>
@@ -175,6 +274,45 @@ function ViewAllDoctors() {
             <Button onClick={handleCloseDialog} color="primary">
               Close
             </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={showModal} onClose={() => setShowModal(false)}>
+          <DialogTitle style={{ fontWeight: 'bold' }}>Payment</DialogTitle>
+          <DialogContent style={{ width: '400px' }}>
+            {forFamilyMember && (
+              <FormControl variant="outlined" fullWidth style={{ marginBottom: '20px', marginTop: '5px' }}>
+                <InputLabel id="member-label" style={{ backgroundColor: '#fff', padding: '0 10px' }}>
+                  Select Family Member
+                </InputLabel>
+                <Select
+                  labelId="member-label"
+                  id="member-select"
+                  value={selectedFamilyMember}
+                  onChange={e => {
+                    setSelectedFamilyMember(e.target.value);
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>All</em>
+                  </MenuItem>
+                  {familyMembers.map((member, index) => (
+                    <MenuItem key={index} value={member.name}>
+                      {member.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+            <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>Choose a Payment Method</label>
+            <Button onClick={handleSelectAppointments} variant="outlined">
+              Wallet
+            </Button>
+            <Button onClick={handleSelectAppointments} variant="outlined" style={{ marginLeft: '5px' }}>
+              Credit Card
+            </Button>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setShowModal(false)}>Cancel</Button>
           </DialogActions>
         </Dialog>
       </Container>

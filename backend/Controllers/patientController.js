@@ -99,7 +99,9 @@ exports.addFamilyMember = async (req, res) => {
 exports.viewAllDoctors = async (req, res) => {
   try {
     //Getting the current patient view the list of doctor
-    const currentPatient = await Patient.find();
+    const currentPatient = req.user;
+
+    console.log(req.user);
 
     if (!currentPatient) {
       return res.status(404).json({ error: 'Patient not found' });
@@ -107,7 +109,7 @@ exports.viewAllDoctors = async (req, res) => {
 
     const doctors = await Doctor.find(
       {},
-      'name speciality hourlyRatename speciality hourlyRate affiliation educationalBackground availableSlots'
+      'name username speciality hourlyRatename speciality hourlyRate affiliation educationalBackground availableSlots'
     );
 
     const doctorsWithSessionPrices = await Promise.all(
@@ -115,6 +117,7 @@ exports.viewAllDoctors = async (req, res) => {
         const sessionPrice = await calculateSessionPrice(currentDoctor.hourlyRate, currentPatient.healthPackage);
         return {
           name: currentDoctor.name,
+          username: currentDoctor.username,
           speciality: currentDoctor.speciality,
           sessionPrice,
           speciality: currentDoctor.speciality,
