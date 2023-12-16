@@ -153,7 +153,7 @@ function ViewAllDoctors() {
 
         {/* Doctor Details Dialog */}
         <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>{selectedDoctor && `Doctor Information: ${selectedDoctor.name}`}</DialogTitle>
+          <DialogTitle>{selectedDoctor && `Doctor Information`}</DialogTitle>
           <DialogContent>
             <DialogContentText>
               {selectedDoctor && (
@@ -163,6 +163,10 @@ function ViewAllDoctors() {
                   <strong>Speciality:</strong> {selectedDoctor.speciality}
                   <br />
                   <strong>Session Price:</strong> {selectedDoctor.sessionPrice}
+                  <br />
+                  <strong>Affiliation:</strong> {selectedDoctor.affiliation}
+                  <br />
+                  <strong>Educational Background:</strong> {selectedDoctor.educationalBackground}
                 </>
               )}
             </DialogContentText>
