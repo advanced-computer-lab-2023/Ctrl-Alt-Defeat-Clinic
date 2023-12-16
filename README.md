@@ -13,7 +13,7 @@ El7a2ny
 Advanced Computer Lab (CSEN 704/ DMET 706), Winter 2023
 
 #### Theme 
-Our project "EL7A2NI" is a comprehensive virtual clinic solution designed to revolutionize the healthcare experience for clinics, doctors, pharmacists, and patients. Our project is driven by the theme of creating a complete virtual clinic, seamlessly integrated with a pharmacy, to optimize and automate interactions within the medical ecosystem.
+Our project "EL7A2NY" is a comprehensive virtual clinic solution designed to revolutionize the healthcare experience for clinics, doctors, pharmacists, and patients. Our project is driven by the theme of creating a complete virtual clinic, seamlessly integrated with a pharmacy, to optimize and automate interactions within the medical ecosystem.
 
 #### Objectives
 * Gain an understanding of how to effectively utilize the Agile Methodology for project planning and software development
