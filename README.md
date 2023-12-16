@@ -7,7 +7,7 @@
 * [Motivation](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#motivation)
 * [Build Status](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#build-status)
 * [Code Styles](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#code-styles)
-* [Tech/Framework used](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#tech/framework-used)
+* [Tech/Framework used](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#tech-framework-used)
 * [Features](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#features)
 * [Screenshots](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#screenshots)
 * [Code Examples](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#code-examples)
