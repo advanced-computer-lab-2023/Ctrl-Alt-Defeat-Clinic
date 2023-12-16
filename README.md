@@ -13,7 +13,7 @@ El7a2ny
 Advanced Computer Lab (CSEN 704/ DMET 706), Winter 2023
 
 #### Theme 
-Our project "EL7A2NI" is a comprehensive virtual clinic solution designed to revolutionize the healthcare experience for clinics, doctors, pharmacists, and patients. Our project is driven by the theme of creating a complete virtual clinic, seamlessly integrated with a pharmacy, to optimize and automate interactions within the medical ecosystem.
+Our project "EL7A2NY" is a comprehensive virtual clinic solution designed to revolutionize the healthcare experience for clinics, doctors, pharmacists, and patients. Our project is driven by the theme of creating a complete virtual clinic, seamlessly integrated with a pharmacy, to optimize and automate interactions within the medical ecosystem.
 
 #### Objectives
 * Gain an understanding of how to effectively utilize the Agile Methodology for project planning and software development
@@ -296,7 +296,7 @@ git clone https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic
 
 | Route | Type     | Request body/params/query                | Description 
 | :-------- | :------- | :------------------------- | :------------|
-| `/addAppointment` | `POST` | **Query:** {familyMember:```String``` , doctor:```String``` , date:```Date``` }  | Add a new appointment.
+| `/addAppointment` | `POST` | **Query:** {familyMember:```Object``` , doctor:```String``` , date:```Date``` }  | Add a new appointment.
 | `/filterAppointments` | `GET` |**Query:** { startDate:```Date```, endDate:```Date```, status:```String``` } | Filter appointments by start date, end date and status of appointment.
 | `/filterPatients` | `GET` | **Query:** { doctorUsername:```String``` } | Filter patients based on upcoming appointments using doctor username.
 | `/filterDoctors` | `GET` | **Query:** { date:```Date``` , speciality:```String``` } | Filter doctors using speciality and date of appointment.
@@ -349,6 +349,52 @@ git clone https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic
 | `/prescription` | `PUT` | **Body:** { medicines: ```String[]```, notes:```String```, filled:```Boolean``` } , **Params:** { prescriptionId: ```String``` }| Update a prescription's information.
 | `/viewAllPrescriptions` | `GET` | | View all prescriptions of the logged in doctor.
 
+
+
+####  Package Router
+
+```http
+ /api/v1/packages
+```
+
+| Route | Type     | Request body/params                | Description 
+| :-------- | :------- | :------------------------- | :------------|
+| `/getPackages` | `GET` |    | View all packages exist.
+| `/addPackage` | `POST` |**Body:** { name: ```String``` , price: ```String``` , discounts: ```Number[]``` } | Create a new package.
+| `/updatePackage` | `PUT` | **Params:** { name: ```String``` } , **Body:** { name: ```String``` , price: ```String``` , discounts: ```Number[]``` }  | Update information of an existing package using its name.
+| `/deletePackage` | `DELETE` | **Params:** { name: ```String``` } | Delete a package using its name.
+
+
+
+####  Patient Router
+
+```http
+ /api/v1/patients
+```
+
+| Route | Type     | Request body/params                | Description 
+| :-------- | :------- | :------------------------- | :------------|
+| `/register` | `POST` | **Body:** { username: ```String``` , name: ```String``` , email: ```String```, password: ```String```, dateOfBirth: ```Date```, nationalId: ```Number```, gender: ```String```, mobileNumber: ```String```, emergencyContact:{ fullname:```String```, mobileNumber:```String```} , healthPackage: ```Object```, healthPackageStatus: ```String```, healthPackageRenewalDate: ```Date```, healthPackageEndDate: ```Date```, familyMembers: ```Object[]```, medicalHistory: ```String[]```, wallet: ```String``` , otp: ```String```   }   | Register as a patient.
+| `/UploadMedicalDocuments` | `POST` |**File** {  } | Upload medical documents for patient.
+| `/getAllPrescriptionsForPatient` | `GET` | **Query:** { username: ```String``` }  | View all prescriptions of logged in patient.
+| `/getPrescriptionById` | `GET` | **Query:** { prescriptionId: ```String``` } | View a prescription of patient by its ID.
+| `/filterPrescriptions` | `GET` | **Query:** { date: ```Date```, doctorUsername: ```String```, filled; ```Boolean```, patientUsername:```String``` } | Filter prescriptions by their date, doctor username, filled and patient username. 
+| `/viewDoctors` | `GET` | **Params:** { username: ```String``` } | View all doctors for the logged in patient.
+| `/searchForDoctors` | `GET` | **Query:** { name: ```String```, speciality:```String``` } | Search for a doctor that the patient is registered with by his name and speciality.
+| `/uploadFile` | `POST` | **Query:** { name: ```String```, speciality:```String``` } | Search for a doctor that the patient is registered with by his name and speciality.
+| `/deleteMedicalHistory` | `DELETE` | **Query:** { filepath: ```String``` } | Delete a medical history of the patient.
+| `/getAllMedicalHistory` | `GET` |  | View all medical history of the patient.
+| `/viewDoctorSlots` | `GET` | **Query:** { doctorUsername: ```String``` } | View available slots of a doctor.
+| `/viewPatientAppointments` | `GET` |  | View the patient's appointments.
+| `/addMember` | `POST` | **Query:** { name: ```String```, nationalId:```Number``` , age:```Number``` , gender:```String``` , healthPackage:```String``` , healthPackageStatus:```String``` , healthPackageRenewalDate:```Date```,  healthPackageEndDate:```Date``` , relationToPatient: ```String```  } | Add a new family member for the patient.
+| `/linkMember` | `POST` | **Body:** { phoneNumber: ```Number```, email: ```String```, relationship:```String``` } | Link a new family member to the patient.
+| `/viewFamilyMembers` | `GET` |  | View the patient's family members.
+| `/subscribeToHealthPackage` | `POST` | **Body:** { healthPackageId: ```String``` } | Subscribe the patient to a health package.
+| `/viewStatusOfHealthPackage` | `GET` |  | Get the status of health package for the patient, if it is subscribed or not or cancelled.
+| `/createCheckoutSessionForHp` | `POST` | **Body:** { healthPackageId: ```String``` } | Create a checkout session.
+| `/subscribeToHealthPackageByWallet` | `POST` | **Body:** { healthPackageId: ```String``` } | Subscribe to a health package using wallet.
+| `/requestFollowUp` | `PUT` | **Query:** { familyMember: ```Object```, doctor: ```Object``` , date : ```Date``` } | Send a request to a specific doctor for a follow-up session. 
+| `/getPrescriptionsForPatient` | `GET` | **Body:** { healthPackageId: ```String``` } | View all prescriptions for the patient.
 
 
 
