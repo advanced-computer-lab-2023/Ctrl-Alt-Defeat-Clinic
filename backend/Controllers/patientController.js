@@ -97,16 +97,18 @@ exports.addFamilyMember = async (req, res) => {
 };
 
 exports.viewAllDoctors = async (req, res) => {
-  const { username } = req.params;
   try {
     //Getting the current patient view the list of doctor
-    const currentPatient = await Patient.findOne({ username });
+    const currentPatient = await Patient.find();
 
     if (!currentPatient) {
       return res.status(404).json({ error: 'Patient not found' });
     }
 
-    const doctors = await Doctor.find({}, 'name speciality hourlyRate');
+    const doctors = await Doctor.find(
+      {},
+      'name speciality hourlyRatename speciality hourlyRate affiliation educationalBackground availableSlots'
+    );
 
     const doctorsWithSessionPrices = await Promise.all(
       doctors.map(async currentDoctor => {
@@ -115,6 +117,10 @@ exports.viewAllDoctors = async (req, res) => {
           name: currentDoctor.name,
           speciality: currentDoctor.speciality,
           sessionPrice,
+          speciality: currentDoctor.speciality,
+          affiliation: currentDoctor.affiliation,
+          educationalBackground: currentDoctor.educationalBackground,
+          availableSlots: currentDoctor.availableSlots,
         };
       })
     );
@@ -456,7 +462,7 @@ exports.viewDoctorSlots = async (req, res) => {
 
     const updateDoctor = await Doctor.findOneAndUpdate(
       { username: doctorUsername },
-      { $pull: { availableSlots: {start: {$lt: new Date()} } } },
+      { $pull: { availableSlots: { start: { $lt: new Date() } } } },
       { new: true }
     );
 
@@ -584,50 +590,49 @@ exports.getAllMedicalHistory = async (req, res) => {
   }
 };
 
-exports.requestFollowUp = async (req, res) =>{
-  try{
+exports.requestFollowUp = async (req, res) => {
+  try {
+    const { familyMember, doctor, date } = req.query;
 
-    const {familyMember, doctor, date} = req.query;
-
-    let appDoctor = await Doctor.findOne({username: doctor}).populate('registeredPatients').exec();
+    let appDoctor = await Doctor.findOne({ username: doctor }).populate('registeredPatients').exec();
 
     if (!appDoctor) {
       return res.status(404).json({ message: 'Doctor not found' });
     }
 
     const isPatientRegistered = appDoctor.registeredPatients.some(
-      (registeredPatient) => registeredPatient.id == req.user._id
+      registeredPatient => registeredPatient.id == req.user._id
     );
 
     if (!isPatientRegistered) {
       return res.status(404).json({ error: 'Patient not registered with this doctor' });
     }
 
-    // add to followUpRequests in doctor 
-    let updatedDoctor; 
+    // add to followUpRequests in doctor
+    let updatedDoctor;
 
-    if(familyMember){
+    if (familyMember) {
       updatedDoctor = await Doctor.findOneAndUpdate(
         { username: doctor },
-        { $addToSet: { followUpRequests: {patient: req.user.username, familyMember: familyMember, date: new Date(date)} } },
+        {
+          $addToSet: {
+            followUpRequests: { patient: req.user.username, familyMember: familyMember, date: new Date(date) },
+          },
+        },
         { new: true }
       ).exec();
-    }
-    else{
+    } else {
       updatedDoctor = await Doctor.findOneAndUpdate(
         { username: doctor },
-        { $addToSet: { followUpRequests: {patient: req.user.username, date: new Date(date), } } },
+        { $addToSet: { followUpRequests: { patient: req.user.username, date: new Date(date) } } },
         { new: true, lean: true }
       ).exec();
     }
 
     res.status(200).json(updatedDoctor.followUpRequests);
-
-  }
-  catch (error){
+  } catch (error) {
     res.status(500).json({ message: 'Error requesting follow-up', error: error.message });
   }
-
 };
 
 exports.getPrescriptionsForPatient = async (req, res) => {

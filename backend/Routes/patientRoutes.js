@@ -13,7 +13,7 @@ router
 router.route('/getAllPrescriptionsForPatient').get(patientController.getAllPrescriptionsForPatient);
 router.route('/getPrescriptionById').get(patientController.getPrescriptionById);
 router.route('/filterPrescriptions').get(patientController.filterPrescriptions);
-router.route('/viewDoctors/:username').get(patientController.viewAllDoctors);
+router.route('/viewDoctors').get(patientController.viewAllDoctors);
 router.route('/searchForDoctors').get(patientController.searchForDoctors);
 router.route('/uploadFile').post(protect, restrictTo('patient'), multerUpload, patientController.uploadFile);
 router.route('/deleteMedicalHistory').delete(protect, restrictTo('patient'), patientController.deleteMedicalHistory);

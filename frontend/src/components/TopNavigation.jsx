@@ -10,6 +10,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import HomeIcon from '@mui/icons-material/Home';
+import VaccinesOutlinedIcon from '@mui/icons-material/VaccinesOutlined';
 
 const TopNavigation = props => {
   const { link } = props;
@@ -53,6 +54,12 @@ const TopNavigation = props => {
               <HomeIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
+          </ListItem>
+          <ListItem button component={Link} to="/patients/alldoctors" onClick={handleToggleSideNav}>
+            <ListItemIcon>
+              <VaccinesOutlinedIcon />
+            </ListItemIcon>
+            <ListItemText primary="doctors" />
           </ListItem>
           <ListItem button component={Link} to="/patients/healthPackages" onClick={handleToggleSideNav}>
             <ListItemIcon>
