@@ -15,7 +15,7 @@
 * [API References](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#api-references)
 * [Testing](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#testing)
 * [How to Use](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#how-to-use)
-* [How to Contribuite](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#how-to-contribute)
+* [How to Contribute](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#how-to-contribute)
 * [Credits](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#credits)
 * [License](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#license)
 
