@@ -14,7 +14,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Snackbar, Alert, InputAdornment } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
@@ -81,7 +81,9 @@ export default function Login() {
         sx={{ display: 'flex', alignItems: 'center', fontSize: '18px', paddingX: '200px', marginTop: '50px' }}
       >
         <ArrowBackIosIcon style={{ color: '#1976d2', width: '20px' }} />
-        <Link href="#">Back</Link>
+        <Link component={RouterLink} to="/">
+          Back
+        </Link>
       </Typography>
       <Container component="main" maxWidth="xs" style={containerStyle}>
         <CssBaseline />
@@ -92,7 +94,7 @@ export default function Login() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: '#0E4378' }}>
+          <Avatar sx={{ m: 1, bgcolor: '#0076c0' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -147,7 +149,7 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, paddingY: 2, bgcolor: '#0E4378', ':hover': { backgroundColor: '#0E4378' } }}
+              sx={{ mt: 3, mb: 2, paddingY: 2, bgcolor: '#0076c0', ':hover': { backgroundColor: '#0076c0' } }}
             >
               Sign In
             </Button>
@@ -159,7 +161,7 @@ export default function Login() {
               </Grid>
               <Grid style={{ display: 'flex', gap: '3px' }}>
                 <Typography variant="body2">Don't have an account?</Typography>
-                <Link href="#" variant="body2">
+                <Link component={RouterLink} to="/" variant="body2">
                   {'Sign Up'}
                 </Link>
               </Grid>

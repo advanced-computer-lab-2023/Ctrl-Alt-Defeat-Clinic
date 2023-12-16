@@ -1,5 +1,5 @@
-import PatientRegister from './components/PatientRegister';
-import DoctorRegister from './components/DoctorRegister';
+import PatientRegister from './pages/PatientRegister';
+import DoctorRegister from './pages/DoctorRegister';
 import AddAdmin from './components/AddAdmin';
 import RemoveAdmin from './components/RemoveAdmin';
 import RemoveDoctor from './components/RemoveDoctor';
@@ -12,7 +12,7 @@ import UpdateDoctor from './components/updateDoctor';
 import ViewAllPatients from './components/ViewAllPatients';
 import SearchPatient from './components/SearchPatient';
 import FamilyMembersViewer from './components/FamilyMembersViewer';
-import Home from './components/Home';
+import Home from './pages/Home';
 import Login from './pages/Login';
 import AdminHome from './components/AdminHome';
 import DoctorHome from './components/DoctorHome';
