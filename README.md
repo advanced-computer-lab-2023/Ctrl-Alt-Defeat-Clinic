@@ -1,10 +1,11 @@
 
-# El7a2ni
-pic here
+# El7a2ny
+![1111211](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/102230910/7b7927ee-4d83-4e08-a6c2-38d86a4fed1a)
+
 
 ## Project description
 #### Title
-El7a2ni
+El7a2ny
 
 
 
@@ -55,6 +56,109 @@ The project is formatted using prettier also The project follows the [MVC](https
 
 
 ## Features
+#### Our Website User Types:  
+ Admin-Doctor-Patient-Guest   
+ ####  **Admin's Features**  
+ <details><summary>As an Admin you can :</summary><br>      
+   
+ - add another adminstrator with a set username and password
+ - remove a doctor/patient / Admin from the system
+ - view all of the information uploaded by a doctor to apply to join the platform
+ - accept or reject the request of a doctor to join the platform  
+ - add/update/delete health packages with different price ranges depending on the services included in each package ( silver, gold, platinum).
+ - accept a request for the registration of a doctor
+
+   </details>
+   
+  ####  **Doctor Features**    
+  
+  <details><summary>As a Doctor you can :</summary><br>
+    
+- edit/ update my email, hourly rate or affiliation (hospital)
+- view and accept the employment contract
+- add my available time slots for appointments
+- view information and health records of patient registered with me
+- view a list of all my patients
+- search for a patient by name
+- filter patients based on upcoming appointments
+- select a patient from the list of patients
+- reschedule an appointment for a patient
+- schedule a follow-up for a patient
+ - add/delete medicine to/from the prescription from the pharmacy platform
+ - add/update dosage for each medicine added to the prescription
+ - add new health records for a patient
+ - add a patient's prescription
+ - update a patient's prescription before it is submitted to the pharmacy
+ - accept or revoke a follow-up session request from a patient
+</details>
+
+####  **Patient Features** 
+<details><summary>As a Patient you can :</summary><br>   
+  
+   - upload/remove documents (PDF,JPEG,JPG,PNG) for my medical history
+   - add family members using name, National ID, age, gender and relation to the patient 
+   - link another patient's account as a family member using email or phone number stating relation to the patient
+   - choose to pay for my appointment using my wallet or credit card
+   - enter credit card details and pay for an appointment using Stripe
+   - view registered family members
+   - view health package options and details
+   - subscribe to a health package for myself and my family members (if any)
+   - choose to pay for the chosen health package using wallet or credit card 
+   - view subscribed health package  for myself and my family members (if any)
+   - View the status of my health care package subscription (subscribed with renewal date/ unsubscribed/ cancelled with end date)  for myself and my family members (if any)
+   - cancel a subscription of a health package  for myself and my family members (if any)
+   - View a list of all doctors along with their specialty, and session price (based on subscribed health package if any)
+   - Search for a doctor by name and/or specialty 
+   - filter  a doctor by specialty and/or availability on a certain date and at a specific time
+   - select a doctor from the search/filter results 
+   - view all details of selected doctors including specialty, affiliation (hospital), educational background 
+   - view all available appointments of a selected doctor
+   - select an appointment date and time for myself or for a family member
+   - reschedule an appointment for myself or for a family member
+   - view a list of all my prescriptions
+   - filter prescriptions based on date or doctor or filled or unfilled
+   - select a prescription from my list of prescriptions
+   - view the details of my selected prescription
+   - choose to pay directly for the prescription items wallet or credit card
+   - request a follow-up to a previous appointment for myself or a family member
+   - receive a refund in my wallet when a doctor cancels an appointment
+</details>
+    
+ ####  **Doctor & Patient Features**      
+ 
+ <details><summary>As a Doctor or Patient you can :</summary><br>
+   
+  - View uploaded health records 
+  - filter appointments by date/status
+  - View all new and old prescriptions and their statuses (filled/ not filled)
+  - receive a notification of my appointment on the system and by mail 
+  - View a list of all my upcoming / past appointments
+  - filter appointments by date or status (upcoming, completed, cancelled, rescheduled)
+  - cancel an appointment for myself or for a family member
+  - receive a notification that my appointment is cancelled or rescheduled on the system and by mail 
+  - download selected prescription (PDF) 
+  - start/end a video call with the doctor/ patient
+  - View the amount in my wallet
+  - chat with a doctor/patient
+</details>
+
+   ####  **Guest Features**      
+   
+  <details><summary>As a Guest you can :</summary><br>
+    
+  - register as a patient using username, name, email, password, date of birth, gender, mobile number, emergency contact ( full name, mobile number)
+  - submit a request to register as a doctor using username, name, email, password, date of birth, hourly rate, affiliation (hospital), educational background
+  - upload and submit required documents upon registration a doctor such as ID, Medical licenses, and medical degree
+</details>
+
+####  **Registered  Features**      
+  <details><summary>As a Registered User you can :</summary><br>
+  - login with username and password
+  - Logout
+  - change password
+  - reset a forgotten password through OTP sent to email
+
+  </details>
 
 ## Code Examples
 ``` javascript
@@ -252,7 +356,7 @@ git clone https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic
 
 
 ## Testing 
-The api reoutes were tested using postman , Postman is an application used for API testing. It is an HTTP client that tests HTTP requests, utilizing a graphical user interface, through which we obtain different types of responses that need to be subsequently validated. Postman offers many endpoint interaction methods. The following are some of the most used, including their functions:
+The API routes were tested using Postman, Postman is an application used for API testing. It is an HTTP client that tests HTTP requests, utilizing a graphical user interface, through which we obtain different types of responses that need to be subsequently validated. Postman offers many endpoint interaction methods. The following are some of the most used, including their functions:
 
 * GET: Obtain information
 * POST: Add information
@@ -263,7 +367,7 @@ The api reoutes were tested using postman , Postman is an application used for A
 ## How to Use
 
 ## How to Contribuite
-Anyone who would like to contribute in the project please send me an E-mail on besho.osama404@gmail.com
+Anyone who would like to contribute to the project please send me an E-mail on besho.osama404@gmail.com
 
 ## Credits 
 * [React.js](https://www.udemy.com/course/the-ultimate-react-course)
