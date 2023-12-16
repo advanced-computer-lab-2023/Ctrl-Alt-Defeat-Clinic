@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { createRef, useEffect, useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -19,9 +19,12 @@ import {
   List,
   ListItem,
   ListItemText,
+  ListItemSecondaryAction,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Delete, Download, Edit } from "@mui/icons-material";
+import html2pdf from "html2pdf.js";
 
 function MyPatientsPage() {
   const [myPatients, setMyPatients] = useState([]);
@@ -33,14 +36,67 @@ function MyPatientsPage() {
   const [viewPrescDialogOpen, setViewPrescDialogOpen] = useState(false);
   const [medicalHistoryPaths, setMedicalHistoryPaths] = useState([]);
   const [loggedIn, setLoggedIn] = useState(null);
-  const [searchName, setSearchName] = useState(null);
-  const [status, setStatus] = useState(null);
+  const [searchName, setSearchName] = useState("");
+  const [status, setStatus] = useState("");
   const [medicines, setMedicines] = useState([]);
   const [med, setMed] = useState({ name: "", dosage: "", duration: "" });
   const [notes, setNotes] = useState("");
   const [filled, setFilled] = useState(false);
   const [addMedicineDialogOpen, setAddMedicineDialogOpen] = useState(false);
   const [addPrescDialogueOpen, setAddPrescDialogueOpen] = useState(false);
+  const [prescriptions, setPrescriptions] = useState([]);
+  const prescriptionDetailsRef = useRef(null);
+  const [selectedPrescription, setSelectedPrescription] = useState({});
+  const [listItemRefs, setListItemRefs] = useState([]);
+
+  useEffect(() => {
+    setListItemRefs((refs) =>
+      Array(prescriptions.length)
+        .fill(0)
+        .map((_, index) => refs[index] || createRef())
+    );
+  }, [prescriptions]);
+
+  const handleDownloadPDF = (index) => {
+    console.log(selectedPrescription);
+    console.log(listItemRefs);
+    if (!selectedPrescription) {
+      return;
+    }
+
+    html2pdf(listItemRefs[index].current, {
+      margin: 10,
+      filename: `prescription_${selectedPrescription._id}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    });
+  };
+
+  const handleFetchPrescriptions = async () => {
+    if (selectedPatient) {
+      console.log(
+        "🚀 ~ file: MyPatientsPage.jsx:55 ~ handleFetchPrescriptions ~ selectedPatient.username:",
+        selectedPatient.username
+      );
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/v1/patients/getAllPrescriptionsForPatient?username=${selectedPatient.username}`
+        );
+        setPrescriptions(response.data);
+        console.log(
+          "🚀 ~ file: MyPatientsPage.jsx:56 ~ handleFetchPrescriptions ~ response.data:",
+          response.data
+        );
+      } catch (error) {
+        console.error("Error fetching prescriptions:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleFetchPrescriptions();
+  }, []);
 
   useEffect(() => {
     const fetchMedicalHistory = async () => {
@@ -411,11 +467,80 @@ function MyPatientsPage() {
         <DialogTitle>Prescriptions</DialogTitle>
         <DialogContent
           sx={{
-            width: "500px", // Adjust the width as needed
-            height: "500px", // Adjust the height as needed
+            width: "500px",
+            height: "500px",
+            overflowY: "scroll",
           }}
         >
-          prescs
+          {prescriptions.map((presc, index) => (
+            <ListItem
+              key={index}
+              ref={listItemRefs[index]}
+              sx={{
+                display: "flex",
+                justifyContent: "space-around",
+                marginTop: "10px",
+                // alignItems: "center",
+                flexDirection: "column",
+                borderRadius: "5px",
+                boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+                border: "1px solid lightgrey",
+              }}
+            >
+              {presc.medicines.map((med, ind) => (
+                <>
+                  <ListItemText
+                    sx={{ width: "100%" }}
+                    primary={med.name}
+                    key={ind}
+                    secondary={`Dosage: ${med.dosage}, Duration: ${med.duration}`}
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                    }}
+                  >
+                    <ListItemSecondaryAction key={ind + "a"}>
+                      <IconButton
+                        edge="end"
+                        color="primary"
+                        aria-label="delete"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const meds = medicines;
+                          meds.splice(index, 1);
+                          setMedicines((meds) => [...meds]);
+                        }}
+                        sx={{ marginX: "20px" }}
+                      >
+                        <Edit />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                    <ListItemSecondaryAction key={ind + "b"}>
+                      <IconButton
+                        edge="end"
+                        color="primary"
+                        aria-label="Download"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedPrescription(presc);
+                          handleDownloadPDF(index);
+                        }}
+                      >
+                        <Download />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </Box>
+                </>
+              ))}
+              <ListItemText
+                sx={{ width: "100%" }}
+                primary={`Notes: ${presc.notes}`}
+                key={index + "a"}
+                secondary={`Filled: ${presc.filled}`}
+              />
+            </ListItem>
+          ))}
         </DialogContent>
         <DialogActions>
           <Button
@@ -504,10 +629,34 @@ function MyPatientsPage() {
                     primary={medicine.name}
                     secondary={`Dosage: ${medicine.dosage}, Duration: ${medicine.duration}`}
                   />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      color="secondary"
+                      sx={{ color: "red" }}
+                      aria-label="delete"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const meds = medicines;
+                        meds.splice(index, 1);
+                        setMedicines((meds) => [...meds]);
+                      }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </ListItemSecondaryAction>
                 </ListItem>
               ))}
             </List>
           )}
+          <TextField
+            label="notes"
+            margin="normal"
+            value={notes}
+            onChange={(e) => {
+              setNotes(e.target.value);
+            }}
+          />
         </DialogContent>
         <DialogActions>
           <Button
@@ -516,6 +665,7 @@ function MyPatientsPage() {
               setMedicines([]);
             }}
             color="primary"
+            sx={{ color: "red" }}
           >
             Close
           </Button>
@@ -526,6 +676,16 @@ function MyPatientsPage() {
             color="primary"
           >
             Add Medicine
+          </Button>
+          <Button
+            onClick={() => {
+              handleAddPrescription();
+              handleFetchPrescriptions();
+              setAddMedicineDialogOpen(false);
+            }}
+            color="primary"
+          >
+            Save
           </Button>
         </DialogActions>
       </Dialog>
@@ -620,6 +780,7 @@ function MyPatientsPage() {
               onClick={() => {
                 console.log("clicked presc");
                 setViewPrescDialogOpen(true);
+                handleFetchPrescriptions();
               }}
               variant="contained"
               color="primary"
