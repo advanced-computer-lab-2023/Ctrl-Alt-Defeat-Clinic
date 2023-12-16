@@ -14,7 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import LockIcon from "@mui/icons-material/Lock";
-import { Person } from "@mui/icons-material";
+import { Chat, Person } from "@mui/icons-material";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import ChangePassword from "./ChangePassword";
 import AppointmentsPage from "./AppointmentsPage";
@@ -59,6 +59,11 @@ function DoctorHome() {
       to: "/doctors/",
     },
     {
+      label: "Chats",
+      icon: <Chat />,
+      to: "/doctors/",
+    },
+    {
       label: "Update My Info",
       icon: <FolderSharedIcon />,
       to: "/doctors/",
@@ -84,6 +89,8 @@ function DoctorHome() {
         return <ChangePassword />;
       case "Update My Info":
         return <UpdateInfoPage />;
+      // case "Chats":
+      // return <ChatPage.jsx />;
       default:
         return renderHome();
     }

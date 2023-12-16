@@ -45,7 +45,7 @@ function MyPatientsPage() {
   const [addMedicineDialogOpen, setAddMedicineDialogOpen] = useState(false);
   const [addPrescDialogueOpen, setAddPrescDialogueOpen] = useState(false);
   const [prescriptions, setPrescriptions] = useState([]);
-  const prescriptionDetailsRef = useRef(null);
+  //   const prescriptionDetailsRef = useRef(null);
   const [selectedPrescription, setSelectedPrescription] = useState({});
   const [listItemRefs, setListItemRefs] = useState([]);
 
