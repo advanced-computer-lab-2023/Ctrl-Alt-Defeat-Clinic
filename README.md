@@ -4,20 +4,20 @@
 
 ## Table of Contents
 * [Project description](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#project-description)
-* [Motivation]()
-* [Build Status]()
-* [Code Styles]()
-* [Tech/Framework used]()
-* [Features]()
-* [Screenshots]()
-* [Code Examples]()
-* [Installation]()
-* [API References]()
-* [Testing]()
-* [How to Use]()
-* [How to Contribuite]()
-* [Credits]()
-* [License]()
+* [Motivation](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#motivation)
+* [Build Status](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#build-status)
+* [Code Styles](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#code-styles)
+* [Tech/Framework used](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#tech/framework-used)
+* [Features](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#features)
+* [Screenshots](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#screenshots)
+* [Code Examples](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#code-examples)
+* [Installation](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#installation)
+* [API References](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#api-references)
+* [Testing](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#testing)
+* [How to Use](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#how-to-use)
+* [How to Contribuite](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#how-to-contribute)
+* [Credits](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#credits)
+* [License](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#license)
 
 
 ## Project description
@@ -178,23 +178,39 @@ The project is formatted using prettier also The project follows the [MVC](https
 
 
 ## Screenshots
-**Home page**
-![sc1](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/4db24ae5-1290-4e66-b569-a84d978f7d7e)
+* **Home page**
+ 
+  ![sc1](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/7acdea35-1ff0-4477-9fd7-d82af334a9cb)
 
-**Doctor registeration page**
-![sc7](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/ab169dbb-5b05-42c8-9c13-e4d6b3c787e9)
 
-**Patient registeration page**
-![sc2](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/819e9958-9be0-4ea5-b3ec-7b68954c54d1)
+* **Doctor registeration page**
+  
+ ![sc7](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/496b67c1-4e2e-4588-8b86-f3004cc7330f)
 
-**Sign in page**
-![sc5](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/9b556b7c-0c2c-442f-b01a-cc8e4607957c)
 
-**Viewing health pacjages**
-![sc1](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/65c184f8-b543-4035-9119-0bfeb65a4232)
 
-**Viewing doctor information**
-![sc3](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/9bd869d5-9ef6-4177-9ca6-b28af9a950e3)
+* **Patient registeration page**
+  
+  ![sc2](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/3cb08faa-8edc-4bee-adab-5b3e677cdf8d)
+
+ 
+
+* **Sign in page**
+  
+![sc5](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/dce4b840-893c-42c8-92fd-1e59bc2852f1)
+
+  
+
+
+* **Viewing health pacjages**
+  
+  ![sc4](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/09576db0-1725-449a-b5d2-e55cbc548d20)
+
+
+* **Viewing doctor information**
+  
+  ![sc3](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/2c48a0dd-6a9d-4408-a201-e86d97495dc6)
+
 
 
 ## Code Examples
@@ -452,13 +468,17 @@ The API routes were tested using Postman, Postman is an application used for API
 
 #### Here are examples of the tests using **Postman** :
 *  **View patients of a doctor**
-pic 
+  
+![test1](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/f011559c-8910-46f3-976c-0a876c3cd0ff)
 
 *  **Get all packages**
-pic
+  
+![test2](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/c59e870f-b3be-491e-bfc4-6c0b66e04b24)
+
 
 * **View all prescriptions of a doctor**
-pic
+  
+![test3](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/ff1ecb81-01cd-4a4c-b5d1-36ee5439977f)
 
 
 
