@@ -2,12 +2,28 @@
 # El7a2ny
 ![1111211](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/102230910/7b7927ee-4d83-4e08-a6c2-38d86a4fed1a)
 
+## Table of Contents
+* [Project description](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/blob/main/README.md#project-description)
+* [Motivation]()
+* [Build Status]()
+* [Code Styles]()
+* [Tech/Framework used]()
+* [Features]()
+* [Screenshots]()
+* [Code Examples]()
+* [Installation]()
+* [API References]()
+* [Testing]()
+* [How to Use]()
+* [How to Contribuite]()
+* [Credits]()
+* [License]()
+
 
 ## Project description
+
 #### Title
 El7a2ny
-
-
 
 #### Course
 Advanced Computer Lab (CSEN 704/ DMET 706), Winter 2023
@@ -160,7 +176,30 @@ The project is formatted using prettier also The project follows the [MVC](https
 
   </details>
 
+
+## Screenshots
+**Home page**
+![sc1](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/4db24ae5-1290-4e66-b569-a84d978f7d7e)
+
+**Doctor registeration page**
+![sc7](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/ab169dbb-5b05-42c8-9c13-e4d6b3c787e9)
+
+**Patient registeration page**
+![sc2](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/819e9958-9be0-4ea5-b3ec-7b68954c54d1)
+
+**Sign in page**
+![sc5](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/9b556b7c-0c2c-442f-b01a-cc8e4607957c)
+
+**Viewing health pacjages**
+![sc1](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/65c184f8-b543-4035-9119-0bfeb65a4232)
+
+**Viewing doctor information**
+![sc3](https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic/assets/126988144/9bd869d5-9ef6-4177-9ca6-b28af9a950e3)
+
+
 ## Code Examples
+
+* Selects a patients by his ID.
 ``` javascript
 exports.selectPatient = async (req, res) => {
   const patientId = req.query.id;
@@ -174,6 +213,7 @@ exports.selectPatient = async (req, res) => {
 };
 ```
 
+* Gets a prescription by its ID.
 ``` javascript
 exports.getPrescriptionById = async (req, res) => {
   try {
@@ -192,7 +232,7 @@ exports.getPrescriptionById = async (req, res) => {
   }
 };
 ```
-
+* Deletes an admin from the database. 
 ``` javascript
 function RemoveAdmin() {
   const [username, setUsername] = useState("");
@@ -270,7 +310,7 @@ git clone https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic
 
 ## API References
 
-####  Admin Router
+#### - Admin Router
 
 ```http
  /api/v1/admins
@@ -288,7 +328,7 @@ git clone https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic
 
 
 
-####  Appointment Router
+#### - Appointment Router
 
 ```http
  /api/v1/appointments
@@ -304,7 +344,7 @@ git clone https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic
 | `/cancelAppointment` | `PUT` | **Query:** { appointmentId:```String``` } | Cancel an appointment using its ID.
 
 
-####  Auth Router
+#### - Auth Router
 
 ```http
  /api/v1/auth
@@ -322,7 +362,7 @@ git clone https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic
 
 
 
-####  Doctor Router
+#### - Doctor Router
 
 ```http
  /api/v1/doctors
@@ -351,7 +391,7 @@ git clone https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic
 
 
 
-####  Package Router
+#### - Package Router
 
 ```http
  /api/v1/packages
@@ -366,7 +406,7 @@ git clone https://github.com/advanced-computer-lab-2023/Ctrl-Alt-Defeat-Clinic
 
 
 
-####  Patient Router
+#### - Patient Router
 
 ```http
  /api/v1/patients
@@ -410,7 +450,22 @@ The API routes were tested using Postman, Postman is an application used for API
 * PATCH: Update certain information
 * DELETE: Delete information
 
+#### Here are examples of the tests using **Postman** :
+*  **View patients of a doctor**
+pic 
+
+*  **Get all packages**
+pic
+
+* **View all prescriptions of a doctor**
+pic
+
+
+
+
+
 ## How to Use
+You can use our website as one of four main users (Admin , Doctor or Patient), you can sign up for an account from the sign up page to the website as any of user types then you can login and change your password and use all of our features.
 
 ## How to Contribuite
 Anyone who would like to contribute to the project please send me an E-mail on besho.osama404@gmail.com
