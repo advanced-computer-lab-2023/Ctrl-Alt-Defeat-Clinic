@@ -487,7 +487,7 @@ The API routes were tested using Postman, Postman is an application used for API
 ## How to Use
 You can use our website as one of four main users (Admin , Doctor or Patient), you can sign up for an account from the sign up page to the website as any of user types then you can login and change your password and use all of our features.
 
-## How to Contribuite
+## How to Contribute
 Anyone who would like to contribute to the project please send me an E-mail on besho.osama404@gmail.com
 
 ## Credits 
