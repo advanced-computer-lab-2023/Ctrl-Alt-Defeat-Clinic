@@ -23,6 +23,7 @@ import UpdateInfoPage from "./UpdateInfoPage";
 import PasswordIcon from "@mui/icons-material/Password";
 import axios from "axios";
 import Contract from "../components/Contract";
+import ChatPage from "./ChatPage";
 
 function DoctorHome() {
   const [showSideNav, setShowSideNav] = useState(false);
@@ -89,8 +90,8 @@ function DoctorHome() {
         return <ChangePassword />;
       case "Update My Info":
         return <UpdateInfoPage />;
-      // case "Chats":
-      // return <ChatPage.jsx />;
+      case "Chats":
+        return <ChatPage />;
       default:
         return renderHome();
     }

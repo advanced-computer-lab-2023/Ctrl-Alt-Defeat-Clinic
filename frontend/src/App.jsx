@@ -40,6 +40,7 @@ import ScheduleFollowUpForm from "./components/ScheduleFollowUp";
 import AddUpdatePrescription from "./components/AddUpdatePrescription";
 import ViewSelectedPrescription from "./components/ViewSelectedPrescription";
 import DownloadPrescription from "./components/DownloadPrescription";
+import ChatPage from "./pages/ChatPage";
 
 function App() {
   return (
@@ -120,6 +121,7 @@ function App() {
             path="/patients/viewSelectedPrescription"
             element={<ViewSelectedPrescription />}
           />
+          <Route path="/chats" element={<ChatPage />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -75,6 +75,7 @@ exports.getMe = async (req, res) => {
   // console.log(user);
   res.status(200).json({
     loggedIn: req.role === 'doctor' ? user : req.user,
+    role: req.role,
   });
 };
 
