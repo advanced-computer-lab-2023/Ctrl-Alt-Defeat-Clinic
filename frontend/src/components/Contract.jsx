@@ -1,9 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
+import { Button, Typography } from "@mui/material";
 
 const Contract = ({ username, hourlyRate }) => {
   const [accepted, setAccepted] = useState(false);
+
+  useEffect(() => {
+    if (accepted) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    }
+  }, [accepted]);
 
   const contractTerms = `
   Welcome to "El7a2ny" Online Clinic!
@@ -37,15 +46,41 @@ const Contract = ({ username, hourlyRate }) => {
   };
 
   return (
-    <div>
-      <h2>Employment Contract</h2>
+    <div
+      style={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        // borderRadius: "5px 5px 0 0",
+        // boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+      }}
+    >
+      <Typography variant="h4" style={{ margin: "20px" }}>
+        Employment Contract
+      </Typography>
       <form onSubmit={handleAcceptance}>
         <p>Here are the terms and conditions of your employment contract:</p>
         <pre>{contractTerms}</pre>
         {!accepted && (
-          <div>
-            <p>Please read the contract terms carefully.</p>
-            <button type="submit">Accept</button>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "20px",
+            }}
+          >
+            <Typography variant="body1">
+              Please read the contract terms carefully.
+            </Typography>
+            <Button type="submit" variant="contained">
+              accept
+            </Button>
           </div>
         )}
       </form>

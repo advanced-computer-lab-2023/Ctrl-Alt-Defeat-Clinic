@@ -67,8 +67,15 @@ exports.login = async (req, res) => {
 
 // for testing purposes not a requirement
 exports.getMe = async (req, res) => {
+  let user;
+  if (req.role === 'doctor') {
+    // console.log('find');
+    user = await Doctor.findById(req.user._id).populate('registeredPatients');
+  }
+  // console.log(user);
   res.status(200).json({
-    loggedIn: req.user,
+    loggedIn: req.role === 'doctor' ? user : req.user,
+    role: req.role,
   });
 };
 
