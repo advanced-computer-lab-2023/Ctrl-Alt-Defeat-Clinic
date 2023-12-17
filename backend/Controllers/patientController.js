@@ -8,6 +8,50 @@ const path = require('path');
 const fs = require('fs');
 const Appointment = require('../Models/Appointment');
 const { filterAppointments } = require('./appointmentController');
+const multer = require('multer');
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/MedicalHistory');
+  },
+  filename: (req, file, cb) => {
+    console.log(file);
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `Patient-${req.user.username}.${ext}`);
+  },
+});
+
+const upload = multer({ storage: multerStorage }).array('medicalHistory', 100);
+
+exports.uploadPDocuments = upload;
+
+exports.uploadPatientDocuments = async (req, res) => {
+  try {
+    const patientUsername = req.user.username;
+
+    let updateData = {};
+
+    if (req.files) {
+      updateData.medicalHistory = req.files.map(file => file.filename);
+    }
+
+    const updatedPatient = await Patient.findOneAndUpdate(
+      { username: patientUsername },
+      { $push: { medicalHistory: { $each: updateData.medicalHistory } } },
+      { new: true, useFindAndModify: false }
+    );
+
+    res.status(200).json({
+      message: 'Patient documents updated successfully',
+      data: updatedPatient,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'fail',
+      message: error.message,
+    });
+  }
+};
 
 exports.registerPatient = async (req, res) => {
   const newPatient = await Patient.create(req.body);
@@ -53,24 +97,33 @@ exports.addFamilyMember = async (req, res) => {
 };
 
 exports.viewAllDoctors = async (req, res) => {
-  const { username } = req.params;
   try {
     //Getting the current patient view the list of doctor
-    const currentPatient = await Patient.findOne({ username });
+    const currentPatient = req.user;
+
+    console.log(req.user);
 
     if (!currentPatient) {
       return res.status(404).json({ error: 'Patient not found' });
     }
 
-    const doctors = await Doctor.find({}, 'name speciality hourlyRate');
+    const doctors = await Doctor.find(
+      {},
+      'name username speciality hourlyRatename speciality hourlyRate affiliation educationalBackground availableSlots'
+    );
 
     const doctorsWithSessionPrices = await Promise.all(
       doctors.map(async currentDoctor => {
         const sessionPrice = await calculateSessionPrice(currentDoctor.hourlyRate, currentPatient.healthPackage);
         return {
           name: currentDoctor.name,
+          username: currentDoctor.username,
           speciality: currentDoctor.speciality,
           sessionPrice,
+          speciality: currentDoctor.speciality,
+          affiliation: currentDoctor.affiliation,
+          educationalBackground: currentDoctor.educationalBackground,
+          availableSlots: currentDoctor.availableSlots,
         };
       })
     );
@@ -537,6 +590,51 @@ exports.getAllMedicalHistory = async (req, res) => {
   } catch (error) {
     console.error('Error fetching medical history:', error);
     res.status(500).json({ message: 'Error fetching medical history' });
+  }
+};
+
+exports.requestFollowUp = async (req, res) => {
+  try {
+    const { familyMember, doctor, date } = req.query;
+
+    let appDoctor = await Doctor.findOne({ username: doctor }).populate('registeredPatients').exec();
+
+    if (!appDoctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const isPatientRegistered = appDoctor.registeredPatients.some(
+      registeredPatient => registeredPatient.id == req.user._id
+    );
+
+    if (!isPatientRegistered) {
+      return res.status(404).json({ error: 'Patient not registered with this doctor' });
+    }
+
+    // add to followUpRequests in doctor
+    let updatedDoctor;
+
+    if (familyMember) {
+      updatedDoctor = await Doctor.findOneAndUpdate(
+        { username: doctor },
+        {
+          $addToSet: {
+            followUpRequests: { patient: req.user.username, familyMember: familyMember, date: new Date(date) },
+          },
+        },
+        { new: true }
+      ).exec();
+    } else {
+      updatedDoctor = await Doctor.findOneAndUpdate(
+        { username: doctor },
+        { $addToSet: { followUpRequests: { patient: req.user.username, date: new Date(date) } } },
+        { new: true, lean: true }
+      ).exec();
+    }
+
+    res.status(200).json(updatedDoctor.followUpRequests);
+  } catch (error) {
+    res.status(500).json({ message: 'Error requesting follow-up', error: error.message });
   }
 };
 

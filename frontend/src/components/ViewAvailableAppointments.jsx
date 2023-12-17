@@ -115,8 +115,9 @@ function ViewAvailableAppointments() {
 
   const handleSelectAppointments = async (dateTime) => {
     try {
+
       const response = await Axios.post(
-        `http://localhost:8000/api/v1/appointments/addAppointment?date=${dateTime}&patient=${selectedPatient}&doctor=${selectedDoctor}`,
+        `http://localhost:8000/api/v1/appointments/addAppointment?date=${dateTime}&doctor=${selectedDoctor}${(selectedPatient === 'Me')? "" : "&familyMember="+selectedPatient}`,
         {},
         { withCredentials: true }
       );

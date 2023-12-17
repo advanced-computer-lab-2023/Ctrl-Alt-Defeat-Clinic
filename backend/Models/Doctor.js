@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const FamilyMember = require('./FamilyMember');
 
 const doctorSchema = new mongoose.Schema({
   username: {
@@ -11,6 +12,11 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  Documents: [
+    {
+      type: String,
+    },
+  ],
   email: {
     type: String,
     required: true,
@@ -76,6 +82,24 @@ const doctorSchema = new mongoose.Schema({
   otp: {
     type: String,
   },
+  followUpRequests: [
+    {
+      _id: false,
+      patient: {
+        type: String,
+        required: true,
+      },
+      familyMember: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: FamilyMember,
+        default: null,
+      },
+      date: {
+        type: Date,
+        required: true,
+      },
+    }
+  ],
 });
 
 doctorSchema.pre('save', async function (next) {

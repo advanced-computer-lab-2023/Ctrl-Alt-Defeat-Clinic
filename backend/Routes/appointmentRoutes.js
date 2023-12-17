@@ -18,4 +18,5 @@ router
 router.route('/my-doctors/:patient').get(protect, restrictTo('patient', 'doctor'), appointmentController.getMyDoctors);
 router.route('/my-patients/:doctor').get(protect, restrictTo('patient', 'doctor'), appointmentController.getMyPatients);
 
+
 module.exports = router;

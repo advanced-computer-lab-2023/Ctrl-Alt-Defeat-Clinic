@@ -1,65 +1,110 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  Container,
-} from "@mui/material";
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Divider from '@mui/material/Divider';
+import { useNavigate } from 'react-router-dom';
+import Patient from '../assets/patient.jpg';
+import Doctor from '../assets/doctor.jpg';
+import Logo from '../assets/logo.png';
 
-function Home() {
+const cards = [
+  {
+    id: 1,
+    title: 'Register as a patient',
+    description: 'Register as a patient and get access to our services',
+    href: '/patients/register',
+    imgSrc: Patient,
+  },
+  {
+    id: 2,
+    title: 'Register as a doctor',
+    description: 'Register as a doctor and get access to our services',
+    href: '/doctors/register',
+    imgSrc: Doctor,
+  },
+];
+
+export default function Album() {
+  const navigate = useNavigate();
+
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <Card
-        sx={{
-          boxShadow: "0px 8px 24px rgba(149, 157, 165, 0.2)",
-          borderRadius: "5px",
-        }}
-      >
-        <CardContent>
-          {/* Replace the text with your logo */}
-          <img
-            src="./src/assets/el7a2ny-logo-transparent.png"
-            alt="Logo"
-            style={{ width: "100%" }}
-          />
-
-          {/* <Typography variant="h5" align="center" gutterBottom>
-            Welcome to Ctrl-Alt-Defeat Clinic, Guest!
-          </Typography> */}
-
-          <Link to="/patients/register" style={{ textDecoration: "none" }}>
-            <Button variant="contained" fullWidth color="primary" size="large">
-              Register as Patient
+    <>
+      <main>
+        {/* Hero unit */}
+        <Box
+          sx={{
+            pt: 8,
+          }}
+        >
+          <Container maxWidth="md" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <img src={Logo} alt="logo" />
+            {/* <Typography component="h1" variant="h2" align="center" color="text.primary" gutterBottom>
+              Welcome to El7a2ni Clinic
+            </Typography> */}
+            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+              your destination for exceptional healthcare. Our dedicated team ensures your well-being with personalized
+              and compassionate services. Trust us for a warm and welcoming experience on your path to optimal health.
+            </Typography>
+            <Button
+              variant="contained"
+              sx={{
+                mt: 3,
+                mb: 2,
+                paddingY: 2,
+                paddingX: 6,
+                bgcolor: '#0076c0',
+                ':hover': { backgroundColor: '#0076c0' },
+              }}
+              onClick={() => {
+                navigate('/login');
+              }}
+            >
+              Log in now!
             </Button>
-          </Link>
-
-          <Link to="/doctors/register" style={{ textDecoration: "none" }}>
-            <Button variant="contained" fullWidth color="primary" size="large">
-              Register as Doctor
-            </Button>
-          </Link>
-
-          <Link to="/login" style={{ textDecoration: "none" }}>
-            <Button variant="contained" fullWidth color="primary" size="large">
-              Login
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
-    </Container>
+            <Divider flexItem style={{ marginTop: '40px' }}>
+              OR
+            </Divider>
+          </Container>
+        </Box>
+        <Container sx={{ py: 8 }} maxWidth="md">
+          <Grid container spacing={4}>
+            {cards.map(card => (
+              <Grid item key={card.id} md={6}>
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: '10px' }}>
+                  <CardMedia
+                    component="div"
+                    sx={{
+                      pt: '56.25%',
+                    }}
+                    image={card.imgSrc}
+                  />
+                  <CardContent sx={{ flexGrow: 1, padding: '20px' }}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {card.title}
+                    </Typography>
+                    <Typography>{card.description}</Typography>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 1, paddingY: 2, bgcolor: '#0076c0', ':hover': { backgroundColor: '#0076c0' } }}
+                      onClick={() => {
+                        navigate(card.href);
+                      }}
+                    >
+                      Register
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </main>
+    </>
   );
 }
-
-export default Home;

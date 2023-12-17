@@ -1,21 +1,15 @@
-import { useState } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import { useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 function PatientHome() {
   const [patient, setPatient] = useState(null);
   const handleLogout = async () => {
-    const response = await axios.get(
-      "http://localhost:8000/api/v1/auth/logout",
-      { withCredentials: true }
-    );
+    const response = await axios.get('http://localhost:8000/api/v1/auth/logout', { withCredentials: true });
     console.log(response.data);
   };
 
   const showData = async () => {
-    const response = await axios.get(
-      "http://localhost:8000/api/v1/auth/getMe",
-      { withCredentials: true }
-    );
+    const response = await axios.get('http://localhost:8000/api/v1/auth/getMe', { withCredentials: true });
     console.log(response.data);
     setPatient(response.data.loggedIn);
   };
@@ -33,14 +27,10 @@ function PatientHome() {
       )}
       <ul>
         <li>
-          <Link to="/patients/view-all-patient-appointments">
-            View All My Appointments
-          </Link>
+          <Link to="/patients/view-all-patient-appointments">View All My Appointments</Link>
         </li>
         <li>
-          <Link to="/patients/view-all-available-appointments">
-            View & Select Available Doctor Appointments
-          </Link>
+          <Link to="/patients/view-all-available-appointments">View & Select Available Doctor Appointments</Link>
         </li>
         <li>
           <Link to="/patients/healthPackages">Show All Health Packages</Link>

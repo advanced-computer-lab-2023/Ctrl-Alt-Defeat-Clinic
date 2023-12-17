@@ -3,6 +3,22 @@ const Patient = require('../Models/Patient');
 const Appointment = require('../Models/Appointment');
 const Prescription = require('../Models/Prescriptions');
 const { filterAppointments } = require('./appointmentController');
+const multer = require('multer');
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/DoctorDocuments');
+  },
+  filename: (req, file, cb) => {
+    console.log(file);
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `Doctor-${req.body.username}.${ext}`);
+  },
+});
+
+const upload = multer({ storage: multerStorage }).array('Documents', 100);
+
+exports.uploadDDocuments = upload;
 
 exports.viewAllDoctors = async (req, res) => {
   try {
@@ -14,7 +30,12 @@ exports.viewAllDoctors = async (req, res) => {
 };
 
 exports.registerDoctor = async (req, res) => {
-  const newDoctor = await Doctor.create(req.body);
+  let newDoc = req.body;
+
+  if (req.files) {
+    newDoc.Documents = req.files.map(file => file.filename);
+  }
+  const newDoctor = await Doctor.create(newDoc);
 
   newDoctor.registrationStatus = undefined;
   res.status(201).json({
@@ -171,7 +192,6 @@ exports.filterDoctors = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-//-------------- SPRINT 2 -------------------
 
 exports.addAvailableSlot = async (req, res) => {
   try {
@@ -357,24 +377,27 @@ exports.addPrescription = async (req, res) => {
 
 exports.updatePrescription = async (req, res) => {
   try {
-    const { prescriptionId } = req.params; // Assuming prescription ID is in the URL params
-    const { medicines, notes, filled } = req.body; // Updated details sent in the request body
+    const { prescriptionId } = req.params;
+    const { medicines, notes, filled } = req.body;
 
-    const updatedPrescription = await Prescription.findByIdAndUpdate(
-      prescriptionId,
-      {
-        $set: {
-          medicines,
-          notes,
-          filled,
-        },
-      },
-      { new: true }
-    );
+    const prescription = await Prescription.findById(prescriptionId);
 
-    if (!updatedPrescription) {
+    if (!prescription) {
       return res.status(404).json({ error: 'Prescription not found' });
     }
+
+    // Update prescription fields only if the corresponding request body fields are not null
+    if (medicines[0].name !== '') {
+      prescription.medicines = medicines;
+    }
+    if (notes !== '') {
+      prescription.notes = notes;
+    }
+    if (filled !== prescription.filled) {
+      prescription.filled = filled;
+    }
+
+    const updatedPrescription = await prescription.save();
 
     res.status(200).json({ message: 'Prescription updated successfully', updatedPrescription });
   } catch (error) {

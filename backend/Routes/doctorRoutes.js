@@ -4,7 +4,7 @@ const authMiddlewares = require('../Middlewares/authMiddlewares');
 
 const router = express.Router();
 
-router.route('/register').post(doctorController.registerDoctor);
+router.route('/register').post(doctorController.uploadDDocuments, doctorController.registerDoctor);
 
 router.route('/updateDoctor').put(doctorController.updateDoctor);
 
@@ -60,6 +60,8 @@ router
   .route('/prescription/:prescriptionId/update')
   .put(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'), doctorController.updatePrescription);
 
-router.route('/viewAllPrescriptions').get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'),doctorController.viewAllPrescriptions);
+router
+  .route('/viewAllPrescriptions')
+  .get(authMiddlewares.protect, authMiddlewares.restrictTo('doctor'), doctorController.viewAllPrescriptions);
 
 module.exports = router;
